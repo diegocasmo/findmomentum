@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import { getResendProvider } from "@/lib/auth/resend-provider";
 import type { JWT } from "next-auth/jwt";
+import { findOrCreateDefaultOrganization } from "@/lib/services/find-or-create-default-organization";
 
 declare module "next-auth" {
   interface Session {
@@ -38,6 +39,13 @@ export const authOptions: NextAuthConfig = {
         session.user.id = token.id as string;
       }
       return session;
+    },
+  },
+  events: {
+    signIn: async ({ user, account }) => {
+      if (user.id && user.email && account?.provider === "resend") {
+        await findOrCreateDefaultOrganization(user.id);
+      }
     },
   },
 };
