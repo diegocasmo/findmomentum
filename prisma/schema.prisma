@@ -16,9 +16,9 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
-  emailVerified DateTime? @map("email_verified")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
+  emailVerified DateTime? @map("email_verified") @db.Timestamptz
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
   @@index([email])
   @@map("users")
@@ -28,9 +28,9 @@ model VerificationToken {
   id         String    @id @default(cuid())
   identifier String
   token      String    @unique
-  expires    DateTime
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
+  expires    DateTime  @db.Timestamptz
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
   @@unique([identifier, token])
   @@map("verification_tokens")
