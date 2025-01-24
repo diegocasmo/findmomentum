@@ -14,9 +14,9 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
-  userOrganizations UserOrganization[]
+  teamMemberships TeamMembership[]
+  activities      Activity[]
 
-  @@index([email])
   @@map("users")
 }
 
@@ -32,34 +32,51 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Organization {
+model Team {
   id        String    @id @default(cuid())
   name      String
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
-  userOrganizations UserOrganization[]
+  teamMemberships TeamMembership[]
+  activities      Activity[]
 
-  @@map("organizations")
+  @@map("teams")
 }
 
-model UserOrganization {
-  id             String               @id @default(cuid())
-  userId         String               @map("user_id")
-  organizationId String               @map("organization_id")
-  role           UserOrganizationRole @default(OWNER)
-  createdAt      DateTime             @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt      DateTime?            @updatedAt @map("updated_at") @db.Timestamptz
+model TeamMembership {
+  id        String             @id @default(cuid())
+  userId    String             @map("user_id")
+  teamId    String             @map("team_id")
+  role      TeamMembershipRole @default(OWNER)
+  createdAt DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime?          @updatedAt @map("updated_at") @db.Timestamptz
 
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, organizationId])
+  @@unique([userId, teamId])
   @@index([userId])
-  @@index([organizationId])
-  @@map("user_organizations")
+  @@index([teamId])
+  @@map("user_teams")
 }
 
-enum UserOrganizationRole {
+model Activity {
+  id        String    @id @default(cuid())
+  name      String
+  teamId    String    @map("team_id")
+  userId    String    @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([teamId])
+  @@map("activities")
+}
+
+enum TeamMembershipRole {
   OWNER
 }
