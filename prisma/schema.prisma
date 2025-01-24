@@ -62,12 +62,15 @@ model TeamMembership {
 }
 
 model Activity {
-  id        String    @id @default(cuid())
-  name      String
-  teamId    String    @map("team_id")
-  userId    String    @map("user_id")
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+  id         String    @id @default(cuid())
+  name       String
+  teamId     String    @map("team_id")
+  userId     String    @map("user_id")
+  durationMs Int       @map("duration_ms")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+
+  timeEntries TimeEntry[]
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -75,6 +78,19 @@ model Activity {
   @@index([userId])
   @@index([teamId])
   @@map("activities")
+}
+
+model TimeEntry {
+  id         String    @id @default(cuid())
+  activityId String    @map("activity_id")
+  startedAt  DateTime  @map("started_at") @db.Timestamptz
+  elapsedMs  Int?      @map("elapsed_ms")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@map("time_entries")
 }
 
 enum TeamMembershipRole {
