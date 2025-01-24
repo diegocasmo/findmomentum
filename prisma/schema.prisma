@@ -90,6 +90,7 @@ model TimeEntry {
 
   activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
 
+  @@index([activityId])
   @@map("time_entries")
 }
 
