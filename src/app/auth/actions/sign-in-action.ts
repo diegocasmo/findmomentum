@@ -1,6 +1,6 @@
 "use server";
 
-import { signInSchema, type SignInSchema } from "@/lib/schemas/sign-in";
+import { signInSchema, type SignInSchema } from "@/lib/schemas/sign-in-schema";
 import { signIn } from "@/lib/auth";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import type { FieldErrors } from "react-hook-form";
