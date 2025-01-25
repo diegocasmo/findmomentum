@@ -1,4 +1,4 @@
-import { type Activity, Prisma } from "@prisma/client";
+import { type Activity } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 type CreateActivityParams = {
@@ -29,11 +29,7 @@ export async function createActivity({
       });
     });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      // Handle known Prisma errors
-      throw new Error(`Failed to create activity: ${error.message}`);
-    }
     console.error("Error creating activity:", error);
-    throw new Error("An unexpected error occurred while creating the activity");
+    throw error;
   }
 }
