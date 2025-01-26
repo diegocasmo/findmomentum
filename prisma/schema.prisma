@@ -67,6 +67,7 @@ model Activity {
   description String?
   teamId      String    @map("team_id")
   userId      String    @map("user_id")
+  completedAt DateTime? @map("completedAt") @db.Timestamptz
   deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz
@@ -77,6 +78,7 @@ model Activity {
   @@index([userId])
   @@index([teamId])
   @@index([deletedAt])
+  @@index([completedAt])
   @@map("activities")
 }
 

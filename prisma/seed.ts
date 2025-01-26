@@ -24,7 +24,8 @@ async function main() {
   // Create 10 activities for the user
   for (let i = 0; i < 10; i++) {
     await createActivity({
-      name: faker.commerce.productName(),
+      name: faker.lorem.words(),
+      description: faker.lorem.sentence(),
       userId: user.id,
     });
   }
