@@ -7,12 +7,11 @@ import {
 } from "@/app/dashboard/schemas/create-activity-schema";
 
 type DurationInputProps = {
-  id: string;
   value: number;
   onChange: (value: number) => void;
 };
 
-export function DurationInput({ id, value, onChange }: DurationInputProps) {
+export function DurationInput({ value, onChange }: DurationInputProps) {
   const minutes = Math.floor(value / MS_PER_MIN);
   const seconds = Math.floor((value % MS_PER_MIN) / MS_PER_SECOND);
 
@@ -39,7 +38,6 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
   return (
     <div className="flex items-center space-x-2">
       <Input
-        id={id}
         type="number"
         value={minutes}
         onChange={handleMinutesChange}

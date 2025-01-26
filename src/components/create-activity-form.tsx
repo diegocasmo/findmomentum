@@ -55,6 +55,7 @@ export function CreateActivityForm() {
                     id="activity-name"
                     placeholder="e.g., Morning Jog, Meditation"
                     {...field}
+                    autoComplete="off"
                     className="text-base"
                   />
                 </FormControl>
@@ -79,7 +80,6 @@ export function CreateActivityForm() {
                 </FormLabel>
                 <FormControl>
                   <DurationInput
-                    id="activity-duration"
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
                   />
