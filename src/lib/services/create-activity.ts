@@ -3,11 +3,13 @@ import { prisma } from "@/lib/prisma";
 
 type CreateActivityParams = {
   name: string;
+  description: string;
   userId: string;
 };
 
 export async function createActivity({
   name,
+  description,
   userId,
 }: CreateActivityParams): Promise<Activity> {
   try {
@@ -20,6 +22,7 @@ export async function createActivity({
       return tx.activity.create({
         data: {
           name,
+          description,
           teamId: teamMembership.teamId,
           userId,
         },

@@ -27,6 +27,7 @@ export async function createActivityAction(
 
   const result = createActivitySchema.safeParse({
     name: formData.get("name"),
+    description: formData.get("description"),
   });
 
   if (!result.success) {
@@ -35,6 +36,7 @@ export async function createActivityAction(
   try {
     const activity = await createActivity({
       name: result.data.name,
+      description: result.data.description,
       userId: session.user.id,
     });
     return { success: true, data: activity };

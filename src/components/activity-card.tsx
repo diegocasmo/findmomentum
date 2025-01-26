@@ -32,7 +32,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           </Button>
         </div>
         <CardDescription className="text-sm text-muted-foreground line-clamp-2 mt-1">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {activity.description}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-4">

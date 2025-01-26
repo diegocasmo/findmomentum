@@ -12,7 +12,8 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Activity as ActivityIcon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ActivityIcon } from "lucide-react";
 import { useTransition } from "react";
 import { createActivityAction } from "@/app/dashboard/actions/create-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
@@ -21,6 +22,7 @@ import type { Activity } from "@prisma/client";
 
 type FormData = {
   name: string;
+  description: string;
 };
 
 type CreateActivityFormProps = {
@@ -35,6 +37,7 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
     resolver: zodResolver(createActivitySchema),
     defaultValues: {
       name: "",
+      description: "",
     },
   });
 
@@ -43,6 +46,7 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
       try {
         const formData = new FormData();
         formData.append("name", data.name);
+        formData.append("description", data.description);
 
         const result = await createActivityAction(formData);
 
@@ -53,8 +57,8 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
           setFormErrors(form.setError, result.errors);
         }
       } catch (error) {
-        console.error("Project creation error:", error);
-        form.setError("name", {
+        console.error("Activity creation error:", error);
+        form.setError("root", {
           type: "manual",
           message: "An unexpected error occurred. Please try again.",
         });
@@ -89,6 +93,34 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
                 </FormControl>
                 <FormDescription>
                   Choose a clear and concise name for your activity.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel
+                  htmlFor="activity-description"
+                  className="text-lg font-semibold"
+                >
+                  Description (Optional)
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    id="activity-description"
+                    placeholder="Describe your activity..."
+                    {...field}
+                    className="text-base"
+                    rows={4}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Provide additional details about your activity (max 500
+                  characters).
                 </FormDescription>
                 <FormMessage />
               </FormItem>
