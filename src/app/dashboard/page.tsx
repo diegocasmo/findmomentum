@@ -1,9 +1,19 @@
+import { getActivities } from "@/lib/services/get-activities";
+import { auth } from "@/lib/auth";
 import { CreateActivityModal } from "@/components/create-activity-modal";
 import { ActivityIcon } from "lucide-react";
-
 import { ActivitiesList } from "@/components/activities-list";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const activities = await getActivities({ userId });
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -13,7 +23,7 @@ export default function Dashboard() {
         </h1>
         <CreateActivityModal />
       </div>
-      <ActivitiesList activities={[]} />
+      <ActivitiesList activities={activities} />
     </div>
   );
 }
