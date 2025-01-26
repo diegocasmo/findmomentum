@@ -80,6 +80,7 @@ export function CreateActivityForm() {
                 </FormLabel>
                 <FormControl>
                   <DurationInput
+                    id="activity-duration"
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
                   />
