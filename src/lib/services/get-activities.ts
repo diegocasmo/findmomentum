@@ -13,6 +13,7 @@ export async function getActivities({
   const activities = await prisma.activity.findMany({
     where: {
       userId: userId,
+      deletedAt: null,
     },
     orderBy: {
       createdAt: "desc",

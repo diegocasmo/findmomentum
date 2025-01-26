@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -8,7 +7,8 @@ import {
 } from "@/components/ui/card";
 import type { Activity } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { Trash2, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
+import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
 
 type ActivityCardProps = {
   activity: Activity;
@@ -22,14 +22,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           <CardTitle className="text-lg font-medium text-foreground">
             {activity.name}
           </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-label={`Delete ${activity.name}`}
-            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200 -mt-2 -mr-2"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <DeleteActivityDialog activity={activity} />
         </div>
         <CardDescription className="text-sm text-muted-foreground line-clamp-2 mt-1">
           {activity.description}
