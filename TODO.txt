@@ -1,0 +1,7 @@
+- Drop `TimeEntry` table
+- Add `description` column to `Activity` table
+
+------------------------------
+
+- Create `Tasks` table
+- Create association between `Tasks` and `TimeEntry` table

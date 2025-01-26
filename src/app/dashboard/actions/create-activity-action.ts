@@ -26,7 +26,6 @@ export async function createActivityAction(
   }
 
   const result = createActivitySchema.safeParse({
-    durationMs: Number(formData.get("durationMs")),
     name: formData.get("name"),
   });
 
@@ -35,7 +34,6 @@ export async function createActivityAction(
   }
   try {
     const activity = await createActivity({
-      durationMs: result.data.durationMs,
       name: result.data.name,
       userId: session.user.id,
     });

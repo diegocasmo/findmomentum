@@ -5,6 +5,8 @@ export type GetActivitiesParams = {
   userId: string;
 };
 
+// To-do: Include time entries so that it's possible to differentiate between
+// activities that were executed and those that were planned
 export async function getActivities({
   userId,
 }: GetActivitiesParams): Promise<Activity[]> {

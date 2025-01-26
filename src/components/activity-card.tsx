@@ -6,10 +6,9 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { formatDuration } from "@/lib/utils/time";
 import type { Activity } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
-import { Trash2, Clock, Calendar } from "lucide-react";
+import { Trash2, Calendar } from "lucide-react";
 
 type ActivityCardProps = {
   activity: Activity;
@@ -38,10 +37,6 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex items-center justify-between text-sm text-muted-foreground mt-2">
-          <span className="flex items-center bg-primary/10 text-primary rounded-full px-3 py-1">
-            <Clock className="w-3 h-3 mr-1" />
-            {formatDuration(activity.durationMs)}
-          </span>
           <span className="flex items-center">
             <Calendar className="w-3 h-3 mr-1 text-primary" />
             <span className="first-letter:uppercase">

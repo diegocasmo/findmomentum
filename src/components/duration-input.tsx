@@ -55,6 +55,10 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
     onChange(minutes * MS_PER_MIN + seconds * MS_PER_SECOND);
   };
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       e.preventDefault();
@@ -90,6 +94,7 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
       onChange={handleInputChange}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
+      onFocus={handleFocus}
       placeholder="MM:ss"
       maxLength={5}
       aria-label="Duration in minutes and seconds"

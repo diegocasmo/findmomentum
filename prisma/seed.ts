@@ -25,7 +25,6 @@ async function main() {
   for (let i = 0; i < 10; i++) {
     await createActivity({
       name: faker.commerce.productName(),
-      durationMs: 10,
       userId: user.id,
     });
   }

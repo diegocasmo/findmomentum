@@ -2,13 +2,11 @@ import type { Activity } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 type CreateActivityParams = {
-  durationMs: number;
   name: string;
   userId: string;
 };
 
 export async function createActivity({
-  durationMs,
   name,
   userId,
 }: CreateActivityParams): Promise<Activity> {
@@ -21,7 +19,6 @@ export async function createActivity({
 
       return tx.activity.create({
         data: {
-          durationMs,
           name,
           teamId: teamMembership.teamId,
           userId,

@@ -12,8 +12,7 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { DurationInput } from "@/components/duration-input";
-import { Clock, Activity as ActivityIcon } from "lucide-react";
+import { Activity as ActivityIcon } from "lucide-react";
 import { useTransition } from "react";
 import { createActivityAction } from "@/app/dashboard/actions/create-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
@@ -22,7 +21,6 @@ import type { Activity } from "@prisma/client";
 
 type FormData = {
   name: string;
-  durationMs: number;
 };
 
 type CreateActivityFormProps = {
@@ -37,7 +35,6 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
     resolver: zodResolver(createActivitySchema),
     defaultValues: {
       name: "",
-      durationMs: 0,
     },
   });
 
@@ -46,7 +43,6 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
       try {
         const formData = new FormData();
         formData.append("name", data.name);
-        formData.append("durationMs", data.durationMs.toString());
 
         const result = await createActivityAction(formData);
 
@@ -93,32 +89,6 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
                 </FormControl>
                 <FormDescription>
                   Choose a clear and concise name for your activity.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="durationMs"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel
-                  htmlFor="activity-duration"
-                  className="text-lg font-semibold flex items-center"
-                >
-                  <Clock className="w-5 h-5 mr-2" />
-                  Duration
-                </FormLabel>
-                <FormControl>
-                  <DurationInput
-                    id="activity-duration"
-                    value={field.value}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Set the duration in minutes and seconds (max 59:59).
                 </FormDescription>
                 <FormMessage />
               </FormItem>
