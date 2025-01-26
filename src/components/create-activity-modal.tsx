@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,6 +23,9 @@ export function CreateActivityModal() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Activity</DialogTitle>
+          <DialogDescription>
+            Create a new activity by filling out the form below.
+          </DialogDescription>
         </DialogHeader>
         <CreateActivityForm />
       </DialogContent>
