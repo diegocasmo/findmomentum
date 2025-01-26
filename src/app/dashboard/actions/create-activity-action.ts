@@ -1,3 +1,5 @@
+"use server";
+
 import { createActivitySchema } from "@/app/dashboard/schemas/create-activity-schema";
 import { createActivity } from "@/lib/services/create-activity";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
@@ -22,10 +24,12 @@ export async function createActivityAction(
       ),
     };
   }
+
   const result = createActivitySchema.safeParse({
-    durationMs: formData.get("durationMs"),
+    durationMs: Number(formData.get("durationMs")),
     name: formData.get("name"),
   });
+
   if (!result.success) {
     return { success: false, errors: parseZodErrors(result) };
   }

@@ -1,4 +1,4 @@
-import { type Activity } from "@prisma/client";
+import type { Activity } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 type CreateActivityParams = {

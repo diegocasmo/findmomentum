@@ -13,14 +13,26 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DurationInput } from "@/components/duration-input";
-import { Clock, Activity } from "lucide-react";
+import { Clock, Activity as ActivityIcon } from "lucide-react";
+import { useTransition } from "react";
+import { createActivityAction } from "@/app/dashboard/actions/create-activity-action";
+import { setFormErrors } from "@/lib/utils/form";
+import { useRouter } from "next/navigation";
+import type { Activity } from "@prisma/client";
 
 type FormData = {
   name: string;
   durationMs: number;
 };
 
-export function CreateActivityForm() {
+type CreateActivityFormProps = {
+  onSuccess: (activity: Activity) => void;
+};
+
+export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   const form = useForm<FormData>({
     resolver: zodResolver(createActivitySchema),
     defaultValues: {
@@ -29,9 +41,29 @@ export function CreateActivityForm() {
     },
   });
 
-  const onSubmit = async (data: FormData) => {
-    console.log("Form submitted with data:", data);
-    // Here you would typically send the data to your backend
+  const onSubmit = (data: FormData) => {
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("durationMs", data.durationMs.toString());
+
+        const result = await createActivityAction(formData);
+
+        if (result.success) {
+          router.refresh();
+          onSuccess(result.data);
+        } else {
+          setFormErrors(form.setError, result.errors);
+        }
+      } catch (error) {
+        console.error("Project creation error:", error);
+        form.setError("name", {
+          type: "manual",
+          message: "An unexpected error occurred. Please try again.",
+        });
+      }
+    });
   };
 
   return (
@@ -47,7 +79,7 @@ export function CreateActivityForm() {
                   htmlFor="activity-name"
                   className="text-lg font-semibold flex items-center"
                 >
-                  <Activity className="w-5 h-5 mr-2" />
+                  <ActivityIcon className="w-5 h-5 mr-2" />
                   Name
                 </FormLabel>
                 <FormControl>
@@ -93,8 +125,12 @@ export function CreateActivityForm() {
             )}
           />
           <div className="pt-6">
-            <Button type="submit" className="w-full text-base font-semibold">
-              Create
+            <Button
+              type="submit"
+              className="w-full text-base font-semibold"
+              disabled={isPending}
+            >
+              {isPending ? "Creating..." : "Create"}
             </Button>
           </div>
         </form>

@@ -27,7 +27,7 @@ export function CreateActivityModal() {
             Create a new activity by filling out the form below.
           </DialogDescription>
         </DialogHeader>
-        <CreateActivityForm />
+        <CreateActivityForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
