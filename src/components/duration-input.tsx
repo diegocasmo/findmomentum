@@ -1,19 +1,11 @@
 import type React from "react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { MS_PER_MIN, MS_PER_SECOND } from "@/lib/utils/time";
+import { MS_PER_MIN, MS_PER_SECOND, formatDuration } from "@/lib/utils/time";
 import {
   MAX_MIN,
   MAX_SEC,
 } from "@/app/dashboard/schemas/create-activity-schema";
-
-function formatDuration(ms: number): string {
-  const minutes = Math.floor(ms / MS_PER_MIN);
-  const seconds = Math.floor((ms % MS_PER_MIN) / MS_PER_SECOND);
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-}
 
 function parseInput(input: string): { minutes: number; seconds: number } {
   const [minutes, seconds] = input.split(":").map(Number);
