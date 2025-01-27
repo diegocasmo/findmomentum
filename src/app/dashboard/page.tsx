@@ -1,6 +1,6 @@
 import { getActivities } from "@/lib/services/get-activities";
 import { auth } from "@/lib/auth";
-import { CreateActivityModal } from "@/components/create-activity-modal";
+import { CreateActivityDialog } from "@/components/create-activity-dialog";
 import { ActivityIcon } from "lucide-react";
 import { ActivitiesList } from "@/components/activities-list";
 
@@ -21,7 +21,7 @@ export default async function Dashboard() {
           <ActivityIcon className="w-8 h-8 mr-2 text-primary" />
           Recent Activities
         </h1>
-        <CreateActivityModal />
+        <CreateActivityDialog />
       </div>
       <ActivitiesList activities={activities} />
     </div>

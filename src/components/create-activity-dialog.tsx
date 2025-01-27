@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { CreateActivityForm } from "@/components/create-activity-form";
 
-export function CreateActivityModal() {
+export function CreateActivityDialog() {
   const [open, setOpen] = useState(false);
 
   return (

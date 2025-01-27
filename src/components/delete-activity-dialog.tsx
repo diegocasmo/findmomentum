@@ -34,17 +34,23 @@ export function DeleteActivityDialog({ activity }: DeleteActivityDialogProps) {
   const router = useRouter();
 
   const handleDelete = async () => {
-    const result = await softDeleteActivityAction(activity.id);
-    if (result.success) {
-      toast({
-        title: "Activity deleted",
-        description: `"${activity.name}" has been successfully deleted.`,
-      });
-      router.refresh();
-    } else {
+    try {
+      const result = await softDeleteActivityAction(activity.id);
+      if (result.success) {
+        toast({
+          title: "Activity deleted",
+          description: `"${activity.name}" has been successfully deleted.`,
+        });
+        router.refresh();
+      } else {
+        toast(ERROR_MESSAGE_CONFIG);
+      }
+    } catch (error) {
+      console.error("Activity deletion error:", error);
       toast(ERROR_MESSAGE_CONFIG);
+    } finally {
+      setIsOpen(false);
     }
-    setIsOpen(false);
   };
 
   return (
