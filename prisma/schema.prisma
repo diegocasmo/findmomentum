@@ -72,8 +72,9 @@ model Activity {
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Task Task[]
 
   @@index([userId])
   @@index([teamId])
@@ -82,13 +83,35 @@ model Activity {
   @@map("activities")
 }
 
+model Task {
+  id          String    @id @default(cuid())
+  name        String
+  activityId  String    @map("activity_id")
+  completedAt DateTime? @map("completed_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+
+  activity    Activity    @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  timeEntries TimeEntry[]
+
+  @@index([activityId])
+  @@index([deletedAt])
+  @@index([completedAt])
+  @@map("tasks")
+}
+
 model TimeEntry {
   id        String    @id @default(cuid())
+  taskId    String    @map("task_id")
   startedAt DateTime  @map("started_at") @db.Timestamptz
-  elapsedMs Int?      @map("elapsed_ms")
+  stoppedAt DateTime? @map("stopped_at") @db.Timestamptz
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
   @@map("time_entries")
 }
 
