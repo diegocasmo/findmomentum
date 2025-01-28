@@ -72,9 +72,9 @@ model Activity {
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
-  team Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Task Task[]
+  team  Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
 
   @@index([userId])
   @@index([teamId])
