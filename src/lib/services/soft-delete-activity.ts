@@ -20,7 +20,7 @@ export async function softDeleteActivity({
           team: {
             teamMemberships: {
               some: {
-                userId: userId,
+                userId,
                 role: TeamMembershipRole.OWNER,
               },
             },

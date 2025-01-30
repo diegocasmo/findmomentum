@@ -21,8 +21,8 @@ export async function getActivity({
 
       return await tx.activity.findFirst({
         where: {
-          id: id,
-          userId: userId,
+          id,
+          userId,
           teamId: teamMembership.teamId,
           deletedAt: null,
         },

@@ -18,11 +18,11 @@ export async function createTask({
       const activity = await tx.activity.findFirstOrThrow({
         where: {
           id: activityId,
-          userId: userId,
+          userId,
           team: {
             teamMemberships: {
               some: {
-                userId: userId,
+                userId,
                 role: TeamMembershipRole.OWNER,
               },
             },
