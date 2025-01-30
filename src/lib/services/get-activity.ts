@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { TeamMembershipRole } from "@prisma/client";
 import { notFound } from "next/navigation";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
@@ -14,7 +15,7 @@ export async function getActivity({
   try {
     const activity = await prisma.$transaction(async (tx) => {
       const teamMembership = await tx.teamMembership.findFirstOrThrow({
-        where: { userId, role: "OWNER" },
+        where: { userId, role: TeamMembershipRole.OWNER },
         select: { teamId: true },
       });
 

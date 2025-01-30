@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Team, User } from "@prisma/client";
+import { Team, User, TeamMembershipRole } from "@prisma/client";
 
 function getTeamName(email: string): string {
   const [name] = email.split("@");
@@ -35,7 +35,7 @@ export async function findOrCreateDefaultTeam(userId: string): Promise<Team> {
           teamMemberships: {
             create: {
               userId,
-              role: "OWNER",
+              role: TeamMembershipRole.OWNER,
             },
           },
         },

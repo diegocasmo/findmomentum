@@ -1,22 +1,24 @@
-import { prisma } from "@/lib/prisma";
-import type { Activity } from "@prisma/client";
+import type { Task } from "@prisma/client";
 import { TeamMembershipRole } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
-type SoftDeleteActivityParams = {
+type CreateTaskParams = {
+  name: string;
   userId: string;
   activityId: string;
 };
 
-export async function softDeleteActivity({
+export async function createTask({
+  name,
   userId,
   activityId,
-}: SoftDeleteActivityParams): Promise<Activity> {
+}: CreateTaskParams): Promise<Task> {
   try {
     return await prisma.$transaction(async (tx) => {
       const activity = await tx.activity.findFirstOrThrow({
         where: {
           id: activityId,
-          deletedAt: null,
+          userId: userId,
           team: {
             teamMemberships: {
               some: {
@@ -28,13 +30,15 @@ export async function softDeleteActivity({
         },
       });
 
-      return await tx.activity.update({
-        where: { id: activity.id },
-        data: { deletedAt: new Date() },
+      return await tx.task.create({
+        data: {
+          name,
+          activityId: activity.id,
+        },
       });
     });
   } catch (error) {
-    console.error("Error soft deleting activity:", error);
+    console.error("Error creating task:", error);
     throw error;
   }
 }

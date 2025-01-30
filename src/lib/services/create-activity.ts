@@ -1,4 +1,5 @@
 import type { Activity } from "@prisma/client";
+import { TeamMembershipRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 type CreateActivityParams = {
@@ -15,7 +16,7 @@ export async function createActivity({
   try {
     return await prisma.$transaction(async (tx) => {
       const teamMembership = await tx.teamMembership.findFirstOrThrow({
-        where: { userId, role: "OWNER" },
+        where: { userId, role: TeamMembershipRole.OWNER },
         select: { teamId: true },
       });
 

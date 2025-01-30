@@ -25,7 +25,10 @@ export async function softDeleteActivityAction(
   }
 
   try {
-    const deletedActivity = await softDeleteActivity(activityId);
+    const deletedActivity = await softDeleteActivity({
+      userId: session.user.id,
+      activityId,
+    });
     return { success: true, data: deletedActivity };
   } catch (error) {
     console.error("Error soft deleting activity:", error);
