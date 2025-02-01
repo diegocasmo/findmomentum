@@ -1,7 +1,7 @@
 import { PlayIcon, PauseIcon, ClockIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDuration } from "@/lib/utils/time";
+import { formatTimeMMss } from "@/lib/utils/time";
 import type { Task } from "@prisma/client";
 
 type TaskCardProps = {
@@ -25,7 +25,7 @@ export function TaskCard({ task, isRunning, onTogglePlay }: TaskCardProps) {
             <div className="flex items-center space-x-1 bg-secondary px-2 py-1 rounded-md">
               <ClockIcon className="w-4 h-4 text-secondary-foreground" />
               <span className="text-sm text-secondary-foreground">
-                {formatDuration(task.durationMs)}
+                {formatTimeMMss(task.durationMs)}
               </span>
             </div>
             <Button

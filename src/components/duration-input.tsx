@@ -1,7 +1,7 @@
 import type React from "react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { MS_PER_MIN, MS_PER_SECOND, formatDuration } from "@/lib/utils/time";
+import { MS_PER_MIN, MS_PER_SECOND, formatTimeMMss } from "@/lib/utils/time";
 import { MAX_MIN, MAX_SEC } from "@/app/dashboard/schemas/create-task-schema";
 
 function parseInput(input: string): { minutes: number; seconds: number } {
@@ -18,10 +18,10 @@ type DurationInputProps = React.ComponentProps<"input"> & {
 };
 
 export function DurationInput({ id, value, onChange }: DurationInputProps) {
-  const [inputValue, setInputValue] = useState(formatDuration(value));
+  const [inputValue, setInputValue] = useState(formatTimeMMss(value));
 
   useEffect(() => {
-    setInputValue(formatDuration(value));
+    setInputValue(formatTimeMMss(value));
   }, [value]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
 
   const handleBlur = () => {
     const { minutes, seconds } = parseInput(inputValue);
-    const formattedValue = formatDuration(
+    const formattedValue = formatTimeMMss(
       minutes * MS_PER_MIN + seconds * MS_PER_SECOND
     );
     setInputValue(formattedValue);
@@ -73,7 +73,7 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
 
       const newMinutes = Math.floor(totalSeconds / 60);
       const newSeconds = totalSeconds % 60;
-      const newValue = formatDuration(
+      const newValue = formatTimeMMss(
         newMinutes * MS_PER_MIN + newSeconds * MS_PER_SECOND
       );
       setInputValue(newValue);
