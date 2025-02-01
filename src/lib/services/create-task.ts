@@ -6,12 +6,14 @@ type CreateTaskParams = {
   name: string;
   userId: string;
   activityId: string;
+  durationMs: number;
 };
 
 export async function createTask({
   name,
   userId,
   activityId,
+  durationMs,
 }: CreateTaskParams): Promise<Task> {
   try {
     return await prisma.$transaction(async (tx) => {
@@ -34,6 +36,7 @@ export async function createTask({
         data: {
           name,
           activityId: activity.id,
+          durationMs,
         },
       });
     });

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RootFormError } from "@/components/root-form-error";
 
 export function SignInForm() {
   const router = useRouter();
@@ -79,6 +80,7 @@ export function SignInForm() {
             </FormItem>
           )}
         />
+        <RootFormError message={form.formState.errors.root?.message} />
         <div className="flex justify-center">
           <Button type="submit" disabled={isPending || !form.formState.isValid}>
             {isPending ? "Submitting..." : "Continue with email"}

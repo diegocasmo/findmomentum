@@ -28,6 +28,7 @@ export async function createTaskAction(
   const result = createTaskSchema.safeParse({
     name: formData.get("name"),
     activityId: formData.get("activityId"),
+    durationMs: Number(formData.get("durationMs")),
   });
 
   if (!result.success) {
@@ -39,6 +40,7 @@ export async function createTaskAction(
       name: result.data.name,
       activityId: result.data.activityId,
       userId: session.user.id,
+      durationMs: result.data.durationMs,
     });
     return { success: true, data: task };
   } catch (error) {

@@ -19,6 +19,7 @@ import { createActivityAction } from "@/app/actions/create-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
 import type { Activity } from "@prisma/client";
+import { RootFormError } from "@/components/root-form-error";
 
 type FormData = {
   name: string;
@@ -126,6 +127,7 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
               </FormItem>
             )}
           />
+          <RootFormError message={form.formState.errors.root?.message} />
           <div className="pt-6">
             <Button
               type="submit"

@@ -2,10 +2,7 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { MS_PER_MIN, MS_PER_SECOND, formatDuration } from "@/lib/utils/time";
-import {
-  MAX_MIN,
-  MAX_SEC,
-} from "@/app/dashboard/schemas/create-activity-schema";
+import { MAX_MIN, MAX_SEC } from "@/app/dashboard/schemas/create-task-schema";
 
 function parseInput(input: string): { minutes: number; seconds: number } {
   const [minutes, seconds] = input.split(":").map(Number);
@@ -15,8 +12,7 @@ function parseInput(input: string): { minutes: number; seconds: number } {
   };
 }
 
-type DurationInputProps = {
-  id: string;
+type DurationInputProps = React.ComponentProps<"input"> & {
   value: number;
   onChange: (value: number) => void;
 };
@@ -99,6 +95,7 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
       maxLength={5}
       aria-label="Duration in minutes and seconds"
       aria-describedby={`${id}-description`}
+      className="text-sm"
     />
   );
 }

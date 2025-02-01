@@ -9,16 +9,17 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusIcon } from "lucide-react";
+import { ListIcon, Loader2Icon, ClockIcon } from "lucide-react";
 import { useTransition } from "react";
 import { createTaskAction } from "@/app/actions/create-task-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
 import type { CreateTaskSchema } from "@/app/dashboard/schemas/create-task-schema";
+import { DurationInput } from "@/components/duration-input";
+import { RootFormError } from "@/components/root-form-error";
 
 type CreateTaskFormProps = {
   activityId: string;
@@ -33,6 +34,7 @@ export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
     defaultValues: {
       name: "",
       activityId: activityId,
+      durationMs: 0,
     },
   });
 
@@ -41,12 +43,13 @@ export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
       try {
         const formData = new FormData();
         formData.append("name", data.name);
-        formData.append("activityId", data.activityId);
+        formData.append("durationMs", data.durationMs.toString());
+        formData.append("activityId", activityId);
 
         const result = await createTaskAction(formData);
 
         if (result.success) {
-          form.reset({ name: "", activityId });
+          form.reset({ name: "", activityId, durationMs: 0 });
           router.refresh();
         } else {
           setFormErrors(form.setError, result.errors);
@@ -62,34 +65,23 @@ export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
   }
 
   return (
-    <div className="mb-6">
+    <div className="bg-background rounded-lg shadow-sm p-4 mb-6 max-w-sm">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="task-name" className="sr-only">
-                  Task Name
-                </FormLabel>
                 <FormControl>
-                  <div className="flex items-center space-x-2">
+                  <div className="relative">
                     <Input
-                      id="task-name"
-                      placeholder="Enter a new task"
+                      placeholder="Add a new task"
                       {...field}
                       autoComplete="off"
-                      className="flex-grow"
+                      className="text-sm pr-10"
                     />
-                    <Button
-                      type="submit"
-                      disabled={isPending}
-                      className="whitespace-nowrap"
-                    >
-                      <PlusIcon className="w-4 h-4 mr-2" />
-                      {isPending ? "Adding..." : "Add Task"}
-                    </Button>
+                    <ListIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -98,15 +90,33 @@ export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
           />
           <FormField
             control={form.control}
-            name="activityId"
+            name="durationMs"
             render={({ field }) => (
-              <FormItem className="hidden">
+              <FormItem>
                 <FormControl>
-                  <Input type="hidden" {...field} />
+                  <div className="relative">
+                    <DurationInput {...field} />
+                    <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  </div>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
+          <RootFormError message={form.formState.errors.root?.message} />
+          <Button
+            type="submit"
+            size="sm"
+            disabled={isPending}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            {isPending ? (
+              <Loader2Icon className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <ListIcon className="h-4 w-4 mr-2" />
+            )}
+            {isPending ? "Adding Task..." : "Add Task"}
+          </Button>
         </form>
       </Form>
     </div>
