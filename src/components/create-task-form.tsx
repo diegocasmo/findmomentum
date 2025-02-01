@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { PlusIcon } from "lucide-react";
 import { useTransition } from "react";
-import { createTaskAction } from "@/app/dashboard/actions/create-task-action";
+import { createTaskAction } from "@/app/actions/create-task-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
 import type { CreateTaskSchema } from "@/app/dashboard/schemas/create-task-schema";

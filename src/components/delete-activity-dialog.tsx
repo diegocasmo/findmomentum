@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { softDeleteActivityAction } from "@/app/dashboard/actions/soft-delete-activity-action";
+import { softDeleteActivityAction } from "@/app/actions/soft-delete-activity-action";
 import { toast } from "@/hooks/use-toast";
 import type { Activity } from "@prisma/client";
 

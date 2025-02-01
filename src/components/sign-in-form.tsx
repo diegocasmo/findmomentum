@@ -9,7 +9,7 @@ import {
 import { setFormErrors } from "@/lib/utils/form";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { signInAction } from "@/app/auth/actions/sign-in-action";
+import { signInAction } from "@/app/actions/sign-in-action";
 import {
   Form,
   FormField,

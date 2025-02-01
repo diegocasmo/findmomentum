@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ActivityIcon } from "lucide-react";
 import { useTransition } from "react";
-import { createActivityAction } from "@/app/dashboard/actions/create-activity-action";
+import { createActivityAction } from "@/app/actions/create-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
 import type { Activity } from "@prisma/client";
