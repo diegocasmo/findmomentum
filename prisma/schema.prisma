@@ -87,6 +87,7 @@ model Task {
   id          String    @id @default(cuid())
   name        String
   activityId  String    @map("activity_id")
+  durationMs  Int       @map("duration_ms")
   completedAt DateTime? @map("completed_at") @db.Timestamptz
   deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz

@@ -39,7 +39,6 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           <p className="text-gray-600">{activity.description}</p>
         </CardContent>
       </Card>
-
       <Card>
         <CardHeader>
           <CardTitle className="text-xl font-semibold flex items-center">
