@@ -1,4 +1,4 @@
-import { Settings } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,7 +19,7 @@ export function TaskActions({ task }: TaskActionsProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
-          <Settings className="h-4 w-4" />
+          <Ellipsis className="h-4 w-4" />
           <span className="sr-only">Open task menu</span>
         </Button>
       </DropdownMenuTrigger>
