@@ -36,7 +36,12 @@ export function DurationInput({
 
     if (newValue.length > 5) return;
 
-    if (newValue.length === 2 && !newValue.includes(":")) {
+    if (
+      newValue.length === 2 &&
+      !newValue.includes(":") &&
+      // Make sure user is typing rather than deleting
+      newValue.length > inputValue.length
+    ) {
       newValue += ":";
     }
 
