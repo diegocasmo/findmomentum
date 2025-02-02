@@ -77,7 +77,10 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-grow overflow-auto">
-              <CreateTaskForm activityId={activity.id} />
+              <CreateTaskForm
+                activityId={activity.id}
+                autoFocus={!Boolean(tasks.length)}
+              />
             </CardContent>
           </Card>
         </div>

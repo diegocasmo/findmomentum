@@ -23,9 +23,10 @@ import { RootFormError } from "@/components/root-form-error";
 
 type CreateTaskFormProps = {
   activityId: string;
+  autoFocus?: boolean;
 };
 
-export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
+export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -78,6 +79,7 @@ export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
                     <Input
                       placeholder="Add a new task"
                       {...field}
+                      autoFocus={autoFocus}
                       autoComplete="off"
                       className="text-sm pr-10"
                     />
