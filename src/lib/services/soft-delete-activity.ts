@@ -11,30 +11,19 @@ export async function softDeleteActivity({
   userId,
   activityId,
 }: SoftDeleteActivityParams): Promise<Activity> {
-  try {
-    return await prisma.$transaction(async (tx) => {
-      const activity = await tx.activity.findFirstOrThrow({
-        where: {
-          id: activityId,
-          deletedAt: null,
-          team: {
-            teamMemberships: {
-              some: {
-                userId,
-                role: TeamMembershipRole.OWNER,
-              },
-            },
+  return prisma.activity.update({
+    where: {
+      id: activityId,
+      deletedAt: null,
+      team: {
+        teamMemberships: {
+          some: {
+            userId,
+            role: TeamMembershipRole.OWNER,
           },
         },
-      });
-
-      return await tx.activity.update({
-        where: { id: activity.id },
-        data: { deletedAt: new Date() },
-      });
-    });
-  } catch (error) {
-    console.error("Error soft deleting activity:", error);
-    throw error;
-  }
+      },
+    },
+    data: { deletedAt: new Date() },
+  });
 }
