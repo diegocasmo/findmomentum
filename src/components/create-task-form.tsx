@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ListIcon, Loader2Icon, ClockIcon } from "lucide-react";
-import { useTransition } from "react";
+import { useTransition, useRef } from "react";
 import { createTaskAction } from "@/app/actions/create-task-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
@@ -27,8 +27,9 @@ type CreateTaskFormProps = {
 };
 
 export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
-  const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<CreateTaskSchema>({
     resolver: zodResolver(createTaskSchema),
@@ -52,6 +53,7 @@ export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
         if (result.success) {
           form.reset({ name: "", activityId, durationMs: 0 });
           router.refresh();
+          nameInputRef.current?.focus();
         } else {
           setFormErrors(form.setError, result.errors);
         }
@@ -79,6 +81,10 @@ export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
                     <Input
                       placeholder="Add a new task"
                       {...field}
+                      ref={(e) => {
+                        field.ref(e);
+                        nameInputRef.current = e;
+                      }}
                       autoFocus={autoFocus}
                       autoComplete="off"
                       className="text-sm pr-10"
