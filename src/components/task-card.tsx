@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatTimeMMss } from "@/lib/utils/time";
 import type { Task } from "@prisma/client";
+import { TaskActions } from "@/components/task-actions";
 
 type TaskCardProps = {
   task: Task;
@@ -42,6 +43,7 @@ export function TaskCard({ task, isRunning, onTogglePlay }: TaskCardProps) {
                 <PlayIcon className="w-4 h-4" />
               )}
             </Button>
+            <TaskActions task={task} />
           </div>
         </div>
       </CardContent>
