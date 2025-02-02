@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 export function SignOutForm() {
   const [isPending, startTransition] = useTransition();
@@ -31,6 +32,7 @@ export function SignOutForm() {
         variant="ghost"
         className="w-full justify-start"
       >
+        <LogOut className="h-4 w-4 mr-2" />
         {isPending ? "Signing out..." : "Sign out"}
       </Button>
       {error && (

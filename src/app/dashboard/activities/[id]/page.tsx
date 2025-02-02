@@ -6,15 +6,9 @@ import { CreateTaskForm } from "@/components/create-task-form";
 import { TasksList } from "@/components/tasks-list";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ActivityIcon,
-  ListTodoIcon,
-  PlusCircleIcon,
-  ClockIcon,
-} from "lucide-react";
+import { ActivityIcon, ListTodoIcon, PlusCircleIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
-import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
-import { Button } from "@/components/ui/button";
+import { ActivityActions } from "@/components/activity-actions";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -50,11 +44,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="outline" className="flex items-center">
-            <ClockIcon className="w-4 h-4 mr-2" />
-            Edit
-          </Button>
-          <DeleteActivityDialog activity={activity} redirectUrl="/dashboard" />
+          <ActivityActions activity={activity} redirectUrl="/dashboard" />
         </div>
       </div>
 

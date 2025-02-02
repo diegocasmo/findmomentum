@@ -9,7 +9,7 @@ import {
 import type { Activity } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Calendar } from "lucide-react";
-import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
+import { ActivityActions } from "./activity-actions";
 
 type ActivityCardProps = {
   activity: Activity;
@@ -24,7 +24,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             <CardTitle className="text-lg font-medium text-foreground">
               {activity.name}
             </CardTitle>
-            <DeleteActivityDialog activity={activity} />
+            <ActivityActions activity={activity} />
           </div>
           <CardDescription className="text-sm text-muted-foreground line-clamp-2 mt-1">
             {activity.description}

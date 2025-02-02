@@ -67,11 +67,11 @@ export function DeleteActivityDialog({
         <AlertDialogTrigger asChild>
           <Button
             variant="ghost"
-            size="sm"
+            className="w-full cursor-pointer hover:text-destructive focus:text-destructive justify-start"
             aria-label={`Delete ${activity.name}`}
-            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200 -mt-2 -mr-2"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
