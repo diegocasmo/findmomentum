@@ -21,6 +21,7 @@ import type { Activity } from "@prisma/client";
 
 type DeleteActivityDialogProps = {
   activity: Activity;
+  redirectUrl?: string;
 };
 
 const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
@@ -29,7 +30,10 @@ const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
   variant: "destructive" as const,
 };
 
-export function DeleteActivityDialog({ activity }: DeleteActivityDialogProps) {
+export function DeleteActivityDialog({
+  activity,
+  redirectUrl,
+}: DeleteActivityDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -41,7 +45,11 @@ export function DeleteActivityDialog({ activity }: DeleteActivityDialogProps) {
           title: "Activity deleted",
           description: `"${activity.name}" has been successfully deleted.`,
         });
-        router.refresh();
+        if (redirectUrl) {
+          router.push(redirectUrl);
+        } else {
+          router.refresh();
+        }
       } else {
         toast(ERROR_MESSAGE_CONFIG);
       }

@@ -47,6 +47,6 @@ These commands will set up your database schema, apply all existing migrations, 
 6. Install dependencies and start the development server
 
 ``` bash
-yarn install
+yarn
 yarn dev
 ```
