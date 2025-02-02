@@ -12,16 +12,23 @@ function parseInput(input: string): { minutes: number; seconds: number } {
   };
 }
 
+const formatValue = (value: number) =>
+  value === 0 ? "" : formatTimeMMss(value);
+
 type DurationInputProps = React.ComponentProps<"input"> & {
   value: number;
   onChange: (value: number) => void;
 };
 
-export function DurationInput({ id, value, onChange }: DurationInputProps) {
-  const [inputValue, setInputValue] = useState(formatTimeMMss(value));
+export function DurationInput({
+  value,
+  onChange,
+  ...field
+}: DurationInputProps) {
+  const [inputValue, setInputValue] = useState(formatValue(value));
 
   useEffect(() => {
-    setInputValue(formatTimeMMss(value));
+    setInputValue(formatValue(value));
   }, [value]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +90,6 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
 
   return (
     <Input
-      id={id}
       type="text"
       inputMode="numeric"
       value={inputValue}
@@ -93,9 +99,7 @@ export function DurationInput({ id, value, onChange }: DurationInputProps) {
       onFocus={handleFocus}
       placeholder="MM:ss"
       maxLength={5}
-      aria-label="Duration in minutes and seconds"
-      aria-describedby={`${id}-description`}
-      className="text-sm"
+      {...field}
     />
   );
 }

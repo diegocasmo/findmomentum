@@ -95,7 +95,7 @@ export function CreateTaskForm({ activityId }: CreateTaskFormProps) {
               <FormItem>
                 <FormControl>
                   <div className="relative">
-                    <DurationInput {...field} />
+                    <DurationInput {...field} className="text-sm pr-10" />
                     <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   </div>
                 </FormControl>
