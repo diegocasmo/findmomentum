@@ -17,29 +17,8 @@ import { playTaskAction } from "@/app/actions/play-task-action";
 import { pauseTaskAction } from "@/app/actions/pause-task-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-
-export function computeTaskRemainingTime(task: TaskWithTimeEntries): number {
-  const elapsedTime = task.timeEntries.reduce((total, entry) => {
-    const start = new Date(entry.startedAt).getTime();
-    const end = entry.stoppedAt
-      ? new Date(entry.stoppedAt).getTime()
-      : Date.now();
-    return total + (end - start);
-  }, 0);
-
-  return Math.max(0, task.durationMs - elapsedTime);
-}
-
-export function isTaskRunning(task: TaskWithTimeEntries): boolean {
-  return (
-    task.timeEntries.length > 0 &&
-    task.timeEntries.some((timeEntry) => timeEntry.stoppedAt === null)
-  );
-}
-
-function isTaskCompleted(task: TaskWithTimeEntries): boolean {
-  return task.completedAt !== null;
-}
+import { isTaskRunning } from "@/lib/utils/is-task-running";
+import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 
 type TaskCardProps = {
   task: TaskWithTimeEntries;

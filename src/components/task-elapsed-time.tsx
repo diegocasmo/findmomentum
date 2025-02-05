@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { formatTimeMMss } from "@/lib/utils/time";
 import type { TaskWithTimeEntries } from "@/types";
-import {
-  isTaskRunning,
-  computeTaskRemainingTime,
-} from "@/components/task-card";
+import { isTaskRunning } from "@/lib/utils/is-task-running";
 import { MS_PER_SECOND } from "@/lib/utils/time";
 import { completeTaskAction } from "@/app/actions/complete-task-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2Icon } from "lucide-react";
+import { computeTaskRemainingTime } from "@/lib/utils/compute-task-remaining-time";
 
 type TaskElapsedTimeProps = {
   task: TaskWithTimeEntries;
@@ -58,19 +56,19 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
   }, [task.id, task.name, router, toast]);
 
   useEffect(() => {
-    if (isTaskRunning(task)) {
-      const timerId = setInterval(() => {
-        const newRemainingTime = computeTaskRemainingTime(task);
-        setRemainingTime(newRemainingTime);
+    if (!isTaskRunning(task)) return;
 
-        if (newRemainingTime <= 0) {
-          clearInterval(timerId);
-          handleCompleteTask();
-        }
-      }, MS_PER_SECOND);
+    const timerId = setInterval(() => {
+      const newRemainingTime = computeTaskRemainingTime(task);
+      setRemainingTime(newRemainingTime);
 
-      return () => clearInterval(timerId);
-    }
+      if (newRemainingTime <= 0) {
+        clearInterval(timerId);
+        handleCompleteTask();
+      }
+    }, MS_PER_SECOND);
+
+    return () => clearInterval(timerId);
   }, [task, handleCompleteTask]);
 
   if (isPending) {

@@ -48,7 +48,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
       <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
         <Card className="lg:col-span-2 flex flex-col">
           <CardHeader className="space-y-4">
-            <ActivityTimer tasks={activity.tasks} />
+            <ActivityTimer activity={activity} />
             <CardTitle className="text-2xl font-semibold flex items-center">
               <ListTodoIcon className="w-6 h-6 mr-2 text-primary" />
               Tasks

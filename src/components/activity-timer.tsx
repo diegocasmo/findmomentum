@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import type { Task } from "@prisma/client";
-import { cn } from "@/lib/utils";
-import {
-  MS_PER_SECOND,
-  MS_PER_MIN,
-  MS_PER_HOUR,
-  formatTimeHHMMss,
-} from "@/lib/utils/time";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
+import { MS_PER_SECOND, formatTimeHHMMss } from "@/lib/utils/time";
+import { isTaskRunning } from "@/lib/utils/is-task-running";
+import { computeActivityRemainingTime } from "@/lib/utils/compute-activity-remaining-time";
+import { computeActivityTotalDuration } from "@/lib/utils/compute-activity-total-duration";
 
 const TIMER_SIZE = 180;
 const STROKE_WIDTH = 8;
@@ -17,33 +14,38 @@ const CENTER = TIMER_SIZE / 2;
 const RADIUS = CENTER - STROKE_WIDTH;
 const FULL_CIRCLE = 2 * Math.PI;
 const TRANSITION_DURATION = 1;
-const UPDATE_INTERVAL = MS_PER_SECOND;
+const DASH_ARRAY = RADIUS * FULL_CIRCLE;
 
-interface ActivityTimerProps {
-  tasks: Task[];
-  className?: string;
-}
+type ActivityTimerProps = {
+  activity: ActivityWithTasksAndTimeEntries;
+};
 
-export function ActivityTimer({ tasks, className }: ActivityTimerProps) {
-  const [remainingTime, setRemainingTime] = useState(0);
-  const totalDurationMs = tasks.reduce((sum, task) => sum + task.durationMs, 0);
+export function ActivityTimer({ activity }: ActivityTimerProps) {
+  const totalDurationMs = computeActivityTotalDuration(activity);
+  const activityRemainingTime = computeActivityRemainingTime(activity);
+  const [remainingTime, setRemainingTime] = useState(activityRemainingTime);
+  const isAnyTaskRunning =
+    activity.tasks.length > 0 && activity.tasks.some(isTaskRunning);
 
   useEffect(() => {
-    setRemainingTime(totalDurationMs);
-    const interval = setInterval(() => {
-      setRemainingTime((prevTime) => Math.max(prevTime - UPDATE_INTERVAL, 0));
-    }, UPDATE_INTERVAL);
+    const nextRemainingTime = computeActivityRemainingTime(activity);
+    if (isAnyTaskRunning) {
+      const timerId = setInterval(() => {
+        setRemainingTime(nextRemainingTime);
+      }, MS_PER_SECOND);
 
-    return () => clearInterval(interval);
-  }, [totalDurationMs]);
+      return () => clearInterval(timerId);
+    } else {
+      setRemainingTime(nextRemainingTime);
+    }
+  }, [isAnyTaskRunning, activity, activityRemainingTime]);
 
   const progress = remainingTime / totalDurationMs;
-  const DASH_ARRAY = RADIUS * FULL_CIRCLE;
   const dashOffset = DASH_ARRAY * (1 - progress);
 
   return (
     <div
-      className={cn("flex flex-col items-center", className)}
+      className="flex flex-col items-center"
       aria-live="polite"
       aria-atomic="true"
     >
