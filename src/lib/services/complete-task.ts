@@ -20,6 +20,7 @@ export async function completeTask({
         where: {
           id: taskId,
           deletedAt: null,
+          completedAt: null,
           activity: {
             team: {
               teamMemberships: {

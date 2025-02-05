@@ -18,6 +18,7 @@ export async function pauseTask({
         where: {
           id: taskId,
           deletedAt: null,
+          completedAt: null,
           activity: {
             team: {
               teamMemberships: {

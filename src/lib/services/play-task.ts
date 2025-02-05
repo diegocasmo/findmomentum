@@ -17,6 +17,7 @@ export async function playTask({
       const task = await tx.task.findFirstOrThrow({
         where: {
           id: taskId,
+          completedAt: null,
           deletedAt: null,
           activity: {
             team: {
