@@ -123,7 +123,7 @@ export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
             ) : (
               <ListIcon className="h-4 w-4 mr-2" />
             )}
-            {isPending ? "Adding Task..." : "Add Task"}
+            {isPending ? "Adding..." : "Add"}
           </Button>
         </form>
       </Form>
