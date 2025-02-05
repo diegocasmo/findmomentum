@@ -38,9 +38,5 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
     }
   }, [task, handleCompleteTask]);
 
-  return (
-    <span className="flex items-center">
-      {formatTimeMMss(Math.max(0, remainingTime))}
-    </span>
-  );
+  return formatTimeMMss(Math.max(0, remainingTime));
 }

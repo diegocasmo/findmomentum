@@ -40,9 +40,9 @@ export function TaskCard({ task }: TaskCardProps) {
             <span className="text-md">{task.name}</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1 bg-secondary px-2 py-1 rounded-md">
-              <ClockIcon className="w-4 h-4 text-secondary-foreground" />
-              <span className="text-sm text-secondary-foreground">
+            <div className="flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md w-[80px]">
+              <ClockIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
+              <span className="text-sm text-secondary-foreground truncate">
                 <TaskElapsedTime task={task} />
               </span>
             </div>
