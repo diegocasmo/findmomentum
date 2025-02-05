@@ -89,7 +89,8 @@ export function TaskCard({ task }: TaskCardProps) {
     <Card
       className={cn(
         "transition-colors duration-200",
-        !isCompleted && "hover:bg-secondary cursor-pointer"
+        !isCompleted && "hover:bg-secondary cursor-pointer",
+        isRunning && "border-primary"
       )}
       onClick={handleToggleTask}
     >
@@ -104,7 +105,7 @@ export function TaskCard({ task }: TaskCardProps) {
               ) : isRunning ? (
                 <PauseIcon className="w-5 h-5" />
               ) : (
-                <PlayIcon className="w-5 h-5" />
+                <PlayIcon className="w-5 h-5 text-muted-foreground" />
               )}
             </div>
             <span
