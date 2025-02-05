@@ -105,13 +105,14 @@ model Task {
 model TimeEntry {
   id        String    @id @default(cuid())
   taskId    String    @map("task_id")
-  startedAt DateTime  @map("started_at") @db.Timestamptz
+  startedAt DateTime  @default(now()) @map("started_at") @db.Timestamptz
   stoppedAt DateTime? @map("stopped_at") @db.Timestamptz
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
   task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
+  @@unique([taskId, stoppedAt])
   @@index([taskId])
   @@map("time_entries")
 }
