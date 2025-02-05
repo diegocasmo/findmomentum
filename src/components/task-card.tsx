@@ -1,22 +1,22 @@
-import { PlayIcon, PauseIcon, ClockIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ClockIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatTimeMMss } from "@/lib/utils/time";
-import type { Task } from "@prisma/client";
 import { TaskActions } from "@/components/task-actions";
+import { PlayTaskForm } from "@/components/play-task-form";
+import { PauseTaskForm } from "@/components/pause-task-form";
+import type { TaskWithTimeEntries } from "@/types";
 
 type TaskCardProps = {
-  task: Task;
-  isRunning: boolean;
-  onTogglePlay: (taskId: string) => void;
+  task: TaskWithTimeEntries;
 };
 
-export function TaskCard({ task, isRunning, onTogglePlay }: TaskCardProps) {
+export function TaskCard({ task }: TaskCardProps) {
+  const isRunning =
+    task.timeEntries.length > 0 &&
+    task.timeEntries.some((timeEntry) => timeEntry.stoppedAt === null);
+
   return (
-    <Card
-      className="cursor-pointer hover:bg-accent transition-colors"
-      onClick={() => onTogglePlay(task.id)}
-    >
+    <Card>
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -29,20 +29,11 @@ export function TaskCard({ task, isRunning, onTogglePlay }: TaskCardProps) {
                 {formatTimeMMss(task.durationMs)}
               </span>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onTogglePlay(task.id);
-              }}
-            >
-              {isRunning ? (
-                <PauseIcon className="w-4 h-4" />
-              ) : (
-                <PlayIcon className="w-4 h-4" />
-              )}
-            </Button>
+            {isRunning ? (
+              <PauseTaskForm taskId={task.id} />
+            ) : (
+              <PlayTaskForm taskId={task.id} />
+            )}
             <TaskActions task={task} />
           </div>
         </div>

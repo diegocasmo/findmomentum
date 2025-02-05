@@ -5,3 +5,7 @@ export type ActivityWithTasksAndTimeEntries = Activity & {
     timeEntries: TimeEntry[];
   })[];
 };
+
+export type TaskWithTimeEntries = Task & {
+  timeEntries: TimeEntry[];
+};

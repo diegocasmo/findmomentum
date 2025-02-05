@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
-import { getTasks } from "@/lib/services/get-tasks";
 import { CreateTaskForm } from "@/components/create-task-form";
 import { TasksList } from "@/components/tasks-list";
 import { Suspense } from "react";
@@ -29,8 +28,6 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
     notFound();
   }
 
-  const tasks = await getTasks({ activityId, userId });
-
   return (
     <div className="container mx-auto px-4 space-y-8 h-full flex flex-col">
       <div className="flex justify-between items-start">
@@ -51,7 +48,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
       <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
         <Card className="lg:col-span-2 flex flex-col">
           <CardHeader className="space-y-4">
-            <ActivityTimer tasks={tasks} />
+            <ActivityTimer tasks={activity.tasks} />
             <CardTitle className="text-2xl font-semibold flex items-center">
               <ListTodoIcon className="w-6 h-6 mr-2 text-primary" />
               Tasks
@@ -63,7 +60,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                 <div className="text-center py-4">Loading tasks...</div>
               }
             >
-              <TasksList tasks={tasks} />
+              <TasksList tasks={activity.tasks} />
             </Suspense>
           </CardContent>
         </Card>
@@ -79,7 +76,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             <CardContent className="flex-grow overflow-auto">
               <CreateTaskForm
                 activityId={activity.id}
-                autoFocus={!Boolean(tasks.length)}
+                autoFocus={!Boolean(activity.tasks.length)}
               />
             </CardContent>
           </Card>
