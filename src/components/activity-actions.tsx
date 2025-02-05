@@ -1,3 +1,4 @@
+"use client";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,18 +20,23 @@ export function ActivityActions({
   redirectUrl,
 }: ActivityActionsProps) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm">
-          <Settings className="h-4 w-4" />
-          <span className="sr-only">Open activity menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuItem asChild>
-          <DeleteActivityDialog activity={activity} redirectUrl={redirectUrl} />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div onClick={(e) => e.stopPropagation()}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm">
+            <Settings className="h-4 w-4" />
+            <span className="sr-only">Open activity menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuItem asChild>
+            <DeleteActivityDialog
+              activity={activity}
+              redirectUrl={redirectUrl}
+            />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

@@ -17,18 +17,20 @@ type TaskActionsProps = {
 
 export function TaskActions({ task }: TaskActionsProps) {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Ellipsis className="h-4 w-4" />
-          <span className="sr-only">Open task menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuItem asChild>
-          <DeleteTaskDialog task={task} />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div onClick={(e) => e.stopPropagation()}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm">
+            <Ellipsis className="h-4 w-4" />
+            <span className="sr-only">Open task menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuItem asChild>
+            <DeleteTaskDialog task={task} />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

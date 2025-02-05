@@ -1,18 +1,22 @@
-import { ClockIcon, CheckCircle } from "lucide-react";
+"use client";
+
+import {
+  ClockIcon,
+  CheckCircle,
+  PlayIcon,
+  PauseIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TaskActions } from "@/components/task-actions";
-import { PlayTaskForm } from "@/components/play-task-form";
-import { PauseTaskForm } from "@/components/pause-task-form";
 import type { TaskWithTimeEntries } from "@/types";
 import { TaskElapsedTime } from "@/components/task-elapsed-time";
 import { cn } from "@/lib/utils";
-
-export function isTaskRunning(task: TaskWithTimeEntries): boolean {
-  return (
-    task.timeEntries.length > 0 &&
-    task.timeEntries.some((timeEntry) => timeEntry.stoppedAt === null)
-  );
-}
+import { useTransition } from "react";
+import { playTaskAction } from "@/app/actions/play-task-action";
+import { pauseTaskAction } from "@/app/actions/pause-task-action";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export function computeTaskRemainingTime(task: TaskWithTimeEntries): number {
   const elapsedTime = task.timeEntries.reduce((total, entry) => {
@@ -26,6 +30,13 @@ export function computeTaskRemainingTime(task: TaskWithTimeEntries): number {
   return Math.max(0, task.durationMs - elapsedTime);
 }
 
+export function isTaskRunning(task: TaskWithTimeEntries): boolean {
+  return (
+    task.timeEntries.length > 0 &&
+    task.timeEntries.some((timeEntry) => timeEntry.stoppedAt === null)
+  );
+}
+
 function isTaskCompleted(task: TaskWithTimeEntries): boolean {
   return task.completedAt !== null;
 }
@@ -35,21 +46,65 @@ type TaskCardProps = {
 };
 
 export function TaskCard({ task }: TaskCardProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
   const isRunning = isTaskRunning(task);
   const isCompleted = isTaskCompleted(task);
 
+  const handleToggleTask = () => {
+    if (isCompleted) return;
+
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("taskId", task.id);
+
+        const action = isRunning ? pauseTaskAction : playTaskAction;
+        const result = await action(formData);
+
+        if (result.success) {
+          router.refresh();
+        } else {
+          toast({
+            title: "Error",
+            description: `Failed to ${
+              isRunning ? "pause" : "start"
+            } the task. Please try again.`,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Task toggle error:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
+    });
+  };
+
   return (
-    <Card>
+    <Card
+      className={cn(
+        "transition-colors duration-200",
+        !isCompleted && "hover:bg-secondary cursor-pointer"
+      )}
+      onClick={handleToggleTask}
+    >
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 flex items-center justify-center">
               {isCompleted ? (
                 <CheckCircle className="w-5 h-5 text-green-500" />
+              ) : isPending ? (
+                <Loader2Icon className="w-5 h-5 animate-spin" />
               ) : isRunning ? (
-                <PauseTaskForm taskId={task.id} />
+                <PauseIcon className="w-5 h-5" />
               ) : (
-                <PlayTaskForm taskId={task.id} />
+                <PlayIcon className="w-5 h-5" />
               )}
             </div>
             <span
@@ -62,7 +117,7 @@ export function TaskCard({ task }: TaskCardProps) {
             </span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="flex items-center justify-between space-x-1 bg-secondary px-2 py-1 rounded-md w-[78px]">
+            <div className="flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md w-[80px]">
               <ClockIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
               <span className="text-sm text-secondary-foreground truncate">
                 <TaskElapsedTime task={task} />

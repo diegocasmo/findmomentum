@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { formatTimeMMss } from "@/lib/utils/time";
 import type { TaskWithTimeEntries } from "@/types";

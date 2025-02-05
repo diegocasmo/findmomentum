@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -62,32 +60,30 @@ export function DeleteActivityDialog({
   };
 
   return (
-    <div onClick={(e) => e.preventDefault()}>
-      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="ghost"
-            className="w-full cursor-pointer hover:text-destructive focus:text-destructive justify-start"
-            aria-label={`Delete ${activity.name}`}
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action will delete the activity &quot;{activity.name}&quot;.
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="ghost"
+          className="w-full cursor-pointer hover:text-destructive focus:text-destructive justify-start"
+          aria-label={`Delete ${activity.name}`}
+        >
+          <Trash2 className="h-4 w-4 mr-2" />
+          Delete
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action will delete the activity &quot;{activity.name}&quot;.
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
