@@ -11,7 +11,7 @@ import {
 import { completeActivityAction } from "@/app/actions/complete-activity-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, CheckCircle } from "lucide-react";
 import type { Activity, Task } from "@prisma/client";
 
 type CompleteActivityProps = {
@@ -23,9 +23,9 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
 
-  const allTasksCompleted = activity.tasks.every(
-    (task) => task.completedAt !== null
-  );
+  const allTasksCompleted =
+    activity.tasks.length > 0 &&
+    activity.tasks.every((task) => task.completedAt !== null);
 
   const handleCompleteActivity = async () => {
     if (!allTasksCompleted) return;
@@ -62,6 +62,15 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
     });
   };
 
+  if (activity.completedAt) {
+    return (
+      <div className="flex items-center ">
+        <CheckCircle className="mr-2 h-5 w-5 text-green-600" />
+        <span className="text-sm font-medium">Activity completed</span>
+      </div>
+    );
+  }
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -69,12 +78,10 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
           <div>
             <Button
               onClick={handleCompleteActivity}
-              disabled={
-                !allTasksCompleted || isPending || activity.completedAt !== null
-              }
+              disabled={!allTasksCompleted || isPending}
             >
               {isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
-              {activity.completedAt ? "Completed 🎉" : "Complete Activity"}
+              Complete Activity
             </Button>
           </div>
         </TooltipTrigger>
