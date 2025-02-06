@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createTaskSchema } from "@/app/dashboard/schemas/create-task-schema";
+import { createTaskSchema } from "@/app/schemas/create-task-schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,7 +17,7 @@ import { useTransition, useRef } from "react";
 import { createTaskAction } from "@/app/actions/create-task-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
-import type { CreateTaskSchema } from "@/app/dashboard/schemas/create-task-schema";
+import type { CreateTaskSchema } from "@/app/schemas/create-task-schema";
 import { DurationInput } from "@/components/duration-input";
 import { RootFormError } from "@/components/root-form-error";
 

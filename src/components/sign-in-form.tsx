@@ -2,10 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  signInSchema,
-  type SignInSchema,
-} from "@/app/auth/schemas/sign-in-schema";
+import { signInSchema, type SignInSchema } from "@/app/schemas/sign-in-schema";
 import { setFormErrors } from "@/lib/utils/form";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";

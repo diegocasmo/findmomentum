@@ -1,6 +1,6 @@
 "use server";
 
-import { createActivitySchema } from "@/app/dashboard/schemas/create-activity-schema";
+import { createActivitySchema } from "@/app/schemas/create-activity-schema";
 import { createActivity } from "@/lib/services/create-activity";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import type { FieldErrors } from "react-hook-form";

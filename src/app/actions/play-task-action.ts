@@ -1,7 +1,7 @@
 "use server";
 
 import { playTask } from "@/lib/services/play-task";
-import { playTaskSchema } from "@/app/dashboard/schemas/play-task-schema";
+import { playTaskSchema } from "@/app/schemas/play-task-schema";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import type { FieldErrors } from "react-hook-form";
 import { auth } from "@/lib/auth";

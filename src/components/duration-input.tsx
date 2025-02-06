@@ -2,7 +2,7 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { MS_PER_MIN, MS_PER_SECOND, formatTimeMMss } from "@/lib/utils/time";
-import { MAX_MIN, MAX_SEC } from "@/app/dashboard/schemas/create-task-schema";
+import { MAX_MIN, MAX_SEC } from "@/app/schemas/create-task-schema";
 
 function parseInput(input: string): { minutes: number; seconds: number } {
   const [minutes, seconds] = input.split(":").map(Number);

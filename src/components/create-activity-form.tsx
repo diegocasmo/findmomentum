@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createActivitySchema } from "@/app/dashboard/schemas/create-activity-schema";
+import { createActivitySchema } from "@/app/schemas/create-activity-schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,

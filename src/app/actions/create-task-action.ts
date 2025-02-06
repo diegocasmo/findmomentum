@@ -1,6 +1,6 @@
 "use server";
 
-import { createTaskSchema } from "@/app/dashboard/schemas/create-task-schema";
+import { createTaskSchema } from "@/app/schemas/create-task-schema";
 import { createTask } from "@/lib/services/create-task";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import type { FieldErrors } from "react-hook-form";

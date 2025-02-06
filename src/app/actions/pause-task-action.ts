@@ -1,7 +1,7 @@
 "use server";
 
 import { pauseTask } from "@/lib/services/pause-task";
-import { pauseTaskSchema } from "@/app/dashboard/schemas/pause-task-schema";
+import { pauseTaskSchema } from "@/app/schemas/pause-task-schema";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import type { FieldErrors } from "react-hook-form";
 import { auth } from "@/lib/auth";

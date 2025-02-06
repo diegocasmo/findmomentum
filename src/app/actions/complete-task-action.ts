@@ -1,7 +1,7 @@
 "use server";
 
 import { completeTask } from "@/lib/services/complete-task";
-import { completeTaskSchema } from "@/app/dashboard/schemas/complete-task-schema";
+import { completeTaskSchema } from "@/app/schemas/complete-task-schema";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import type { FieldErrors } from "react-hook-form";
 import { auth } from "@/lib/auth";
