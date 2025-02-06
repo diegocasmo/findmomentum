@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivityIcon, ListTodoIcon, PlusCircleIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
 import { ActivityActions } from "@/components/activity-actions";
+import { CompleteActivity } from "@/components/complete-activity";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -40,8 +41,12 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             {activity.description}
           </p>
         </div>
-        <div className="flex items-center space-x-4">
-          <ActivityActions activity={activity} redirectUrl="/dashboard" />
+
+        <div className="mt-4">
+          <div className="flex items-center space-x-4">
+            <CompleteActivity activity={activity} />
+            <ActivityActions activity={activity} redirectUrl="/dashboard" />
+          </div>
         </div>
       </div>
 

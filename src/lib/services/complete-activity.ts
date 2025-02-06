@@ -13,8 +13,9 @@ export async function completeActivity({
 }: CompleteActivityParams): Promise<Activity> {
   try {
     return await prisma.$transaction(async (tx) => {
-      // Ensure user is the owner of the activity's team and all non-deleted tasks are completed
-      await tx.activity.findFirstOrThrow({
+      // Ensure user is the owner of the activity's team, all non-deleted tasks are completed,
+      // and there is at least one non-deleted completed task
+      const activity = await tx.activity.findFirstOrThrow({
         where: {
           id: activityId,
           deletedAt: null,
@@ -37,7 +38,22 @@ export async function completeActivity({
             },
           },
         },
+        include: {
+          tasks: {
+            where: {
+              deletedAt: null,
+              completedAt: { not: null },
+            },
+          },
+        },
       });
+
+      // Check if there is at least one non-deleted completed task
+      if (activity.tasks.length === 0) {
+        throw new Error(
+          "Activity must have at least one non-deleted completed task"
+        );
+      }
 
       // Update the activity to mark it as completed
       return await tx.activity.update({
