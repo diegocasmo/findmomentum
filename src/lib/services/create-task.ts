@@ -21,6 +21,7 @@ export async function createTask({
         where: {
           id: activityId,
           userId,
+          completedAt: null,
           team: {
             teamMemberships: {
               some: {

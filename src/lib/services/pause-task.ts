@@ -20,6 +20,7 @@ export async function pauseTask({
           deletedAt: null,
           completedAt: null,
           activity: {
+            completedAt: null,
             team: {
               teamMemberships: {
                 some: {

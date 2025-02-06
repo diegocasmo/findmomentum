@@ -17,6 +17,7 @@ export async function softDeleteTask({
         id: taskId,
         deletedAt: null,
         activity: {
+          completedAt: null,
           team: {
             teamMemberships: {
               some: {
