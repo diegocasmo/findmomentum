@@ -4,10 +4,9 @@ import type { TaskWithTimeEntries } from "@/types";
 
 type TasksListProps = {
   tasks: TaskWithTimeEntries[];
-  isActivityCompleted: boolean;
 };
 
-export function TasksList({ tasks, isActivityCompleted }: TasksListProps) {
+export function TasksList({ tasks }: TasksListProps) {
   if (tasks.length === 0) {
     return <NoTasks />;
   }
@@ -17,7 +16,7 @@ export function TasksList({ tasks, isActivityCompleted }: TasksListProps) {
       {tasks.map((task) => {
         return (
           <li key={task.id}>
-            <TaskCard task={task} isActivityCompleted={isActivityCompleted} />
+            <TaskCard task={task} />
           </li>
         );
       })}
