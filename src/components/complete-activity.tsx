@@ -11,7 +11,7 @@ import {
 import { completeActivityAction } from "@/app/actions/complete-activity-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2Icon, CheckCircle } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import type { Activity, Task } from "@prisma/client";
 
 type CompleteActivityProps = {
@@ -61,15 +61,6 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
       }
     });
   };
-
-  if (activity.completedAt) {
-    return (
-      <div className="flex items-center ">
-        <CheckCircle className="mr-2 h-5 w-5 text-green-600" />
-        <span className="text-sm font-medium">Activity completed</span>
-      </div>
-    );
-  }
 
   return (
     <TooltipProvider>
