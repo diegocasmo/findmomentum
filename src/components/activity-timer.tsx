@@ -28,19 +28,18 @@ export function ActivityTimer({ activity }: ActivityTimerProps) {
     activity.tasks.length > 0 && activity.tasks.some(isTaskRunning);
 
   useEffect(() => {
-    const nextRemainingTime = computeActivityRemainingTime(activity);
     if (isAnyTaskRunning) {
       const timerId = setInterval(() => {
-        setRemainingTime(nextRemainingTime);
+        setRemainingTime(computeActivityRemainingTime(activity));
       }, MS_PER_SECOND);
 
       return () => clearInterval(timerId);
     } else {
-      setRemainingTime(nextRemainingTime);
+      setRemainingTime(computeActivityRemainingTime(activity));
     }
-  }, [isAnyTaskRunning, activity, activityRemainingTime]);
+  }, [isAnyTaskRunning, activity]);
 
-  const progress = remainingTime / totalDurationMs;
+  const progress = Math.max(0, Math.min(1, remainingTime / totalDurationMs));
   const dashOffset = DASH_ARRAY * (1 - progress);
 
   return (
