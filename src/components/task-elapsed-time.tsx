@@ -56,19 +56,21 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
   }, [task.id, task.name, router, toast]);
 
   useEffect(() => {
-    if (!isTaskRunning(task)) return;
+    if (isTaskRunning(task)) {
+      const timerId = setInterval(() => {
+        const newRemainingTime = computeTaskRemainingTime(task);
+        setRemainingTime(newRemainingTime);
 
-    const timerId = setInterval(() => {
-      const newRemainingTime = computeTaskRemainingTime(task);
-      setRemainingTime(newRemainingTime);
+        if (newRemainingTime <= 0) {
+          clearInterval(timerId);
+          handleCompleteTask();
+        }
+      }, MS_PER_SECOND);
 
-      if (newRemainingTime <= 0) {
-        clearInterval(timerId);
-        handleCompleteTask();
-      }
-    }, MS_PER_SECOND);
-
-    return () => clearInterval(timerId);
+      return () => clearInterval(timerId);
+    } else {
+      setRemainingTime(computeTaskRemainingTime(task));
+    }
   }, [task, handleCompleteTask]);
 
   if (isPending) {
