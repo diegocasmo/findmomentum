@@ -15,7 +15,7 @@ export const createTaskSchema = z.object({
   durationMs: z
     .number()
     .int()
-    .positive("Duration must be a positive number")
+    .positive("Duration must be in MM:ss format (e.g., 25:00)")
     .max(MAX_DURATION_MS, "Duration must be 59:59 or less"),
 });
 

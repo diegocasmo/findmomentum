@@ -4,11 +4,12 @@ import { getActivity } from "@/lib/services/get-activity";
 import { TasksList } from "@/components/tasks-list";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ActivityIcon, ListTodoIcon, CheckCircle } from "lucide-react";
+import { ActivityIcon, ListTodoIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
 import { ActivityActions } from "@/components/activity-actions";
 import { CompleteActivity } from "@/components/complete-activity";
 import { CreateTaskCard } from "@/components/create-task-card";
+import { cn } from "@/lib/utils";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -47,10 +48,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <div className="mt-4">
           <div className="flex items-center space-x-4">
             {isActivityCompleted ? (
-              <div className="flex items-center ">
-                <CheckCircle className="mr-2 h-5 w-5 text-green-600" />
-                <span className="text-sm font-medium">Activity completed</span>
-              </div>
+              <span className="text-sm font-medium">Activity completed 🎉</span>
             ) : (
               <CompleteActivity activity={activity} />
             )}
@@ -61,9 +59,10 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
 
       <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
         <Card
-          className={`${
+          className={cn(
+            "flex flex-col",
             isActivityCompleted ? "lg:col-span-3" : "lg:col-span-2"
-          } flex flex-col`}
+          )}
         >
           <CardHeader className="space-y-4">
             <ActivityTimer activity={activity} />
@@ -78,7 +77,10 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                 <div className="text-center py-4">Loading tasks...</div>
               }
             >
-              <TasksList tasks={activity.tasks} />
+              <TasksList
+                tasks={activity.tasks}
+                isActivityCompleted={isActivityCompleted}
+              />
             </Suspense>
           </CardContent>
         </Card>

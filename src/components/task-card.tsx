@@ -18,13 +18,15 @@ import { pauseTaskAction } from "@/app/actions/pause-task-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { isTaskRunning } from "@/lib/utils/is-task-running";
+import { formatTimeMMss } from "@/lib/utils/time";
 import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 
 type TaskCardProps = {
   task: TaskWithTimeEntries;
+  isActivityCompleted: boolean;
 };
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, isActivityCompleted }: TaskCardProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -97,13 +99,28 @@ export function TaskCard({ task }: TaskCardProps) {
             </span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md w-[80px]">
-              <ClockIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
-              <span className="text-sm text-secondary-foreground truncate">
-                <TaskElapsedTime task={task} />
-              </span>
+            <div
+              className={cn(
+                "flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md ",
+                {
+                  "w-[80px]": !isCompleted,
+                }
+              )}
+            >
+              {isActivityCompleted ? (
+                <span className="text-sm text-secondary-foreground">
+                  Completed in {formatTimeMMss(task.durationMs)}
+                </span>
+              ) : (
+                <>
+                  <ClockIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
+                  <span className="text-sm text-secondary-foreground truncate">
+                    <TaskElapsedTime task={task} />
+                  </span>
+                </>
+              )}
             </div>
-            <TaskActions task={task} />
+            {!isActivityCompleted && <TaskActions task={task} />}
           </div>
         </div>
       </CardContent>
