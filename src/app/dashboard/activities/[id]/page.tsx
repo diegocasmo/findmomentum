@@ -1,19 +1,14 @@
 import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
-import { CreateTaskForm } from "@/components/create-task-form";
 import { TasksList } from "@/components/tasks-list";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ActivityIcon,
-  ListTodoIcon,
-  PlusCircleIcon,
-  CheckCircle,
-} from "lucide-react";
+import { ActivityIcon, ListTodoIcon, CheckCircle } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
 import { ActivityActions } from "@/components/activity-actions";
 import { CompleteActivity } from "@/components/complete-activity";
+import { CreateTaskCard } from "@/components/create-task-card";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -34,6 +29,8 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
     notFound();
   }
 
+  const isActivityCompleted = Boolean(activity.completedAt);
+
   return (
     <div className="container mx-auto px-4 space-y-8 h-full flex flex-col">
       <div className="flex justify-between items-start">
@@ -49,7 +46,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
 
         <div className="mt-4">
           <div className="flex items-center space-x-4">
-            {activity.completedAt ? (
+            {isActivityCompleted ? (
               <div className="flex items-center ">
                 <CheckCircle className="mr-2 h-5 w-5 text-green-600" />
                 <span className="text-sm font-medium">Activity completed</span>
@@ -63,7 +60,11 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
       </div>
 
       <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
-        <Card className="lg:col-span-2 flex flex-col">
+        <Card
+          className={`${
+            isActivityCompleted ? "lg:col-span-3" : "lg:col-span-2"
+          } flex flex-col`}
+        >
           <CardHeader className="space-y-4">
             <ActivityTimer activity={activity} />
             <CardTitle className="text-2xl font-semibold flex items-center">
@@ -81,23 +82,11 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             </Suspense>
           </CardContent>
         </Card>
-
-        <div className="lg:col-span-1 flex flex-col gap-8">
-          <Card className="flex flex-col">
-            <CardHeader>
-              <CardTitle className="text-2xl font-semibold flex items-center">
-                <PlusCircleIcon className="w-6 h-6 mr-2 text-primary" />
-                Add Task
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-grow overflow-auto">
-              <CreateTaskForm
-                activityId={activity.id}
-                autoFocus={!Boolean(activity.tasks.length)}
-              />
-            </CardContent>
-          </Card>
-        </div>
+        {!isActivityCompleted && (
+          <div className="lg:col-span-1 flex flex-col gap-8">
+            <CreateTaskCard activity={activity} />
+          </div>
+        )}
       </div>
     </div>
   );
