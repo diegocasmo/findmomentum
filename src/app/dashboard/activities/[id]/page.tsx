@@ -45,13 +45,12 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          {!activity.completedAt && <CompleteActivity activity={activity} />}
           <ActivityActions activity={activity} redirectUrl="/dashboard" />
         </div>
       </div>
       <div>
         <Link href="/dashboard">
-          <Button>
+          <Button variant="outline">
             <ArrowLeftIcon className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Button>
@@ -66,9 +65,16 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           <Card className="flex flex-col lg:col-span-2">
             <CardHeader className="space-y-4">
               <ActivityTimer activity={activity} />
-              <CardTitle className="text-2xl font-semibold flex items-center">
-                <ListTodoIcon className="w-6 h-6 mr-2 text-primary" />
-                Tasks
+              <CardTitle className="text-2xl font-semibold flex justify-between items-center">
+                <div className="flex items-center">
+                  <ListTodoIcon className="w-6 h-6 mr-2 text-primary" />
+                  Tasks
+                </div>
+                <div>
+                  {!activity.completedAt && (
+                    <CompleteActivity activity={activity} />
+                  )}
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-grow overflow-auto">
