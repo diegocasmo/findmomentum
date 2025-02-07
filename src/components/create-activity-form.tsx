@@ -52,7 +52,7 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
         const result = await createActivityAction(formData);
 
         if (result.success) {
-          router.refresh();
+          router.push(`/dashboard/activities/${result.data.id}`);
           onSuccess(result.data);
         } else {
           setFormErrors(form.setError, result.errors);

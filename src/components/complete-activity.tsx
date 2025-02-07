@@ -11,7 +11,7 @@ import {
 import { completeActivityAction } from "@/app/actions/complete-activity-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, CheckIcon } from "lucide-react";
 import type { Activity, Task } from "@prisma/client";
 
 type CompleteActivityProps = {
@@ -71,7 +71,11 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
               onClick={handleCompleteActivity}
               disabled={!allTasksCompleted || isPending}
             >
-              {isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
+              {isPending ? (
+                <Loader2Icon className="h-4 w-4 animate-spin" />
+              ) : (
+                <CheckIcon className="h-4 w-4" />
+              )}
               Complete Activity
             </Button>
           </div>
