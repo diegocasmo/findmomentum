@@ -49,7 +49,7 @@ export function ActivityTimer({ activity }: ActivityTimerProps) {
       <div className="relative w-[180px] h-[180px]">
         <CircularProgressbar
           value={progress}
-          strokeWidth={8}
+          strokeWidth={4}
           styles={buildStyles({
             strokeLinecap: "round",
             pathColor: "currentColor",
