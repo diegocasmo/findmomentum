@@ -1,3 +1,5 @@
+import { formatDuration, intervalToDuration } from "date-fns";
+
 export const MS_PER_SECOND = 1000;
 export const SECONDS_PER_MIN = 60;
 export const MS_PER_MIN = SECONDS_PER_MIN * MS_PER_SECOND;
@@ -19,4 +21,8 @@ export function formatTimeHHMMss(ms: number) {
   return `${hours.toString().padStart(2, "0")}:${minutes
     .toString()
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+
+export function formatMsAsDuration(ms: number) {
+  return formatDuration(intervalToDuration({ start: 0, end: ms }));
 }

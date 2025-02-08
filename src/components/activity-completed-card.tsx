@@ -1,28 +1,43 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircleIcon, ClockIcon, TrophyIcon, StarIcon } from "lucide-react";
-import { formatTimeHHMMss } from "@/lib/utils/time";
+import { formatMsAsDuration } from "@/lib/utils/time";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { computeActivityTotalDuration } from "@/lib/utils/compute-activity-total-duration";
+import { useEffect, useState } from "react";
+import Confetti from "react-confetti";
 
 type ActivityCompletedCardProps = {
   activity: ActivityWithTasksAndTimeEntries;
 };
 
-export async function ActivityCompletedCard({
+export function ActivityCompletedCard({
   activity,
 }: ActivityCompletedCardProps) {
+  const searchParams = useSearchParams();
+  const [celebrate, setCelebrate] = useState(false);
   const totalDuration = computeActivityTotalDuration(activity);
+
+  useEffect(() => {
+    setCelebrate(searchParams.get("celebrate") === "true");
+  }, [searchParams]);
 
   return (
     <Card className="w-full max-w-3xl shadow-lg border-secondary">
       <CardHeader className="flex justify-center items-center pb-6">
-        <div className="mb-4 ">
-          <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
+        <div className="mb-4">
+          <div
+            className={`w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center ${
+              celebrate ? "animate-bounce" : ""
+            }`}
+          >
             <TrophyIcon className="w-10 h-10 text-primary" />
           </div>
         </div>
         <div className="text-center">
-          <CardTitle className="text-3xl font-bold text-primary mb-2 ">
+          <CardTitle className="text-3xl font-bold text-primary mb-2">
             Activity Completed 🎉
           </CardTitle>
         </div>
@@ -32,7 +47,7 @@ export async function ActivityCompletedCard({
           <div className="flex justify-between items-center p-4 rounded-lg bg-primary/10">
             <span className="text-lg font-medium">Total Time:</span>
             <span className="text-2xl font-bold text-primary">
-              {formatTimeHHMMss(totalDuration)}
+              {formatMsAsDuration(totalDuration)}
             </span>
           </div>
           <div className="space-y-4">
@@ -54,7 +69,7 @@ export async function ActivityCompletedCard({
                 <div className="flex items-center space-x-2">
                   <ClockIcon className="w-4 h-4 text-muted-foreground" />
                   <span className="text-foreground/70">
-                    {formatTimeHHMMss(task.durationMs)}
+                    {formatMsAsDuration(task.durationMs)}
                   </span>
                 </div>
               </div>
@@ -62,6 +77,7 @@ export async function ActivityCompletedCard({
           </div>
         </div>
       </CardContent>
+      {celebrate && <Confetti numberOfPieces={50} />}
     </Card>
   );
 }

@@ -41,7 +41,7 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
             description: `"${activity.name}" has been marked as complete.`,
             variant: "default",
           });
-          router.refresh();
+          router.push(`?celebrate=true`);
         } else {
           toast({
             title: "Failed to complete activity",
