@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2Icon } from "lucide-react";
 import { computeTaskRemainingTime } from "@/lib/utils/compute-task-remaining-time";
+import { sendNotification } from "@/components/notification-manager";
 
 type TaskElapsedTimeProps = {
   task: TaskWithTimeEntries;
@@ -34,6 +35,10 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
             description: `"${task.name}" has been marked as complete.`,
             variant: "default",
           });
+          sendNotification(
+            "Task Completed",
+            `"${task.name}" has been marked as complete.`
+          );
           router.refresh();
         } else {
           toast({

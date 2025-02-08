@@ -1,6 +1,7 @@
 import { MainNav } from "@/components/main-nav";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
+import { NotificationManager } from "@/components/notification-manager";
 
 export default async function DashboardLayout({
   children,
@@ -11,6 +12,7 @@ export default async function DashboardLayout({
 
   return (
     <SessionProvider session={session}>
+      <NotificationManager />
       <div className="flex flex-col min-h-screen">
         <MainNav />
         <main className="flex-grow py-8">
