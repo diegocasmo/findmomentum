@@ -15,21 +15,14 @@ export function NotificationManager() {
         const permission = await Notification.requestPermission();
         setNotificationPermission(permission);
 
-        if (permission === "granted") {
-          toast({
-            title: "Notifications enabled",
-            description:
-              "You will receive notifications when tasks are completed.",
-            variant: "default",
-          });
-        } else {
-          toast({
-            title: "Notifications disabled",
-            description:
-              "You won't receive notifications for completed tasks. You can enable them in your browser settings.",
-            variant: "default",
-          });
-        }
+        if (permission === "granted") return;
+
+        toast({
+          title: "Notifications disabled",
+          description:
+            "You won't receive notifications for completed tasks. You can enable them in your browser settings.",
+          variant: "default",
+        });
       }
     };
 

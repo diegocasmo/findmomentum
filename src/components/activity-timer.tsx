@@ -6,17 +6,19 @@ import "react-circular-progressbar/dist/styles.css";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { MS_PER_SECOND, formatTimeHHMMss } from "@/lib/utils/time";
 import { isTaskRunning } from "@/lib/utils/is-task-running";
-import { computeActivityRemainingTime } from "@/lib/utils/compute-activity-remaining-time";
-import { computeActivityTotalDuration } from "@/lib/utils/compute-activity-total-duration";
+import {
+  getActivityTotalDuration,
+  getActivityRemainingTime,
+} from "@/lib/utils/time";
 
 type ActivityTimerProps = {
   activity: ActivityWithTasksAndTimeEntries;
 };
 
 export function ActivityTimer({ activity }: ActivityTimerProps) {
-  const totalDurationMs = computeActivityTotalDuration(activity);
+  const totalDurationMs = getActivityTotalDuration(activity);
   const [remainingTime, setRemainingTime] = useState(() =>
-    computeActivityRemainingTime(activity)
+    getActivityRemainingTime(activity)
   );
   const isAnyTaskRunning =
     activity.tasks.length > 0 && activity.tasks.some(isTaskRunning);
@@ -24,12 +26,12 @@ export function ActivityTimer({ activity }: ActivityTimerProps) {
   useEffect(() => {
     if (isAnyTaskRunning) {
       const timerId = setInterval(() => {
-        setRemainingTime(computeActivityRemainingTime(activity));
+        setRemainingTime(getActivityRemainingTime(activity));
       }, MS_PER_SECOND);
 
       return () => clearInterval(timerId);
     } else {
-      setRemainingTime(computeActivityRemainingTime(activity));
+      setRemainingTime(getActivityRemainingTime(activity));
     }
   }, [isAnyTaskRunning, activity]);
 

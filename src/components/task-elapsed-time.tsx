@@ -7,7 +7,7 @@ import { completeTaskAction } from "@/app/actions/complete-task-action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2Icon } from "lucide-react";
-import { computeTaskRemainingTime } from "@/lib/utils/compute-task-remaining-time";
+import { getTaskRemainingTime } from "@/lib/utils/time";
 import { sendNotification } from "@/components/notification-manager";
 
 type TaskElapsedTimeProps = {
@@ -16,7 +16,7 @@ type TaskElapsedTimeProps = {
 
 export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
   const [remainingTime, setRemainingTime] = useState(
-    computeTaskRemainingTime(task)
+    getTaskRemainingTime(task)
   );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -63,7 +63,7 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
   useEffect(() => {
     if (isTaskRunning(task)) {
       const timerId = setInterval(() => {
-        const newRemainingTime = computeTaskRemainingTime(task);
+        const newRemainingTime = getTaskRemainingTime(task);
         setRemainingTime(newRemainingTime);
 
         if (newRemainingTime <= 0) {
@@ -74,7 +74,7 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
 
       return () => clearInterval(timerId);
     } else {
-      setRemainingTime(computeTaskRemainingTime(task));
+      setRemainingTime(getTaskRemainingTime(task));
     }
   }, [task, handleCompleteTask]);
 

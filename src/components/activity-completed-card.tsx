@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircleIcon, ClockIcon, TrophyIcon, StarIcon } from "lucide-react";
 import { formatMsAsDuration } from "@/lib/utils/time";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
-import { computeActivityTotalDuration } from "@/lib/utils/compute-activity-total-duration";
+import { getActivityTotalDuration } from "@/lib/utils/time";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
@@ -18,7 +18,7 @@ export function ActivityCompletedCard({
 }: ActivityCompletedCardProps) {
   const searchParams = useSearchParams();
   const [celebrate, setCelebrate] = useState(false);
-  const totalDuration = computeActivityTotalDuration(activity);
+  const totalDuration = getActivityTotalDuration(activity);
 
   useEffect(() => {
     setCelebrate(searchParams.get("celebrate") === "true");
