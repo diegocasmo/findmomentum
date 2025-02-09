@@ -1,7 +1,7 @@
 # Momentum
 
 
-[![Momentum](https://www.findmomentum.xyz)](https://www.findmomentum.xyz)
+[https://www.findmomentum.xyz](https://www.findmomentum.xyz)
 
 
 Build momentum, one focused time block at a time
