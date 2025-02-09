@@ -19,11 +19,13 @@ export async function signInAction(formData: FormData): Promise<SignInResult> {
   }
 
   try {
-    await signIn("resend", {
+    const res = await signIn("resend", {
       email: result.data.email,
       redirect: false,
       redirectTo: "/dashboard",
     });
+    console.log("----------HERE----------");
+    console.log(res);
     return { success: true };
   } catch (error) {
     console.error("Error signing in :", error);
