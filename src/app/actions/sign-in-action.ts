@@ -28,7 +28,7 @@ export async function signInAction(formData: FormData): Promise<SignInResult> {
   } catch (error) {
     console.error("Error signing in :", error);
     const zodError = createZodError("Failed to sign in. Please try again", [
-      "email",
+      "root",
     ]);
 
     return {
