@@ -1,12 +1,10 @@
 import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { TasksList } from "@/components/tasks-list";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ActivityIcon, ListTodoIcon, ArrowLeftIcon } from "lucide-react";
+import { ActivityIcon, ListTodoIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
 import { ActivityActions } from "@/components/activity-actions";
 import { CompleteActivity } from "@/components/complete-activity";
@@ -33,7 +31,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 space-y-8 h-full flex flex-col">
+    <div className="container mx-auto p-4 space-y-8 h-full flex flex-col">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-4xl font-bold flex items-center">
@@ -47,14 +45,6 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <div className="flex items-center space-x-4">
           <ActivityActions activity={activity} redirectUrl="/dashboard" />
         </div>
-      </div>
-      <div>
-        <Link href="/dashboard">
-          <Button variant="outline">
-            <ArrowLeftIcon className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-        </Link>
       </div>
       {activity.completedAt ? (
         <div className="flex justify-center">

@@ -1,7 +1,4 @@
-"use client";
-
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,14 +9,16 @@ import {
 } from "@/components/ui/dialog";
 import { CreateActivityForm } from "@/components/create-activity-form";
 
-export function CreateActivityDialog() {
+type CreateActivityDialogProps = {
+  children: React.ReactNode;
+};
+
+export function CreateActivityDialog({ children }: CreateActivityDialogProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Create Activity</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Activity</DialogTitle>
