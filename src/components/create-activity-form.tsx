@@ -18,7 +18,6 @@ import { useTransition } from "react";
 import { createActivityAction } from "@/app/actions/create-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
-import type { Activity } from "@prisma/client";
 import { RootFormError } from "@/components/root-form-error";
 
 type FormData = {
@@ -27,7 +26,7 @@ type FormData = {
 };
 
 type CreateActivityFormProps = {
-  onSuccess: (activity: Activity) => void;
+  onSuccess: () => void;
 };
 
 export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
@@ -53,7 +52,7 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
 
         if (result.success) {
           router.push(`/dashboard/activities/${result.data.id}`);
-          onSuccess(result.data);
+          onSuccess();
         } else {
           setFormErrors(form.setError, result.errors);
         }
