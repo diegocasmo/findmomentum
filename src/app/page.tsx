@@ -22,7 +22,7 @@ export default async function Home() {
               Momentum
             </CardTitle>
             <CardDescription className="text-center">
-              Build momentum, one focused time block at a time
+              Build momentum, one focused task at a time
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex justify-center">

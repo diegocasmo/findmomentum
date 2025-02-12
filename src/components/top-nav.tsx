@@ -9,7 +9,7 @@ export async function TopBav() {
             <Link href="/dashboard" className="flex items-center space-x-4">
               <span className="font-bold text-lg">Momentum</span>
               <span className="md:inline text-sm text-muted-foreground">
-                Build momentum, one focused time block at a time
+                Build momentum, one focused task at a time
               </span>
             </Link>
           </div>

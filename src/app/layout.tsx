@@ -17,7 +17,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Momentum",
-  description: "Build momentum, one focused time block at a time",
+  description: "Build momentum, one focused task at a time",
 };
 
 export default function RootLayout({
