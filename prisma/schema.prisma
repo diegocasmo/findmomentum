@@ -58,6 +58,7 @@ model TeamMembership {
   @@unique([userId, teamId])
   @@index([userId])
   @@index([teamId])
+  @@index([role])
   @@map("user_teams")
 }
 
