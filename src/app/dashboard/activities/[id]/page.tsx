@@ -51,7 +51,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
           <ActivityCompletedCard activity={activity} />
         </div>
       ) : (
-        <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+        <div className="flex-grow grid grid-cols-1 gap-8 h-full">
           <Card className="flex flex-col lg:col-span-2">
             <CardHeader className="space-y-4">
               <div className="flex items-center justify-between flex-col space-y-4">
