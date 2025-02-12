@@ -17,10 +17,8 @@ export default async function DashboardLayout({
       <NotificationManager />
       <div className="flex flex-col min-h-screen">
         <TopBav />
-        <main className="flex-grow pt-8 mb-[75px]">
-          <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
+        <main className="flex-grow pt-6 mb-[75px]">
+          <div className="container max-w-7xl mx-auto px-4">{children}</div>
         </main>
         <BottomNav />
       </div>

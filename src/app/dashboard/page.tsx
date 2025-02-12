@@ -15,7 +15,7 @@ export default async function Dashboard() {
   const activities = await getActivities({ userId });
 
   return (
-    <div className="space-y-8 p-4">
+    <div className="space-y-8">
       <div className="flex justify-beeween items-center">
         <h1 className="text-3xl font-bold flex items-center">
           <ActivityIcon className="w-8 h-8 mr-2 text-primary" />

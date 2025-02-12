@@ -31,7 +31,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-8 h-full flex flex-col">
+    <div className="container mx-auto space-y-8 h-full flex flex-col">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-4xl font-bold flex items-center">
@@ -52,8 +52,8 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         </div>
       ) : (
         <div className="flex-grow grid grid-cols-1 gap-8 h-full">
-          <Card className="flex flex-col lg:col-span-2">
-            <CardHeader className="space-y-4">
+          <Card className="flex flex-col">
+            <CardHeader className="space-y-4 p-4">
               <div className="flex items-center justify-between flex-col space-y-4">
                 <ActivityTimer activity={activity} />
                 <CompleteActivity activity={activity} />
@@ -71,7 +71,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-grow overflow-auto">
+            <CardContent className="flex-grow overflow-auto p-4">
               <Suspense
                 fallback={
                   <div className="text-center py-4">Loading tasks...</div>
