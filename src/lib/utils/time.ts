@@ -1,4 +1,4 @@
-import { formatDuration, intervalToDuration } from "date-fns";
+import { intervalToDuration } from "date-fns";
 import type {
   ActivityWithTasksAndTimeEntries,
   TaskWithTimeEntries,
@@ -28,7 +28,15 @@ export function formatTimeHHMMss(ms: number) {
 }
 
 export function formatMsAsDuration(ms: number) {
-  return formatDuration(intervalToDuration({ start: 0, end: ms }));
+  const duration = intervalToDuration({ start: 0, end: ms });
+  const parts: string[] = [];
+
+  if (duration.hours) parts.push(`${duration.hours}h`);
+  if (duration.minutes) parts.push(`${duration.minutes}m`);
+  if (duration.seconds && parts.length === 0)
+    parts.push(`${duration.seconds}s`);
+
+  return parts.join(" ") || "0s";
 }
 
 export function getActivityTotalDuration(
