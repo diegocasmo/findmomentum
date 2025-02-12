@@ -8,7 +8,7 @@ import { ActivityIcon, ListTodoIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
 import { ActivityActions } from "@/components/activity-actions";
 import { CompleteActivity } from "@/components/complete-activity";
-import { CreateTaskCard } from "@/components/create-task-card";
+import { CreateTaskDialog } from "@/components/create-task-dialog";
 import { ActivityCompletedCard } from "@/components/activity-completed-card";
 
 type ActivityPageProps = {
@@ -78,7 +78,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             </CardContent>
           </Card>
           <div className="lg:col-span-1 flex flex-col gap-8">
-            <CreateTaskCard activity={activity} />
+            <CreateTaskDialog activityId={activity.id} />
           </div>
         </div>
       )}

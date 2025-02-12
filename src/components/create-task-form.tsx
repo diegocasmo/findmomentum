@@ -24,9 +24,14 @@ import { RootFormError } from "@/components/root-form-error";
 type CreateTaskFormProps = {
   activityId: string;
   autoFocus?: boolean;
+  onSuccess?: () => void;
 };
 
-export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
+export function CreateTaskForm({
+  activityId,
+  autoFocus,
+  onSuccess,
+}: CreateTaskFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -53,7 +58,7 @@ export function CreateTaskForm({ activityId, autoFocus }: CreateTaskFormProps) {
         if (result.success) {
           form.reset({ name: "", activityId, durationMs: 0 });
           router.refresh();
-          nameInputRef.current?.focus();
+          onSuccess?.();
         } else {
           setFormErrors(form.setError, result.errors);
         }
