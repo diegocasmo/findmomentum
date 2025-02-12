@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
 import { TasksList } from "@/components/tasks-list";
 import { Suspense } from "react";
@@ -21,7 +21,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
   const activityId = (await params).id;
 
   if (!userId) {
-    throw new Error("User not authenticated");
+    redirect("/auth/sign-in");
   }
 
   const activity = await getActivity({ id: activityId, userId });
@@ -42,7 +42,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
             {activity.description}
           </p>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <ActivityActions activity={activity} redirectUrl="/dashboard" />
         </div>
       </div>
@@ -54,16 +54,20 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
         <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
           <Card className="flex flex-col lg:col-span-2">
             <CardHeader className="space-y-4">
-              <ActivityTimer activity={activity} />
+              <div className="flex items-center justify-between flex-col space-y-4">
+                <ActivityTimer activity={activity} />
+                <CompleteActivity activity={activity} />
+              </div>
               <CardTitle className="text-2xl font-semibold flex justify-between items-center">
                 <div className="flex items-center">
                   <ListTodoIcon className="w-6 h-6 mr-2 text-primary" />
                   Tasks
                 </div>
                 <div>
-                  {!activity.completedAt && (
-                    <CompleteActivity activity={activity} />
-                  )}
+                  <CreateTaskDialog
+                    activityId={activity.id}
+                    aria-label="Create new task"
+                  />
                 </div>
               </CardTitle>
             </CardHeader>
@@ -77,9 +81,6 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
               </Suspense>
             </CardContent>
           </Card>
-          <div className="lg:col-span-1 flex flex-col gap-8">
-            <CreateTaskDialog activityId={activity.id} />
-          </div>
         </div>
       )}
     </div>

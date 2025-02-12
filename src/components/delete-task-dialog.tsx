@@ -68,7 +68,7 @@ export function DeleteTaskDialog({ task, redirectUrl }: DeleteTaskDialogProps) {
           Delete
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="sm:max-w-[425px] max-w-[90%] w-full">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>

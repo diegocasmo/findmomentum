@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ListIcon, Loader2Icon, ClockIcon } from "lucide-react";
+import { ListIcon, Loader2Icon, ClockIcon, PlusCircleIcon } from "lucide-react";
 import { useTransition, useRef } from "react";
 import { createTaskAction } from "@/app/actions/create-task-action";
 import { setFormErrors } from "@/lib/utils/form";
@@ -126,7 +126,7 @@ export function CreateTaskForm({
             {isPending ? (
               <Loader2Icon className="h-4 w-4 animate-spin mr-2" />
             ) : (
-              <ListIcon className="h-4 w-4 mr-2" />
+              <PlusCircleIcon className="mr-2 h-4 w-4" />
             )}
             {isPending ? "Adding..." : "Add"}
           </Button>

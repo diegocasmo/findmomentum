@@ -19,7 +19,7 @@ export function CreateActivityDialog({ children }: CreateActivityDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] max-w-[90%] w-full px-4 sm:px-6">
+      <DialogContent className="sm:max-w-[425px] max-w-[90%] w-full">
         <DialogHeader>
           <DialogTitle>Create New Activity</DialogTitle>
           <DialogDescription>

@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getActivities } from "@/lib/services/get-activities";
 import { auth } from "@/lib/auth";
 import { ActivityIcon } from "lucide-react";
@@ -8,7 +9,7 @@ export default async function Dashboard() {
   const userId = session?.user?.id;
 
   if (!userId) {
-    throw new Error("User not authenticated");
+    redirect("/auth/sign-in");
   }
 
   const activities = await getActivities({ userId });
