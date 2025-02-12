@@ -15,7 +15,7 @@ export default async function SignIn() {
           Momentum
         </CardTitle>
         <CardDescription className="text-center">
-          Build momentum, one focused task at a time
+          Build momentum, one task at a time
         </CardDescription>
       </CardHeader>
       <CardContent>
