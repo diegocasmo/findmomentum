@@ -35,6 +35,13 @@ export function ActivityTimer({ activity }: ActivityTimerProps) {
     }
   }, [isAnyTaskRunning, activity]);
 
+  useEffect(() => {
+    document.title = `Momentum (${formatTimeHHMMss(remainingTime)})`;
+    return () => {
+      document.title = "Momentum";
+    };
+  }, [remainingTime, activity.name]);
+
   const progress = Math.max(
     0,
     Math.min(100, (remainingTime / totalDurationMs) * 100)
