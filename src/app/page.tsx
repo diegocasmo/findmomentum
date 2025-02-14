@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,10 @@ import { SessionProvider } from "next-auth/react";
 export default async function Home() {
   const session = await auth();
 
+  if (session && session.user) {
+    redirect("/dashboard");
+  }
+
   return (
     <SessionProvider session={session}>
       <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-24">
@@ -26,15 +31,9 @@ export default async function Home() {
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex justify-center">
-            {session && session.user ? (
-              <Button asChild>
-                <Link href="/dashboard">Go to dashboard</Link>
-              </Button>
-            ) : (
-              <Button asChild>
-                <Link href="/auth/sign-in">Sign in</Link>
-              </Button>
-            )}
+            <Button asChild>
+              <Link href="/auth/sign-in">Sign in</Link>
+            </Button>
           </CardFooter>
         </Card>
       </main>
