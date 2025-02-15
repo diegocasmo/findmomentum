@@ -8,6 +8,7 @@ import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { getActivityTotalDuration } from "@/lib/utils/time";
 import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
+import { useWindowSize } from "@/hooks/use-window-size";
 
 type ActivityCompletedCardProps = {
   activity: ActivityWithTasksAndTimeEntries;
@@ -16,6 +17,7 @@ type ActivityCompletedCardProps = {
 export function ActivityCompletedCard({
   activity,
 }: ActivityCompletedCardProps) {
+  const { width, height } = useWindowSize();
   const searchParams = useSearchParams();
   const [celebrate, setCelebrate] = useState(false);
   const totalDuration = getActivityTotalDuration(activity);
@@ -77,7 +79,9 @@ export function ActivityCompletedCard({
           </div>
         </div>
       </CardContent>
-      {celebrate && <Confetti numberOfPieces={50} />}
+      {celebrate && (
+        <Confetti numberOfPieces={50} width={width} height={height} />
+      )}
     </Card>
   );
 }
