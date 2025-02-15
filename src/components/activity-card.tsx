@@ -1,3 +1,6 @@
+"use client";
+
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import {
   Card,
@@ -6,23 +9,37 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import type { Activity } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import { Calendar } from "lucide-react";
 import { ActivityActions } from "./activity-actions";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
+import { formatTimeHHMMss } from "@/lib/utils/time";
+import { isActivityRunning } from "@/lib/utils/is-activity-running";
+import { useGetActivityRemainingTime } from "@/hooks/use-get-activity-remaining-time";
 
 type ActivityCardProps = {
-  activity: Activity;
+  activity: ActivityWithTasksAndTimeEntries;
 };
 
 export function ActivityCard({ activity }: ActivityCardProps) {
+  const isRunning = isActivityRunning(activity);
+  const remainingTime = useGetActivityRemainingTime({ activity });
+
   return (
     <Link href={`/dashboard/activities/${activity.id}`} passHref>
-      <Card className="transition-all duration-300 group cursor-pointer overflow-hidden hover:bg-accent/50">
+      <Card
+        className={cn(
+          "transition-all duration-300 group cursor-pointer overflow-hidden hover:bg-accent/50",
+          {
+            "border-primary": isRunning,
+          }
+        )}
+      >
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <CardTitle className="text-lg font-medium text-foreground">
-              {activity.name}
+              {activity.name}&nbsp;
+              {isRunning ? `(${formatTimeHHMMss(remainingTime)})` : null}
             </CardTitle>
             <ActivityActions activity={activity} />
           </div>

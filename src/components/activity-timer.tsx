@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
-import { MS_PER_SECOND, formatTimeHHMMss } from "@/lib/utils/time";
-import { isTaskRunning } from "@/lib/utils/is-task-running";
-import {
-  getActivityTotalDuration,
-  getActivityRemainingTime,
-} from "@/lib/utils/time";
+import { formatTimeHHMMss } from "@/lib/utils/time";
+import { getActivityTotalDuration } from "@/lib/utils/time";
+import { useGetActivityRemainingTime } from "@/hooks/use-get-activity-remaining-time";
 
 type ActivityTimerProps = {
   activity: ActivityWithTasksAndTimeEntries;
@@ -17,23 +14,7 @@ type ActivityTimerProps = {
 
 export function ActivityTimer({ activity }: ActivityTimerProps) {
   const totalDurationMs = getActivityTotalDuration(activity);
-  const [remainingTime, setRemainingTime] = useState(() =>
-    getActivityRemainingTime(activity)
-  );
-  const isAnyTaskRunning =
-    activity.tasks.length > 0 && activity.tasks.some(isTaskRunning);
-
-  useEffect(() => {
-    if (isAnyTaskRunning) {
-      const timerId = setInterval(() => {
-        setRemainingTime(getActivityRemainingTime(activity));
-      }, MS_PER_SECOND);
-
-      return () => clearInterval(timerId);
-    } else {
-      setRemainingTime(getActivityRemainingTime(activity));
-    }
-  }, [isAnyTaskRunning, activity]);
+  const remainingTime = useGetActivityRemainingTime({ activity });
 
   useEffect(() => {
     document.title = `Momentum (${formatTimeHHMMss(remainingTime)})`;

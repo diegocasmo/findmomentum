@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { Activity } from "@prisma/client";
+import { ActivityWithTasksAndTimeEntries } from "@/types";
 import { TeamMembershipRole } from "@prisma/client";
 
 export type GetActivitiesParams = {
@@ -8,7 +8,7 @@ export type GetActivitiesParams = {
 
 export async function getActivities({
   userId,
-}: GetActivitiesParams): Promise<Activity[]> {
+}: GetActivitiesParams): Promise<ActivityWithTasksAndTimeEntries[]> {
   const activities = await prisma.activity.findMany({
     where: {
       userId,

@@ -1,12 +1,13 @@
-import type { Activity } from "@prisma/client";
 import { ActivityCard } from "@/components/activity-card";
 import { NoActivities } from "@/components/no-activities";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
 type ActivitiesListProps = {
-  activities: Activity[];
+  activities: ActivityWithTasksAndTimeEntries[];
 };
 
 export function ActivitiesList({ activities }: ActivitiesListProps) {
+  console.log(activities);
   if (activities.length === 0) {
     return <NoActivities />;
   }
