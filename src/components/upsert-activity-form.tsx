@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
+import type { Activity } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createActivitySchema } from "@/app/schemas/create-activity-schema";
+import { updateActivitySchema } from "@/app/schemas/update-activity-schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,28 +18,37 @@ import { Textarea } from "@/components/ui/textarea";
 import { ActivityIcon } from "lucide-react";
 import { useTransition } from "react";
 import { createActivityAction } from "@/app/actions/create-activity-action";
+import { updateActivityAction } from "@/app/actions/update-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
 import { RootFormError } from "@/components/root-form-error";
 
 type FormData = {
+  activityId?: string;
   name: string;
   description: string;
 };
 
-type CreateActivityFormProps = {
+type UpsertActivityFormProps = {
+  activity?: Activity;
   onSuccess: () => void;
 };
 
-export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
+export function UpsertActivityForm({
+  activity,
+  onSuccess,
+}: UpsertActivityFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const form = useForm<FormData>({
-    resolver: zodResolver(createActivitySchema),
+    resolver: zodResolver(
+      activity ? updateActivitySchema : createActivitySchema
+    ),
     defaultValues: {
-      name: "",
-      description: "",
+      ...(activity && { activityId: activity.id }),
+      name: activity?.name || "",
+      description: activity?.description || "",
     },
   });
 
@@ -47,17 +58,29 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("description", data.description);
+        if (activity) {
+          formData.append("activityId", activity.id);
+        }
 
-        const result = await createActivityAction(formData);
+        const result = activity
+          ? await updateActivityAction(formData)
+          : await createActivityAction(formData);
 
         if (result.success) {
-          router.push(`/dashboard/activities/${result.data.id}`);
+          if (activity) {
+            router.refresh();
+          } else {
+            router.push(`/dashboard/activities/${result.data.id}`);
+          }
           onSuccess();
         } else {
           setFormErrors(form.setError, result.errors);
         }
       } catch (error) {
-        console.error("Activity creation error:", error);
+        console.error(
+          `Activity ${activity ? "update" : "create"} error:`,
+          error
+        );
         form.setError("root", {
           type: "manual",
           message: "An unexpected error occurred. Please try again.",
@@ -133,7 +156,13 @@ export function CreateActivityForm({ onSuccess }: CreateActivityFormProps) {
               className="w-full text-base font-semibold"
               disabled={isPending}
             >
-              {isPending ? "Creating..." : "Create"}
+              {activity
+                ? isPending
+                  ? "Updating..."
+                  : "Update"
+                : isPending
+                ? "Creating..."
+                : "Create"}
             </Button>
           </div>
         </form>

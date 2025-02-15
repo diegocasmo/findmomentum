@@ -11,8 +11,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { softDeleteActivityAction } from "@/app/actions/soft-delete-activity-action";
 import { toast } from "@/hooks/use-toast";
 import type { Activity } from "@prisma/client";
@@ -20,6 +18,7 @@ import type { Activity } from "@prisma/client";
 type DeleteActivityDialogProps = {
   activity: Activity;
   redirectUrl?: string;
+  children: React.ReactNode;
 };
 
 const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
@@ -31,6 +30,7 @@ const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
 export function DeleteActivityDialog({
   activity,
   redirectUrl,
+  children,
 }: DeleteActivityDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -61,16 +61,7 @@ export function DeleteActivityDialog({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="w-full cursor-pointer hover:text-destructive focus:text-destructive justify-start"
-          aria-label={`Delete ${activity.name}`}
-        >
-          <Trash2 className="h-4 w-4 mr-2" />
-          Delete
-        </Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-[425px] max-w-[90%] w-full">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>

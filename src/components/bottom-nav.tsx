@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Home, ActivityIcon, User } from "lucide-react";
-import { CreateActivityDialog } from "@/components/create-activity-dialog";
+import { UpsertActivityDialog } from "@/components/upsert-activity-dialog";
 import { UserDropdownMenu } from "@/components/user-dropdown-menu";
 import type React from "react";
 import Link from "next/link";
@@ -36,12 +36,12 @@ export function BottomNav() {
             <Link href="/dashboard" passHref legacyBehavior>
               <NavButton icon={<Home className="h-6 w-6" />} label="Home" />
             </Link>
-            <CreateActivityDialog>
+            <UpsertActivityDialog>
               <NavButton
                 icon={<ActivityIcon className="h-6 w-6" />}
                 label="Create"
               />
-            </CreateActivityDialog>
+            </UpsertActivityDialog>
             <UserDropdownMenu>
               <Button
                 variant="ghost"

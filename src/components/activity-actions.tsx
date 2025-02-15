@@ -1,5 +1,6 @@
 "use client";
-import { Settings } from "lucide-react";
+
+import { Settings, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UpsertActivityDialog } from "@/components/upsert-activity-dialog";
 import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
 import type { Activity } from "@prisma/client";
 
@@ -30,10 +32,28 @@ export function ActivityActions({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuItem asChild>
-            <DeleteActivityDialog
-              activity={activity}
-              redirectUrl={redirectUrl}
-            />
+            <UpsertActivityDialog activity={activity}>
+              <Button
+                variant="ghost"
+                className="w-full cursor-pointer justify-start"
+                aria-label={`Update ${activity.name}`}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Update
+              </Button>
+            </UpsertActivityDialog>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <DeleteActivityDialog activity={activity} redirectUrl={redirectUrl}>
+              <Button
+                variant="ghost"
+                className="w-full cursor-pointer hover:text-destructive focus:text-destructive justify-start"
+                aria-label={`Delete ${activity.name}`}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            </DeleteActivityDialog>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

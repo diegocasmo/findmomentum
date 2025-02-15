@@ -7,7 +7,6 @@ type ActivitiesListProps = {
 };
 
 export function ActivitiesList({ activities }: ActivitiesListProps) {
-  console.log(activities);
   if (activities.length === 0) {
     return <NoActivities />;
   }
