@@ -1,6 +1,7 @@
 "use client";
 
-import { Settings, Trash2, Pencil } from "lucide-react";
+import { Settings, Trash2, Pencil, Copy, Loader2 } from "lucide-react";
+import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +12,9 @@ import {
 import { UpsertActivityDialog } from "@/components/upsert-activity-dialog";
 import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
 import type { Activity } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { createActivityFromTemplateAction } from "@/app/actions/create-activity-from-template-action";
+import { useToast } from "@/hooks/use-toast";
 
 type ActivityActionsProps = {
   activity: Activity;
@@ -21,6 +25,38 @@ export function ActivityActions({
   activity,
   redirectUrl,
 }: ActivityActionsProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+
+  const handleUseAsTemplate = () => {
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("activityId", activity.id);
+        const result = await createActivityFromTemplateAction(formData);
+
+        if (result.success) {
+          router.push(`/dashboard/activities/${result.data?.id}`);
+        } else {
+          toast({
+            title: "Error",
+            description:
+              "Failed to create activity from template. Please try again.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Use as template error:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
+    });
+  };
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu>
@@ -42,6 +78,25 @@ export function ActivityActions({
                 Update
               </Button>
             </UpsertActivityDialog>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            asChild
+            className="p-0"
+          >
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer justify-start px-4 py-2"
+              onClick={handleUseAsTemplate}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Copy className="h-4 w-4 mr-2" />
+              )}
+              {isPending ? "Using as template..." : "Use as template"}
+            </Button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <DeleteActivityDialog activity={activity} redirectUrl={redirectUrl}>
