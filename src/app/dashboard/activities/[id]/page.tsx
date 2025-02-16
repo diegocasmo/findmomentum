@@ -4,13 +4,13 @@ import { notFound, redirect } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
 import { TasksList } from "@/components/tasks-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ActivityIcon, ListTodoIcon } from "lucide-react";
+import { ListTodoIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
-import { ActivityActions } from "@/components/activity-actions";
 import { CompleteActivity } from "@/components/complete-activity";
 import { CreateTaskDialog } from "@/components/create-task-dialog";
 import { ActivityCompletedCard } from "@/components/activity-completed-card";
 import { ActivityPageSkeleton } from "@/components/activity-page-skeleton";
+import { ActivityHeader } from "@/app/dashboard/activities/[id]/components/activity-header";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -34,20 +34,7 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
   return (
     <Suspense fallback={<ActivityPageSkeleton />}>
       <div className="container mx-auto space-y-8 h-full flex flex-col">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-4xl font-bold flex items-center">
-              <ActivityIcon className="w-10 h-10 mr-4 text-primary" />
-              {activity.name}
-            </h1>
-            <p className="mt-2 text-xl text-muted-foreground">
-              {activity.description}
-            </p>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <ActivityActions activity={activity} redirectUrl="/dashboard" />
-          </div>
-        </div>
+        <ActivityHeader activity={activity} />
         {activity.completedAt ? (
           <div className="flex justify-center">
             <ActivityCompletedCard activity={activity} />
