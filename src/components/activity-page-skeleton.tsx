@@ -5,9 +5,12 @@ export function ActivityPageSkeleton() {
   return (
     <div className="container mx-auto space-y-8 h-full flex flex-col">
       <div className="flex justify-between items-center">
-        <div>
-          <Skeleton className="h-10 w-64 mb-2" />
-          <Skeleton className="h-6 w-96" />
+        <div className="flex items-center space-x-6">
+          <Skeleton className="h-10 w-10" />
+          <div>
+            <Skeleton className="h-10 w-64 mb-2" />
+            <Skeleton className="h-6 w-96" />
+          </div>
         </div>
         <Skeleton className="h-10 w-10 rounded-full" />
       </div>
