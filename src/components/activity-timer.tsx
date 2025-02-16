@@ -19,7 +19,7 @@ export function ActivityTimer({ activity }: ActivityTimerProps) {
   useEffect(() => {
     document.title = `Momentum (${formatTimeHHMMss(remainingTime)})`;
     return () => {
-      document.title = "Momentum";
+      document.title = "Momentum | Small wins. Big progress.";
     };
   }, [remainingTime, activity.name]);
 

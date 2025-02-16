@@ -27,7 +27,7 @@ export default async function Home() {
               Momentum
             </CardTitle>
             <CardDescription className="text-center">
-              Build momentum, one task at a time
+              Small wins. Big progress.
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex justify-center">

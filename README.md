@@ -3,8 +3,7 @@
 
 [https://www.findmomentum.xyz](https://www.findmomentum.xyz)
 
-
-Build momentum, one task at a time
+Small wins. Big progress.
 
 ## Installation
 

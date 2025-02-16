@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { metadata } from "@/app/layout";
 
 export async function TopBav() {
   return (
@@ -9,7 +10,7 @@ export async function TopBav() {
             <Link href="/dashboard" className="flex items-center space-x-4">
               <span className="font-bold text-lg">Momentum</span>
               <span className="md:inline text-sm text-muted-foreground">
-                Build momentum, one task at a time
+                {metadata.description}
               </span>
             </Link>
           </div>
