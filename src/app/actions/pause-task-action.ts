@@ -3,14 +3,10 @@
 import { pauseTask } from "@/lib/services/pause-task";
 import { pauseTaskSchema } from "@/app/schemas/pause-task-schema";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
-import type { FieldErrors } from "react-hook-form";
 import { auth } from "@/lib/auth";
 import type { TimeEntry } from "@prisma/client";
 import { transformPrismaErrorToZodError } from "@/lib/utils/prisma-error-handler";
-
-type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; errors: FieldErrors };
+import type { ActionResult } from "@/types";
 
 export async function pauseTaskAction(
   formData: FormData

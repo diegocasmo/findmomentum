@@ -5,11 +5,7 @@ import { auth } from "@/lib/auth";
 import type { Activity } from "@prisma/client";
 import { createZodError, parseZodErrors } from "@/lib/utils/form";
 import { transformPrismaErrorToZodError } from "@/lib/utils/prisma-error-handler";
-import type { FieldErrors } from "react-hook-form";
-
-type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; errors: FieldErrors };
+import type { ActionResult } from "@/types";
 
 export async function softDeleteActivityAction(
   activityId: string

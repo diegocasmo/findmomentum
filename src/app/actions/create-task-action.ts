@@ -3,14 +3,10 @@
 import { createTaskSchema } from "@/app/schemas/create-task-schema";
 import { createTask } from "@/lib/services/create-task";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
-import type { FieldErrors } from "react-hook-form";
 import { auth } from "@/lib/auth";
 import type { Task } from "@prisma/client";
 import { transformPrismaErrorToZodError } from "@/lib/utils/prisma-error-handler";
-
-type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; errors: FieldErrors };
+import type { ActionResult } from "@/types";
 
 export async function createTaskAction(
   formData: FormData

@@ -3,14 +3,10 @@
 import { updateActivitySchema } from "@/app/schemas/update-activity-schema";
 import { updateActivity } from "@/lib/services/update-activity";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
-import type { FieldErrors } from "react-hook-form";
 import { auth } from "@/lib/auth";
 import type { Activity } from "@prisma/client";
 import { transformPrismaErrorToZodError } from "@/lib/utils/prisma-error-handler";
-
-type ActionResult<T> =
-  | { success: true; data: T }
-  | { success: false; errors: FieldErrors };
+import type { ActionResult } from "@/types";
 
 export async function updateActivityAction(
   formData: FormData
