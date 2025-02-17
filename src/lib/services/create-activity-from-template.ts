@@ -27,7 +27,12 @@ export async function createActivityFromTemplate({
             },
           },
         },
-        include: { tasks: true },
+        include: {
+          tasks: {
+            where: { deletedAt: null },
+            orderBy: { createdAt: "asc" },
+          },
+        },
       });
 
       return await tx.activity.create({
