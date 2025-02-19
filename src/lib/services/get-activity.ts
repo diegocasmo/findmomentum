@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { TeamMembershipRole } from "@prisma/client";
-import { notFound } from "next/navigation";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
 export type GetActivityParams = {
@@ -13,40 +12,34 @@ export async function getActivity({
   userId,
 }: GetActivityParams): Promise<ActivityWithTasksAndTimeEntries> {
   try {
-    const activity = await prisma.$transaction(async (tx) => {
-      const teamMembership = await tx.teamMembership.findFirstOrThrow({
-        where: { userId, role: TeamMembershipRole.OWNER },
-        select: { teamId: true },
-      });
-
-      return await tx.activity.findFirst({
-        where: {
-          id,
-          userId,
-          teamId: teamMembership.teamId,
-          deletedAt: null,
-        },
-        include: {
-          tasks: {
-            where: {
-              deletedAt: null,
-            },
-            include: {
-              timeEntries: true,
-            },
-            orderBy: {
-              createdAt: "asc",
+    return await prisma.activity.findFirstOrThrow({
+      where: {
+        id,
+        userId,
+        team: {
+          teamMemberships: {
+            some: {
+              userId,
+              role: TeamMembershipRole.OWNER,
             },
           },
         },
-      });
+        deletedAt: null,
+      },
+      include: {
+        tasks: {
+          where: {
+            deletedAt: null,
+          },
+          include: {
+            timeEntries: true,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
     });
-
-    if (!activity) {
-      notFound();
-    }
-
-    return activity;
   } catch (error) {
     console.error("Error fetching activity:", error);
     throw error;

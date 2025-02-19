@@ -27,8 +27,14 @@ export async function getActivities({
     },
     include: {
       tasks: {
+        where: {
+          deletedAt: null,
+        },
         include: {
           timeEntries: true,
+        },
+        orderBy: {
+          createdAt: "asc",
         },
       },
     },

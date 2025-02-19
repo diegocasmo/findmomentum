@@ -62,6 +62,10 @@ model TeamMembership {
   @@map("user_teams")
 }
 
+enum TeamMembershipRole {
+  OWNER
+}
+
 model Activity {
   id          String    @id @default(cuid())
   name        String
@@ -116,8 +120,4 @@ model TimeEntry {
   @@unique([taskId, stoppedAt])
   @@index([taskId])
   @@map("time_entries")
-}
-
-enum TeamMembershipRole {
-  OWNER
 }

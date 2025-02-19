@@ -47,6 +47,7 @@ export async function createActivityFromTemplate({
             create: sourceActivity.tasks.map((task) => ({
               name: task.name,
               durationMs: task.durationMs,
+              createdAt: new Date(),
             })),
           },
         },
