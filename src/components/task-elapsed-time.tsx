@@ -9,14 +9,16 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2Icon } from "lucide-react";
 import { getTaskRemainingTime } from "@/lib/utils/time";
 import { sendNotification } from "@/components/notification-manager";
+import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 
 type TaskElapsedTimeProps = {
   task: TaskWithTimeEntries;
 };
 
 export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
-  const [remainingTime, setRemainingTime] = useState(
-    getTaskRemainingTime(task)
+  const isCompleted = isTaskCompleted(task);
+  const [displayTime, setDisplayTime] = useState(
+    isCompleted ? task.durationMs : getTaskRemainingTime(task)
   );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -61,10 +63,12 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
   }, [task.id, task.name, router, toast]);
 
   useEffect(() => {
-    if (isTaskRunning(task)) {
+    if (isCompleted) {
+      setDisplayTime(task.durationMs);
+    } else if (isTaskRunning(task)) {
       const timerId = setInterval(() => {
         const newRemainingTime = getTaskRemainingTime(task);
-        setRemainingTime(newRemainingTime);
+        setDisplayTime(newRemainingTime);
 
         if (newRemainingTime <= 0) {
           clearInterval(timerId);
@@ -74,9 +78,9 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
 
       return () => clearInterval(timerId);
     } else {
-      setRemainingTime(getTaskRemainingTime(task));
+      setDisplayTime(getTaskRemainingTime(task));
     }
-  }, [task, handleCompleteTask]);
+  }, [task, handleCompleteTask, isCompleted]);
 
   if (isPending) {
     return (
@@ -86,5 +90,5 @@ export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
     );
   }
 
-  return formatTimeMMss(Math.max(0, remainingTime));
+  return formatTimeMMss(Math.max(0, displayTime));
 }

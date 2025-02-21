@@ -66,11 +66,11 @@ export function TaskCard({ task }: TaskCardProps) {
 
   return (
     <Card
-      className={cn(
-        "transition-colors duration-200",
-        !isCompleted && "hover:bg-secondary cursor-pointer",
-        isRunning && "border-primary"
-      )}
+      className={cn("transition-colors duration-200", {
+        "hover:bg-secondary cursor-pointer": !isCompleted,
+        "border-primary": isRunning,
+        "border-green-500": isCompleted,
+      })}
       onClick={handleToggleTask}
     >
       <CardContent className="p-4">
@@ -78,7 +78,7 @@ export function TaskCard({ task }: TaskCardProps) {
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 flex items-center justify-center">
               {isCompleted ? (
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <CheckCircle className="w-5 h-5 text-muted-foreground" />
               ) : isPending ? (
                 <Loader2Icon className="w-5 h-5 animate-spin" />
               ) : isRunning ? (
