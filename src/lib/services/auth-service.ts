@@ -1,7 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.AUTH_RESEND_KEY);
+import { getResend } from "@/lib/auth/resend";
 
 export async function requestOtp(email: string) {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -24,6 +22,7 @@ export async function requestOtp(email: string) {
   if (process.env.NODE_ENV === "development") {
     console.log(`OTP for ${email}: ${otp}`);
   } else {
+    const resend = getResend();
     await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: email,
