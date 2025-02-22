@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RootFormError } from "@/components/root-form-error";
+import { ArrowLeft, Edit2 } from "lucide-react";
 
 export function SignInForm() {
   const router = useRouter();
@@ -70,32 +71,51 @@ export function SignInForm() {
     });
   });
 
+  const handleBack = () => {
+    setStep("email");
+    form.setValue("otp", "");
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  autoFocus
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                {step === "email"
-                  ? "We'll send you a one-time password."
-                  : "Enter the OTP sent to your email."}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {step === "otp" && (
+          <div className="flex items-center justify-between mb-4">
+            <span className="mr-2 text-sm text-muted-foreground">
+              {form.getValues("email")}
+            </span>
+
+            <Button variant="outline" onClick={handleBack}>
+              <Edit2 className="w-4 h-4" />
+              Edit
+            </Button>
+          </div>
+        )}
+
+        {step === "email" && (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    autoFocus
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  We&apos;ll send you a one-time password.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         {step === "otp" && (
           <FormField
             control={form.control}
@@ -111,19 +131,24 @@ export function SignInForm() {
                     {...field}
                   />
                 </FormControl>
+                <FormDescription>
+                  Enter the OTP sent to your email.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
         )}
+
         <RootFormError message={form.formState.errors.root?.message} />
+
         <div className="flex justify-center">
-          <Button type="submit" disabled={isPending || !form.formState.isValid}>
+          <Button type="submit" disabled={isPending}>
             {isPending
               ? "Submitting..."
-              : step === "email"
-              ? "Continue with email"
-              : "Verify OTP"}
+              : step === "otp"
+              ? "Verify OTP"
+              : "Continue with email"}
           </Button>
         </div>
       </form>
