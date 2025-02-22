@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RootFormError } from "@/components/root-form-error";
-import { ArrowLeft, Edit2 } from "lucide-react";
+import { Edit2 } from "lucide-react";
 
 export function SignInForm() {
   const router = useRouter();
