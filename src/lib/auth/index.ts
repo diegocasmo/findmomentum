@@ -1,9 +1,8 @@
 import NextAuth from "next-auth";
-import type { NextAuthConfig, Session, User } from "next-auth";
+import type { NextAuthConfig, User } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
-import { getResendProvider } from "@/lib/auth/resend-provider";
-import type { JWT } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { findOrCreateDefaultTeam } from "@/lib/services/find-or-create-default-team";
 
 declare module "next-auth" {
@@ -17,33 +16,68 @@ declare module "next-auth" {
 
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
-  providers: [getResendProvider()],
-  session: {
-    strategy: "jwt",
-  },
+  providers: [
+    CredentialsProvider({
+      name: "OTP",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        otp: { label: "OTP", type: "text" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.otp) return null;
+
+        const verificationToken =
+          await prisma.verificationToken.findFirstOrThrow({
+            where: {
+              identifier: credentials.email,
+              token: credentials.otp,
+              expires: { gt: new Date() },
+            },
+          });
+
+        if (!verificationToken) return null;
+
+        // Delete the used token
+        await prisma.verificationToken.delete({
+          where: { id: verificationToken.id },
+        });
+
+        // Find or create the user
+        let user = await prisma.user.findFirstOrThrow({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          user = await prisma.user.create({
+            data: { email: verificationToken.identifier },
+          });
+        }
+
+        return user;
+      },
+    }),
+  ],
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/sign-in",
-    signOut: "/auth/sign-out",
-    verifyRequest: "/auth/verify-request",
-    error: "/auth/error",
   },
   callbacks: {
-    jwt: async ({ token, user }: { token: JWT; user?: User }) => {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
-    session: async ({ session, token }: { session: Session; token: JWT }) => {
-      if (session.user && token.id) {
+    async session({ session, token }) {
+      if (session.user) {
         session.user.id = token.id as string;
       }
       return session;
     },
   },
   events: {
-    signIn: async ({ user, account }) => {
-      if (user.id && user.email && account?.provider === "resend") {
+    async signIn({ user }) {
+      if (user.id && user.email) {
         await findOrCreateDefaultTeam(user.id);
       }
     },
