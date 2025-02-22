@@ -16,6 +16,7 @@ export async function getActivity({
       where: {
         id,
         userId,
+        deletedAt: null,
         team: {
           teamMemberships: {
             some: {
@@ -24,7 +25,6 @@ export async function getActivity({
             },
           },
         },
-        deletedAt: null,
       },
       include: {
         tasks: {

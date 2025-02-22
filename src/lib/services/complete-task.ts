@@ -22,6 +22,7 @@ export async function completeTask({
           deletedAt: null,
           completedAt: null,
           activity: {
+            deletedAt: null,
             team: {
               teamMemberships: {
                 some: {
