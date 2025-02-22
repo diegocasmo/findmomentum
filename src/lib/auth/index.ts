@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { findOrCreateDefaultTeam } from "@/lib/services/find-or-create-default-team";
 import { findUserByEmailAndOtp } from "@/lib/services/find-user-by-email-and-otp";
+import type { OtpCredentials } from "@/types";
 
 declare module "next-auth" {
   interface Session {
@@ -14,12 +15,6 @@ declare module "next-auth" {
     } & Partial<User>;
   }
 }
-
-// Define a type for our credentials
-type OtpCredentials = {
-  email: string;
-  otp: string;
-};
 
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
