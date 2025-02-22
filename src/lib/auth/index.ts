@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { findOrCreateDefaultTeam } from "@/lib/services/find-or-create-default-team";
+import { verifyOtp } from "@/lib/services/auth-service";
 
 declare module "next-auth" {
   interface Session {
@@ -13,6 +14,12 @@ declare module "next-auth" {
     } & Partial<User>;
   }
 }
+
+// Define a type for our credentials
+type OtpCredentials = {
+  email: string;
+  otp: string;
+};
 
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -24,32 +31,20 @@ export const authOptions: NextAuthConfig = {
         otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.otp) return null;
+        const { email, otp } = credentials as OtpCredentials;
 
-        const verificationToken =
-          await prisma.verificationToken.findFirstOrThrow({
-            where: {
-              identifier: credentials.email,
-              token: credentials.otp,
-              expires: { gt: new Date() },
-            },
-          });
+        if (!email || !otp) return null;
 
-        if (!verificationToken) return null;
+        const isValid = await verifyOtp(email, otp);
+        if (!isValid) return null;
 
-        // Delete the used token
-        await prisma.verificationToken.delete({
-          where: { id: verificationToken.id },
-        });
-
-        // Find or create the user
-        let user = await prisma.user.findFirstOrThrow({
-          where: { email: credentials.email },
+        let user = await prisma.user.findUnique({
+          where: { email },
         });
 
         if (!user) {
           user = await prisma.user.create({
-            data: { email: verificationToken.identifier },
+            data: { email },
           });
         }
 

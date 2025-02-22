@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInSchema } from "@/app/schemas/sign-in-schema";
 import { setFormErrors } from "@/lib/utils/form";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { signInAction } from "@/app/actions/sign-in-action";
+import { requestOtpAction } from "@/app/actions/request-otp-action";
+import { verifyOtpAction } from "@/app/actions/verify-otp-action";
 import {
   Form,
   FormField,
@@ -23,25 +25,40 @@ import { RootFormError } from "@/components/root-form-error";
 export function SignInForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [step, setStep] = useState<"email" | "otp">("email");
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
+      otp: "",
     },
   });
 
   const onSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        const formData = new FormData();
-        formData.set("email", data.email);
-        const result = await signInAction(formData);
+        if (step === "email") {
+          const formData = new FormData();
+          formData.set("email", data.email);
+          const result = await requestOtpAction(formData);
 
-        if (result.success) {
-          router.push("/api/auth/verify-request");
+          if (result.success) {
+            setStep("otp");
+          } else {
+            setFormErrors(form.setError, result.errors);
+          }
         } else {
-          setFormErrors(form.setError, result.errors);
+          const formData = new FormData();
+          formData.set("email", data.email);
+          formData.set("otp", data.otp!);
+          const result = await verifyOtpAction(formData);
+
+          if (result.success) {
+            router.push("/dashboard");
+          } else {
+            setFormErrors(form.setError, result.errors);
+          }
         }
       } catch (error) {
         console.error("Sign in error:", error);
@@ -71,16 +88,42 @@ export function SignInForm() {
                 />
               </FormControl>
               <FormDescription>
-                We&apos;ll send you a magic link to sign in.
+                {step === "email"
+                  ? "We'll send you a one-time password."
+                  : "Enter the OTP sent to your email."}
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        {step === "otp" && (
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>One-Time Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Enter your OTP"
+                    autoFocus
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <RootFormError message={form.formState.errors.root?.message} />
         <div className="flex justify-center">
           <Button type="submit" disabled={isPending || !form.formState.isValid}>
-            {isPending ? "Submitting..." : "Continue with email"}
+            {isPending
+              ? "Submitting..."
+              : step === "email"
+              ? "Continue with email"
+              : "Verify OTP"}
           </Button>
         </div>
       </form>
