@@ -14,3 +14,8 @@ export type TaskWithTimeEntries = Task & {
 export type ActionResult<T = void> =
   | { success: true; data: T }
   | { success: false; errors: FieldErrors };
+
+export type OtpCredentials = {
+  email: string;
+  otp: string;
+};

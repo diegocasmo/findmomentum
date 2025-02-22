@@ -1,6 +1,6 @@
 "use server";
 
-import { requestOtp } from "@/lib/services/auth-service";
+import { requestOtp } from "@/lib/services/request-otp";
 import { signInSchema } from "@/app/schemas/sign-in-schema";
 import { parseZodErrors, createZodError } from "@/lib/utils/form";
 import { transformPrismaErrorToZodError } from "@/lib/utils/prisma-error-handler";

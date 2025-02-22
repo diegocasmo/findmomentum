@@ -4,7 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { findOrCreateDefaultTeam } from "@/lib/services/find-or-create-default-team";
-import { verifyOtp } from "@/lib/services/auth-service";
+import { findUserByEmailAndOtp } from "@/lib/services/find-user-by-email-and-otp";
 
 declare module "next-auth" {
   interface Session {
@@ -31,24 +31,13 @@ export const authOptions: NextAuthConfig = {
         otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials) {
-        const { email, otp } = credentials as OtpCredentials;
-
-        if (!email || !otp) return null;
-
-        const isValid = await verifyOtp(email, otp);
-        if (!isValid) return null;
-
-        let user = await prisma.user.findUnique({
-          where: { email },
-        });
-
-        if (!user) {
-          user = await prisma.user.create({
-            data: { email },
-          });
+        try {
+          const { email, otp } = credentials as OtpCredentials;
+          return await findUserByEmailAndOtp(email, otp);
+        } catch (error) {
+          console.error("Error authorizing user:", error);
+          return null;
         }
-
-        return user;
       },
     }),
   ],
