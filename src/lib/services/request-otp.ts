@@ -1,10 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { getResend } from "@/lib/auth/resend";
+import { MS_PER_MIN } from "@/lib/utils/time";
 
 export async function requestOtp(email: string) {
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
-
   const nextAuthUrl = process.env.NEXTAUTH_URL;
   if (!nextAuthUrl) {
     throw new Error("NEXTAUTH_URL is not set in the environment variables");
@@ -15,6 +13,10 @@ export async function requestOtp(email: string) {
     throw new Error("EMAIL_FROM is not set in the environment variables");
   }
 
+  const otp = Buffer.from(crypto.getRandomValues(new Uint8Array(8)))
+    .toString("hex")
+    .slice(0, 6);
+  const expires = new Date(Date.now() + 10 * MS_PER_MIN); // 10 minutes from now
   const { host } = new URL(nextAuthUrl);
 
   await prisma.$transaction(async (tx) => {
