@@ -7,7 +7,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-export default async function SignIn() {
+export default function SignIn() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -15,7 +15,7 @@ export default async function SignIn() {
           Momentum
         </CardTitle>
         <CardDescription className="text-center">
-          Build momentum, one task at a time
+          Small wins. Big progress.
         </CardDescription>
       </CardHeader>
       <CardContent>

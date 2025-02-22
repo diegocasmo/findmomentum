@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInSchema } from "@/app/schemas/sign-in-schema";
 import { setFormErrors } from "@/lib/utils/form";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { signInAction } from "@/app/actions/sign-in-action";
+import { requestOtpAction } from "@/app/actions/request-otp-action";
+import { verifyOtpAction } from "@/app/actions/verify-otp-action";
 import {
   Form,
   FormField,
@@ -19,29 +21,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RootFormError } from "@/components/root-form-error";
+import { ArrowLeft, Edit2 } from "lucide-react";
 
 export function SignInForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [step, setStep] = useState<"email" | "otp">("email");
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
+      otp: "",
     },
   });
 
   const onSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        const formData = new FormData();
-        formData.set("email", data.email);
-        const result = await signInAction(formData);
+        if (step === "email") {
+          const formData = new FormData();
+          formData.set("email", data.email);
+          const result = await requestOtpAction(formData);
 
-        if (result.success) {
-          router.push("/api/auth/verify-request");
+          if (result.success) {
+            setStep("otp");
+          } else {
+            setFormErrors(form.setError, result.errors);
+          }
         } else {
-          setFormErrors(form.setError, result.errors);
+          const formData = new FormData();
+          formData.set("email", data.email);
+          formData.set("otp", data.otp!);
+          const result = await verifyOtpAction(formData);
+
+          if (result.success) {
+            router.push("/dashboard");
+          } else {
+            setFormErrors(form.setError, result.errors);
+          }
         }
       } catch (error) {
         console.error("Sign in error:", error);
@@ -53,34 +71,84 @@ export function SignInForm() {
     });
   });
 
+  const handleBack = () => {
+    setStep("email");
+    form.setValue("otp", "");
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  autoFocus
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                We&apos;ll send you a magic link to sign in.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {step === "otp" && (
+          <div className="flex items-center justify-between mb-4">
+            <span className="mr-2 text-sm text-muted-foreground">
+              {form.getValues("email")}
+            </span>
+
+            <Button variant="outline" onClick={handleBack}>
+              <Edit2 className="w-4 h-4" />
+              Edit
+            </Button>
+          </div>
+        )}
+
+        {step === "email" && (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    autoFocus
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  We&apos;ll send you a one-time password.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+        {step === "otp" && (
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>One-Time Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Enter your OTP"
+                    autoFocus
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Enter the OTP sent to your email.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         <RootFormError message={form.formState.errors.root?.message} />
+
         <div className="flex justify-center">
-          <Button type="submit" disabled={isPending || !form.formState.isValid}>
-            {isPending ? "Submitting..." : "Continue with email"}
+          <Button type="submit" disabled={isPending}>
+            {isPending
+              ? "Submitting..."
+              : step === "otp"
+              ? "Verify OTP"
+              : "Continue with email"}
           </Button>
         </div>
       </form>

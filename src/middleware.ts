@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Routes that require authentication
-  if (pathname.startsWith("/dashboard") || pathname === "/auth/sign-out") {
+  if (pathname.startsWith("/dashboard")) {
     if (!session) {
       return NextResponse.redirect(new URL("/auth/sign-in", request.url));
     }
@@ -20,12 +20,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Routes for unauthenticated users
-  if (
-    ["/auth/sign-in", "/auth/error", "/auth/verify-request"].includes(
-      pathname
-    ) &&
-    session
-  ) {
+  if (["/auth/sign-in"].includes(pathname) && session) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

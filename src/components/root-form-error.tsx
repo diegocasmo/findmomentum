@@ -10,8 +10,10 @@ export function RootFormError({ message }: RootFormErrorProps) {
 
   return (
     <Alert variant="destructive" className="mb-4">
-      <AlertCircle className="h-4 w-4" />
-      <AlertDescription>{message}</AlertDescription>
+      <div className="flex items-center">
+        <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
+        <AlertDescription>{message}</AlertDescription>
+      </div>
     </Alert>
   );
 }
