@@ -15,7 +15,7 @@ export default function SignIn() {
           Momentum
         </CardTitle>
         <CardDescription className="text-center">
-          Build momentum, one task at a time
+          Small wins. Big progress.
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -26,8 +26,8 @@ export async function requestOtp(email: string) {
     await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: email,
-      subject: `Your OTP for ${host}`,
-      html: `Your OTP is: <strong>${otp}</strong>. It will expire in 10 minutes.`,
+      subject: `Your One-Time Password for ${host}`,
+      html: `Your one-time password is: <strong>${otp}</strong>. It will expire in 10 minutes.`,
     });
   }
 }
