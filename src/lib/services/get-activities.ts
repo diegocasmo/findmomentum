@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { ActivityWithTasksAndTimeEntries } from "@/types";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { TeamMembershipRole } from "@prisma/client";
 
 export type GetActivitiesParams = {
@@ -29,6 +29,17 @@ export async function getActivities({
       tasks: {
         where: {
           deletedAt: null,
+          activity: {
+            tasks: {
+              some: {
+                timeEntries: {
+                  some: {
+                    stoppedAt: null,
+                  },
+                },
+              },
+            },
+          },
         },
         include: {
           timeEntries: true,
