@@ -4,10 +4,12 @@ import { TeamMembershipRole } from "@prisma/client";
 
 export type GetActivitiesParams = {
   userId: string;
+  completed?: boolean;
 };
 
 export async function getActivities({
   userId,
+  completed,
 }: GetActivitiesParams): Promise<ActivityWithTasksAndTimeEntries[]> {
   const activities = await prisma.activity.findMany({
     where: {
@@ -19,6 +21,11 @@ export async function getActivities({
             userId,
             role: TeamMembershipRole.OWNER,
           },
+        },
+      },
+      tasks: {
+        every: {
+          completedAt: completed ? { not: null } : null,
         },
       },
     },
