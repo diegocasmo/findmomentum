@@ -1,3 +1,4 @@
+import type React from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/toaster";
@@ -17,7 +18,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Momentum | Small wins. Big progress.",
-  description: "Small wins. Big progress.",
+  description:
+    "Track your daily activities and build momentum towards your goals.",
 };
 
 export default function RootLayout({
@@ -30,7 +32,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
-        <TooltipProvider>{children}</TooltipProvider>
+        <TooltipProvider>
+          <div className="container max-w-7xl mx-auto px-4">{children}</div>
+        </TooltipProvider>
         <Toaster />
       </body>
     </html>

@@ -1,15 +1,10 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
 import { SessionProvider } from "next-auth/react";
+import { Header } from "@/components/header";
+import { Hero } from "@/components/hero";
+import { Features } from "@/components/features";
+import { Footer } from "@/components/footer";
 
 export default async function Home() {
   const session = await auth();
@@ -20,23 +15,14 @@ export default async function Home() {
 
   return (
     <SessionProvider session={session}>
-      <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-24">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-center">
-              Momentum
-            </CardTitle>
-            <CardDescription className="text-center">
-              Small wins. Big progress.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="flex justify-center">
-            <Button asChild>
-              <Link href="/auth/sign-in">Sign in</Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </main>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">
+          <Hero />
+          <Features />
+        </main>
+        <Footer />
+      </div>
     </SessionProvider>
   );
 }
