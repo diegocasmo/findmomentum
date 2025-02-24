@@ -1,32 +1,18 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCallback } from "react";
+import { useActivityTab } from "@/hooks/use-activity-tab";
+import type { ActivityTab } from "@/hooks/use-activity-tab";
 
 export function ActivityTabs() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-      return params.toString();
-    },
-    [searchParams]
-  );
-
-  const currentTab = searchParams.get("tab") || "active";
-
-  const handleTabChange = (value: string) => {
-    router.push(`/dashboard?${createQueryString("tab", value)}`, {
-      scroll: false,
-    });
-  };
+  const { currentTab, setActivityTab } = useActivityTab();
 
   return (
-    <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
+    <Tabs
+      value={currentTab}
+      onValueChange={(value) => setActivityTab(value as ActivityTab)}
+      className="w-full"
+    >
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="active">Active</TabsTrigger>
         <TabsTrigger value="completed">Completed</TabsTrigger>

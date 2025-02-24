@@ -8,7 +8,7 @@ import { DashboardPageSkeleton } from "@/components/dashboard-page-skeleton";
 import { ActivityTabs } from "@/components/activity-tabs";
 
 type DashboardProps = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function Dashboard({ searchParams }: DashboardProps) {
@@ -19,7 +19,8 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     redirect("/auth/sign-in");
   }
 
-  const tab = searchParams.tab as string | undefined;
+  const params = await searchParams;
+  const tab = params.tab as string | undefined;
   const completed = tab === "completed";
 
   const activities = await getActivities({ userId, completed });
