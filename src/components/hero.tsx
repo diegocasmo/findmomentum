@@ -9,7 +9,7 @@ export const Hero = () => {
         Small wins. Big progress.
       </h1>
       <p className="text-xl mb-8 text-muted-foreground">
-        Track your daily achievements and build momentum towards your goals.
+        Track your daily activities and build momentum towards your goals.
       </p>
       <Button asChild size="lg">
         <Link href="/auth/sign-in">Get Started</Link>
