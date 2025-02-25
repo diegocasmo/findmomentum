@@ -4,6 +4,7 @@ import type React from "react";
 import Link from "next/link";
 import { Home, Plus, User } from "lucide-react";
 import { UserDropdownMenu } from "@/components/user-dropdown-menu";
+import { UpsertActivityDialog } from "@/components/upsert-activity-dialog";
 
 interface NavButtonProps {
   icon: React.ReactNode;
@@ -50,12 +51,9 @@ export function BottomNav() {
             as={Link}
             href="/dashboard"
           />
-          <NavButton
-            icon={<Plus className="h-6 w-6" />}
-            label="Create"
-            as={Link}
-            href="/create"
-          />
+          <UpsertActivityDialog>
+            <NavButton icon={<Plus className="h-6 w-6" />} label="Create" />
+          </UpsertActivityDialog>
           <UserDropdownMenu>
             <NavButton icon={<User className="h-6 w-6" />} label="Profile" />
           </UserDropdownMenu>
