@@ -1,3 +1,4 @@
+import type React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,8 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SignOutForm } from "@//components/sign-out-form";
+import { SignOutForm } from "@/components/sign-out-form";
 import { useSession } from "next-auth/react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type UserDropdownMenuProps = {
   children: React.ReactNode;
@@ -22,9 +24,16 @@ export function UserDropdownMenu({ children }: UserDropdownMenuProps) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p>{session?.user?.email}</p>
+            <p className="text-sm font-medium leading-none">
+              {session?.user?.name}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {session?.user?.email}
+            </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <ThemeToggle />
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <SignOutForm />
