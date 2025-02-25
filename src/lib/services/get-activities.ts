@@ -15,17 +15,13 @@ export async function getActivities({
     where: {
       userId,
       deletedAt: null,
+      completedAt: completed ? { not: null } : null,
       team: {
         teamMemberships: {
           some: {
             userId,
             role: TeamMembershipRole.OWNER,
           },
-        },
-      },
-      tasks: {
-        every: {
-          completedAt: completed ? { not: null } : null,
         },
       },
     },
