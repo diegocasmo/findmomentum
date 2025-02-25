@@ -57,11 +57,7 @@ export function BottomNav() {
             href="/create"
           />
           <UserDropdownMenu>
-            <NavButton
-              icon={<User className="h-6 w-6" />}
-              label="Profile"
-              as="div"
-            />
+            <NavButton icon={<User className="h-6 w-6" />} label="Profile" />
           </UserDropdownMenu>
         </div>
       </nav>
