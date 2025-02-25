@@ -85,7 +85,7 @@ export function SignInForm() {
               {form.getValues("email")}
             </span>
 
-            <Button variant="outline" onClick={handleBack}>
+            <Button type="button" variant="outline" onClick={handleBack}>
               <Edit2 className="w-4 h-4" />
               Edit
             </Button>
