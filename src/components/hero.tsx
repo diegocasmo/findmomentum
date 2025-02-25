@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export const Hero = () => {
   return (
-    <section className="text-center py-20 px-4">
+    <section className="text-center py-10 px-4">
       <h1 className="text-4xl md:text-6xl font-bold mb-4">
         Small wins. Big progress.
       </h1>

@@ -18,8 +18,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Momentum | Small wins. Big progress.",
-  description:
-    "Track your daily activities and build momentum towards your goals.",
+  description: "Small wins. Big progress.",
 };
 
 export default function RootLayout({

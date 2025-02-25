@@ -13,7 +13,13 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
     <div className="flex justify-between ">
       <div className="flex items-center space-x-6">
         <Button variant="outline" size="icon" asChild>
-          <Link href="/dashboard" aria-label="Back to dashboard">
+          <Link
+            href={{
+              pathname: "/dashboard",
+              query: { tab: activity.completedAt ? "completed" : "active" },
+            }}
+            aria-label="Back to dashboard"
+          >
             <ChevronLeft className="h-4 w-4" />
           </Link>
         </Button>
