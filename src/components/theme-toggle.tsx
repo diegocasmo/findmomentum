@@ -22,15 +22,24 @@ export function ThemeToggle() {
       </DropdownMenuSubTrigger>
       <DropdownMenuPortal>
         <DropdownMenuSubContent>
-          <DropdownMenuItem onClick={() => setTheme("light")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setTheme("light")}
+          >
             <Sun className="mr-2 h-4 w-4" />
             <span>Light</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("dark")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setTheme("dark")}
+          >
             <Moon className="mr-2 h-4 w-4" />
             <span>Dark</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme("system")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => setTheme("system")}
+          >
             <Laptop className="mr-2 h-4 w-4" />
             <span>System</span>
           </DropdownMenuItem>
