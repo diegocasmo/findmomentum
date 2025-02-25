@@ -2,7 +2,7 @@
 
 import type React from "react";
 import Link from "next/link";
-import { Home, Search, Plus, User } from "lucide-react";
+import { Home, Plus, User } from "lucide-react";
 import { UserDropdownMenu } from "@/components/user-dropdown-menu";
 
 interface NavButtonProps {
