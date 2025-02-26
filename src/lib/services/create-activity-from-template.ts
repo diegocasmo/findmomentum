@@ -31,7 +31,7 @@ export async function createActivityFromTemplate({
         include: {
           tasks: {
             where: { deletedAt: null },
-            orderBy: { createdAt: "asc" },
+            orderBy: { position: "asc" },
           },
         },
       });
@@ -47,6 +47,7 @@ export async function createActivityFromTemplate({
           tasks: {
             create: sourceActivity.tasks.map((task, index) => ({
               name: task.name,
+              position: task.position,
               durationMs: task.durationMs,
               // Make sure each task has a distinct `createdAt` timestamp
               createdAt: addMilliseconds(new Date(), index),
