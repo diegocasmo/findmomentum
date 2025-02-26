@@ -4,7 +4,7 @@ import { type Task, TeamMembershipRole } from "@prisma/client";
 type UpdateTaskPositionParams = {
   taskId: string;
   userId: string;
-  newPosition: "top" | "bottom" | { afterTaskId: string };
+  newPosition: "top" | "bottom" | string;
 };
 
 export async function updateTaskPosition({
@@ -58,9 +58,7 @@ export async function updateTaskPosition({
         newPositionValue =
           tasks.length > 0 ? tasks[tasks.length - 1].position + 1 : 0;
       } else {
-        const afterTaskIndex = tasks.findIndex(
-          (t) => t.id === newPosition.afterTaskId
-        );
+        const afterTaskIndex = tasks.findIndex((t) => t.id === newPosition);
 
         if (afterTaskIndex === -1) {
           throw new Error("Invalid afterTaskId provided");
