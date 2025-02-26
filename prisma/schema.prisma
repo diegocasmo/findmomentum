@@ -101,7 +101,7 @@ model Task {
 
   @@unique([activityId, position])
   @@index([activityId, deletedAt, completedAt])
-  @@index([activityId, position, createdAt])
+  @@index([activityId, position])
   @@map("tasks")
 }
 

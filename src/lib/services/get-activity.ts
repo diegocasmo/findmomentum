@@ -35,7 +35,7 @@ export async function getActivity({
             timeEntries: true,
           },
           orderBy: {
-            createdAt: "asc",
+            position: "asc",
           },
         },
       },
