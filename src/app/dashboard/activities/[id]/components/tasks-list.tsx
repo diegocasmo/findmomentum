@@ -21,8 +21,27 @@ import { TaskCard } from "@/app/dashboard/activities/[id]/components/task-card";
 import { NoTasks } from "@/app/dashboard/activities/[id]/components/no-tasks";
 import type { TaskWithTimeEntries } from "@/types";
 import { updateTaskPositionAction } from "@/app/actions/update-task-position-action";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { Loader2Icon } from "lucide-react";
+
+const findTaskIndex = (tasks: TaskWithTimeEntries[], id: string) =>
+  tasks.findIndex((item) => item.id === id);
+
+const getNewPosition = (
+  tasks: TaskWithTimeEntries[],
+  newIndex: number,
+  oldIndex: number
+): string => {
+  if (newIndex === 0) return "top";
+  if (newIndex === tasks.length - 1) return "bottom";
+  return tasks[newIndex > oldIndex ? newIndex : newIndex - 1].id;
+};
+
+const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
+  title: "Error",
+  description: "Failed to update task position. Please try again.",
+  variant: "destructive" as const,
+};
 
 type TasksListProps = {
   tasks: TaskWithTimeEntries[];
@@ -30,7 +49,6 @@ type TasksListProps = {
 
 export function TasksList({ tasks: initialTasks }: TasksListProps) {
   const router = useRouter();
-  const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [localTasks, setLocalTasks] =
     useState<TaskWithTimeEntries[]>(initialTasks);
@@ -46,64 +64,45 @@ export function TasksList({ tasks: initialTasks }: TasksListProps) {
     })
   );
 
+  const updateTaskPosition = useCallback(
+    async (taskId: string, newPosition: string) => {
+      const formData = new FormData();
+      formData.append("taskId", taskId);
+      formData.append("newPosition", newPosition);
+
+      try {
+        const result = await updateTaskPositionAction(formData);
+        if (result.success) {
+          router.refresh();
+        } else {
+          toast(ERROR_MESSAGE_CONFIG);
+        }
+      } catch (error) {
+        console.error("Error updating task position:", error);
+        setLocalTasks(initialTasks); // Revert to original order
+        toast(ERROR_MESSAGE_CONFIG);
+      }
+    },
+    [router, initialTasks]
+  );
+
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
 
       if (over && active.id !== over.id) {
-        setLocalTasks((tasks) => {
-          const oldIndex = tasks.findIndex((item) => item.id === active.id);
-          const newIndex = tasks.findIndex((item) => item.id === over.id);
+        const oldIndex = findTaskIndex(localTasks, active.id as string);
+        const newIndex = findTaskIndex(localTasks, over.id as string);
 
-          return arrayMove(tasks, oldIndex, newIndex);
-        });
+        setLocalTasks((tasks) => arrayMove(tasks, oldIndex, newIndex));
 
         startTransition(async () => {
-          const oldIndex = localTasks.findIndex(
-            (item) => item.id === active.id
-          );
-          const newIndex = localTasks.findIndex((item) => item.id === over.id);
-          const movedTask = localTasks[oldIndex];
-          const formData = new FormData();
-          formData.append("taskId", movedTask.id);
-
-          let newPosition: string;
-          if (newIndex === 0) {
-            newPosition = "top";
-          } else if (newIndex === localTasks.length - 1) {
-            newPosition = "bottom";
-          } else {
-            newPosition =
-              localTasks[newIndex > oldIndex ? newIndex : newIndex - 1].id;
-          }
-
-          formData.append("newPosition", newPosition);
-
-          try {
-            const result = await updateTaskPositionAction(formData);
-            if (result.success) {
-              router.refresh();
-            } else {
-              toast({
-                title: "Error",
-                description:
-                  "Failed to update task position. Please try again.",
-                variant: "destructive",
-              });
-            }
-          } catch (error) {
-            console.error("Error updating task position:", error);
-            setLocalTasks(initialTasks); // Revert to original order
-            toast({
-              title: "Error",
-              description: "Failed to update task position. Please try again.",
-              variant: "destructive",
-            });
-          }
+          const newPosition = getNewPosition(localTasks, newIndex, oldIndex);
+          await updateTaskPosition(active.id as string, newPosition);
         });
       }
     },
-    [router, toast, initialTasks, localTasks]
+    [localTasks, updateTaskPosition]
   );
 
   if (localTasks.length === 0) {
