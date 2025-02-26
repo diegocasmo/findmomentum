@@ -88,6 +88,7 @@ model Activity {
 model Task {
   id          String    @id @default(cuid())
   name        String
+  position    Float     @default(0)
   activityId  String    @map("activity_id")
   durationMs  Int       @map("duration_ms")
   completedAt DateTime? @map("completed_at") @db.Timestamptz
@@ -98,8 +99,9 @@ model Task {
   activity    Activity    @relation(fields: [activityId], references: [id], onDelete: Cascade)
   timeEntries TimeEntry[]
 
+  @@unique([activityId, position])
   @@index([activityId, deletedAt, completedAt])
-  @@index([activityId, createdAt])
+  @@index([activityId, position, createdAt])
   @@map("tasks")
 }
 
