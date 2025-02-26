@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DeleteTaskDialog } from "@/components/delete-task-dialog";
+import { DeleteTaskDialog } from "@/app/dashboard/activities/[id]/components/delete-task-dialog";
 import type { Task } from "@prisma/client";
 
 type TaskActionsProps = {

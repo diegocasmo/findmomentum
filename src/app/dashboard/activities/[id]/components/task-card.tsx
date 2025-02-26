@@ -8,9 +8,9 @@ import {
   Loader2Icon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { TaskActions } from "@/components/task-actions";
+import { TaskActions } from "@/app/dashboard/activities/[id]/components/task-actions";
 import type { TaskWithTimeEntries } from "@/types";
-import { TaskElapsedTime } from "@/components/task-elapsed-time";
+import { TaskElapsedTime } from "@/app/dashboard/activities/[id]/components/task-elapsed-time";
 import { cn } from "@/lib/utils";
 import { useTransition } from "react";
 import { playTaskAction } from "@/app/actions/play-task-action";

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
-import { TasksList } from "@/components/tasks-list";
+import { TasksList } from "@/app/dashboard/activities/[id]/components/tasks-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListTodoIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";

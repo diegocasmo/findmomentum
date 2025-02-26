@@ -1,5 +1,5 @@
-import { TaskCard } from "@/components/task-card";
-import { NoTasks } from "@/components/no-tasks";
+import { TaskCard } from "@/app/dashboard/activities/[id]/components/task-card";
+import { NoTasks } from "@/app/dashboard/activities/[id]/components/no-tasks";
 import type { TaskWithTimeEntries } from "@/types";
 
 type TasksListProps = {
