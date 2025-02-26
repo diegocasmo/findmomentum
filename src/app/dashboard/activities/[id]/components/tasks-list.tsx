@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useTransition, useRef, useEffect } from "react";
+import { useCallback, useTransition, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -32,7 +32,12 @@ export function TasksList({ tasks: initialTasks }: TasksListProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
-  const tasksRef = useRef(initialTasks);
+  const [localTasks, setLocalTasks] =
+    useState<TaskWithTimeEntries[]>(initialTasks);
+
+  useEffect(() => {
+    setLocalTasks(initialTasks);
+  }, [initialTasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -41,37 +46,35 @@ export function TasksList({ tasks: initialTasks }: TasksListProps) {
     })
   );
 
-  useEffect(() => {
-    tasksRef.current = initialTasks;
-  }, [initialTasks]);
-
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
 
       if (over && active.id !== over.id) {
+        setLocalTasks((tasks) => {
+          const oldIndex = tasks.findIndex((item) => item.id === active.id);
+          const newIndex = tasks.findIndex((item) => item.id === over.id);
+
+          return arrayMove(tasks, oldIndex, newIndex);
+        });
+
         startTransition(async () => {
-          const oldIndex = tasksRef.current.findIndex(
+          const oldIndex = localTasks.findIndex(
             (item) => item.id === active.id
           );
-          const newIndex = tasksRef.current.findIndex(
-            (item) => item.id === over.id
-          );
-
-          const updatedTasks = arrayMove(tasksRef.current, oldIndex, newIndex);
-          tasksRef.current = updatedTasks;
-
-          const movedTask = updatedTasks[newIndex];
+          const newIndex = localTasks.findIndex((item) => item.id === over.id);
+          const movedTask = localTasks[oldIndex];
           const formData = new FormData();
           formData.append("taskId", movedTask.id);
 
           let newPosition: string;
           if (newIndex === 0) {
             newPosition = "top";
-          } else if (newIndex === updatedTasks.length - 1) {
+          } else if (newIndex === localTasks.length - 1) {
             newPosition = "bottom";
           } else {
-            newPosition = updatedTasks[newIndex - 1].id;
+            newPosition =
+              localTasks[newIndex > oldIndex ? newIndex : newIndex - 1].id;
           }
 
           formData.append("newPosition", newPosition);
@@ -90,21 +93,20 @@ export function TasksList({ tasks: initialTasks }: TasksListProps) {
             }
           } catch (error) {
             console.error("Error updating task position:", error);
+            setLocalTasks(initialTasks); // Revert to original order
             toast({
               title: "Error",
               description: "Failed to update task position. Please try again.",
               variant: "destructive",
             });
-            tasksRef.current = initialTasks; // Revert to original order
-            router.refresh();
           }
         });
       }
     },
-    [router, toast, initialTasks]
+    [router, toast, initialTasks, localTasks]
   );
 
-  if (tasksRef.current.length === 0) {
+  if (localTasks.length === 0) {
     return <NoTasks />;
   }
 
@@ -115,11 +117,11 @@ export function TasksList({ tasks: initialTasks }: TasksListProps) {
       onDragEnd={handleDragEnd}
     >
       <SortableContext
-        items={tasksRef.current}
+        items={localTasks}
         strategy={verticalListSortingStrategy}
       >
         <ul className="space-y-4 relative">
-          {tasksRef.current.map((task) => (
+          {localTasks.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))}
           {isPending && (
