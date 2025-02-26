@@ -29,6 +29,7 @@ model VerificationToken {
   updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
   @@unique([identifier, token])
+  @@index([identifier, expires])
   @@map("verification_tokens")
 }
 
@@ -56,9 +57,7 @@ model TeamMembership {
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([userId, teamId])
-  @@index([userId])
-  @@index([teamId])
-  @@index([role])
+  @@index([userId, role])
   @@map("user_teams")
 }
 
@@ -81,10 +80,8 @@ model Activity {
   user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks Task[]
 
-  @@index([userId])
-  @@index([teamId])
-  @@index([deletedAt])
-  @@index([completedAt])
+  @@index([userId, deletedAt, completedAt])
+  @@index([teamId, deletedAt])
   @@map("activities")
 }
 
@@ -101,9 +98,8 @@ model Task {
   activity    Activity    @relation(fields: [activityId], references: [id], onDelete: Cascade)
   timeEntries TimeEntry[]
 
-  @@index([activityId])
-  @@index([deletedAt])
-  @@index([completedAt])
+  @@index([activityId, deletedAt, completedAt])
+  @@index([activityId, createdAt])
   @@map("tasks")
 }
 
@@ -118,6 +114,6 @@ model TimeEntry {
   task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@unique([taskId, stoppedAt])
-  @@index([taskId])
+  @@index([taskId, stoppedAt])
   @@map("time_entries")
 }
