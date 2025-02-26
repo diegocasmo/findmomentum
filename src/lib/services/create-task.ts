@@ -32,13 +32,25 @@ export async function createTask({
             },
           },
         },
+        include: {
+          tasks: {
+            orderBy: {
+              position: "desc",
+            },
+            take: 1,
+          },
+        },
       });
+
+      const lastTask = activity.tasks[0];
+      const newPosition = lastTask ? lastTask.position + 1 : 0;
 
       return await tx.task.create({
         data: {
           name,
           activityId: activity.id,
           durationMs,
+          position: newPosition,
         },
       });
     });
