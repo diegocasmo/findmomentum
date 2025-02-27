@@ -81,17 +81,19 @@ export function TaskCard({ task }: TaskCardProps) {
           "border-primary": isRunning,
           "border-green-500": isCompleted,
         })}
+        onClick={handleToggleTask}
       >
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div {...listeners} className="touch-none">
+              <div
+                {...listeners}
+                className="touch-none p-2 -m-2 rounded-md hover:bg-secondary/50 transition-colors"
+                aria-label="Drag to reorder task"
+              >
                 <GripVerticalIcon className="w-5 h-5 text-muted-foreground cursor-move" />
               </div>
-              <div
-                className="w-8 h-8 flex items-center justify-center"
-                onClick={handleToggleTask}
-              >
+              <div className="w-8 h-8 flex items-center justify-center">
                 {isCompleted ? (
                   <CheckCircle className="w-5 h-5 text-muted-foreground" />
                 ) : isPending ? (
