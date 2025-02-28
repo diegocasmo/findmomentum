@@ -86,17 +86,17 @@ export function TaskCard({ task }: TaskCardProps) {
         })}
         onClick={handleToggleTask}
       >
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-grow min-w-0">
               <div
                 {...listeners}
-                className="touch-none p-2 -m-2 rounded-md hover:bg-secondary/50 transition-colors"
+                className="touch-none p-2 -m-2 rounded-md hover:bg-secondary/50 transition-colors flex-shrink-0"
                 aria-label="Drag to reorder task"
               >
                 <GripVerticalIcon className="w-5 h-5 text-muted-foreground cursor-move" />
               </div>
-              <div className="w-8 h-8 flex items-center justify-center">
+              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
                 {isCompleted ? (
                   <CheckCircle className="w-5 h-5 text-muted-foreground" />
                 ) : isPending ? (
@@ -109,16 +109,18 @@ export function TaskCard({ task }: TaskCardProps) {
               </div>
               <span
                 className={cn(
-                  "text-md",
+                  "text-md font-medium truncate",
                   isCompleted && "line-through text-muted-foreground"
                 )}
               >
                 {task.name}
               </span>
+            </div>
 
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-3 mt-1 sm:mt-0">
               <Badge
                 variant="outline"
-                className="flex items-center gap-1 px-2 py-1 font-normal"
+                className="flex items-center gap-1 px-2 py-1 font-normal order-1 sm:order-none"
                 title="Initial Duration"
               >
                 <TimerIcon className="w-3.5 h-3.5" />
@@ -126,18 +128,23 @@ export function TaskCard({ task }: TaskCardProps) {
                   {formatTimeMMss(task.durationMs)}
                 </span>
               </Badge>
-            </div>
 
-            <div className="flex items-center space-x-2">
-              {isCompleted ? null : (
-                <div className="flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md w-[80px]">
-                  <HourglassIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
-                  <span className="text-sm text-secondary-foreground truncate">
+              {!isCompleted && (
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 px-2 py-1 font-normal order-2 sm:order-none"
+                  title="Remaining Time"
+                >
+                  <HourglassIcon className="w-3.5 h-3.5" />
+                  <span className="text-xs whitespace-nowrap">
                     <TaskRemainingTime task={task} />
                   </span>
-                </div>
+                </Badge>
               )}
-              <TaskActions task={task} />
+
+              <div className="order-3 sm:order-none ml-auto sm:ml-0">
+                <TaskActions task={task} />
+              </div>
             </div>
           </div>
         </CardContent>

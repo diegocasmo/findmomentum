@@ -153,7 +153,7 @@ export function UpsertTaskForm({
                 </FormControl>
 
                 <FormDescription>
-                  Current elapsed time: {formatTimeMMss(elapsedMs)}
+                  Current elapsed time {formatTimeMMss(elapsedMs)}
                 </FormDescription>
                 <FormMessage />
               </FormItem>

@@ -39,7 +39,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <div className="container max-w-7xl mx-auto px-4">{children}</div>
+            <div className="container max-w-7xl mx-auto px-2">{children}</div>
           </TooltipProvider>
           <Toaster />
         </ThemeProvider>
