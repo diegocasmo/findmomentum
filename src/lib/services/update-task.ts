@@ -53,13 +53,10 @@ export async function updateTask({
         }
       }
 
-      // Update the task
-      const updatedTask = await tx.task.update({
+      return await tx.task.update({
         where: { id: taskId },
         data: { name, durationMs },
       });
-
-      return updatedTask;
     });
   } catch (error) {
     console.error("Error updating task:", error);

@@ -4,13 +4,14 @@ import { notFound, redirect } from "next/navigation";
 import { getActivity } from "@/lib/services/get-activity";
 import { TasksList } from "@/app/dashboard/activities/[id]/components/tasks-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ListTodoIcon } from "lucide-react";
+import { ListTodoIcon, PlusCircleIcon } from "lucide-react";
 import { ActivityTimer } from "@/components/activity-timer";
 import { CompleteActivity } from "@/components/complete-activity";
-import { CreateTaskDialog } from "@/components/create-task-dialog";
+import { UpsertTaskDialog } from "@/components/upsert-task-dialog";
 import { ActivityCompletedCard } from "@/components/activity-completed-card";
 import { ActivityPageSkeleton } from "@/components/activity-page-skeleton";
 import { ActivityHeader } from "@/app/dashboard/activities/[id]/components/activity-header";
+import { Button } from "@/components/ui/button";
 
 type ActivityPageProps = {
   params: Promise<{ id: string }>;
@@ -53,10 +54,15 @@ export default async function ActivityPage({ params }: ActivityPageProps) {
                     Tasks
                   </div>
                   <div>
-                    <CreateTaskDialog
+                    <UpsertTaskDialog
                       activityId={activity.id}
                       aria-label="Create new task"
-                    />
+                    >
+                      <Button variant="outline" className="w-full">
+                        <PlusCircleIcon className="mr-2 h-4 w-4" />
+                        Create Task
+                      </Button>
+                    </UpsertTaskDialog>
                   </div>
                 </CardTitle>
               </CardHeader>

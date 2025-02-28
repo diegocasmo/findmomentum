@@ -47,6 +47,7 @@ export function DeleteActivityDialog({
           router.push(redirectUrl);
         } else {
           router.refresh();
+          setIsOpen(false);
         }
       } else {
         toast(ERROR_MESSAGE_CONFIG);
@@ -54,8 +55,6 @@ export function DeleteActivityDialog({
     } catch (error) {
       console.error("Activity deletion error:", error);
       toast(ERROR_MESSAGE_CONFIG);
-    } finally {
-      setIsOpen(false);
     }
   };
 

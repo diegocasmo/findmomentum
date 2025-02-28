@@ -15,7 +15,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ActivityIcon } from "lucide-react";
+import {
+  ActivityIcon,
+  Loader2Icon,
+  PlusCircleIcon,
+  Pencil,
+} from "lucide-react";
 import { useTransition } from "react";
 import { createActivityAction } from "@/app/actions/create-activity-action";
 import { updateActivityAction } from "@/app/actions/update-activity-action";
@@ -156,6 +161,13 @@ export function UpsertActivityForm({
               className="w-full text-base font-semibold"
               disabled={isPending}
             >
+              {isPending ? (
+                <Loader2Icon className="h-4 w-4 animate-spin mr-2" />
+              ) : activity ? (
+                <Pencil className="h-4 w-4 mr-2" />
+              ) : (
+                <PlusCircleIcon className="mr-2 h-4 w-4" />
+              )}
               {activity
                 ? isPending
                   ? "Updating..."

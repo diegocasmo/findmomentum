@@ -9,36 +9,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateTaskForm } from "@/components/create-task-form";
-import { Button } from "@/components/ui/button";
-import { PlusCircleIcon } from "lucide-react";
+import { UpsertTaskForm } from "@/components/upsert-task-form";
+import type { TaskWithTimeEntries } from "@/types";
 
-type CreateTaskDialogProps = {
-  activityId: string;
+type UpsertTaskDialogProps = {
+  activityId?: string;
+  children: React.ReactNode;
+  task?: TaskWithTimeEntries;
 };
 
-export function CreateTaskDialog({ activityId }: CreateTaskDialogProps) {
+export function UpsertTaskDialog({
+  activityId,
+  children,
+  task,
+}: UpsertTaskDialogProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <PlusCircleIcon className="mr-2 h-4 w-4" />
-          Create Task
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] max-w-[90%] w-full">
         <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
+          <DialogTitle>{task ? "Update" : "Create New"} Task</DialogTitle>
           <DialogDescription>
             Add a new task to your activity by filling out the form below.
           </DialogDescription>
         </DialogHeader>
-        <CreateTaskForm
+        <UpsertTaskForm
           activityId={activityId}
           autoFocus
           onSuccess={() => setOpen(false)}
+          task={task}
         />
       </DialogContent>
     </Dialog>

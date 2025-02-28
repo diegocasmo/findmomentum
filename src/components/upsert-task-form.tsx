@@ -12,58 +12,94 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ListIcon, Loader2Icon, ClockIcon, PlusCircleIcon } from "lucide-react";
+import {
+  ListIcon,
+  Loader2Icon,
+  ClockIcon,
+  PlusCircleIcon,
+  Pencil,
+} from "lucide-react";
 import { useTransition, useRef } from "react";
 import { createTaskAction } from "@/app/actions/create-task-action";
+import { updateTaskAction } from "@/app/actions/update-task-action";
 import { setFormErrors } from "@/lib/utils/form";
 import { useRouter } from "next/navigation";
 import type { CreateTaskSchema } from "@/app/schemas/create-task-schema";
 import { DurationInput } from "@/components/duration-input";
 import { RootFormError } from "@/components/root-form-error";
+import { updateTaskSchema } from "@/app/schemas/update-task-schema";
+import { getTaskRemainingTime } from "@/lib/utils/time";
+import type { TaskWithTimeEntries } from "@/types";
 
-type CreateTaskFormProps = {
-  activityId: string;
-  autoFocus?: boolean;
-  onSuccess?: () => void;
+type FormData = {
+  taskId?: string;
+  activityId?: string;
+  name: string;
+  durationMs: number;
 };
 
-export function CreateTaskForm({
+type UpsertTaskFormProps = {
+  activityId?: string;
+  autoFocus?: boolean;
+  onSuccess: () => void;
+  task?: TaskWithTimeEntries;
+};
+
+export function UpsertTaskForm({
   activityId,
   autoFocus,
   onSuccess,
-}: CreateTaskFormProps) {
+  task,
+}: UpsertTaskFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<CreateTaskSchema>({
-    resolver: zodResolver(createTaskSchema),
+    resolver: zodResolver(task ? updateTaskSchema : createTaskSchema),
     defaultValues: {
-      name: "",
-      activityId: activityId,
-      durationMs: 0,
+      ...(task
+        ? {
+            taskId: task.id,
+            name: task.name,
+            durationMs: getTaskRemainingTime(task),
+          }
+        : {
+            activityId,
+            name: "",
+            durationMs: 0,
+          }),
     },
   });
 
-  async function onSubmit(data: CreateTaskSchema) {
+  async function onSubmit(data: FormData) {
     startTransition(async () => {
       try {
+        console.log(data);
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("durationMs", data.durationMs.toString());
-        formData.append("activityId", activityId);
 
-        const result = await createTaskAction(formData);
+        if (task) {
+          formData.append("taskId", task.id);
+        }
+
+        if (activityId) {
+          formData.append("activityId", activityId);
+        }
+
+        const result = task
+          ? await updateTaskAction(formData)
+          : await createTaskAction(formData);
 
         if (result.success) {
-          form.reset({ name: "", activityId, durationMs: 0 });
           router.refresh();
-          onSuccess?.();
+          onSuccess();
         } else {
           setFormErrors(form.setError, result.errors);
         }
       } catch (error) {
-        console.error("Task creation error:", error);
+        console.error(`Task ${task ? "update" : "create"} error:`, error);
         form.setError("root", {
           type: "manual",
           message: "An unexpected error occurred. Please try again.",
@@ -101,21 +137,23 @@ export function CreateTaskForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="durationMs"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="relative">
-                    <DurationInput {...field} className="text-sm pr-10" />
-                    <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {!task && (
+            <FormField
+              control={form.control}
+              name="durationMs"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <div className="relative">
+                      <DurationInput {...field} className="text-sm pr-10" />
+                      <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <RootFormError message={form.formState.errors.root?.message} />
           <Button
             type="submit"
@@ -125,10 +163,18 @@ export function CreateTaskForm({
           >
             {isPending ? (
               <Loader2Icon className="h-4 w-4 animate-spin mr-2" />
+            ) : task ? (
+              <Pencil className="h-4 w-4 mr-2" />
             ) : (
               <PlusCircleIcon className="mr-2 h-4 w-4" />
             )}
-            {isPending ? "Adding..." : "Add"}
+            {task
+              ? isPending
+                ? "Updating..."
+                : "Update"
+              : isPending
+              ? "Creating..."
+              : "Create"}
           </Button>
         </form>
       </Form>
