@@ -8,12 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DeleteTaskDialog } from "@/app/dashboard/activities/[id]/components/delete-task-dialog";
-import type { Task } from "@prisma/client";
 import { Pencil } from "lucide-react";
 import { UpsertTaskDialog } from "@/components/upsert-task-dialog";
+import { TaskWithTimeEntries } from "@/types";
 
 type TaskActionsProps = {
-  task: Task;
+  task: TaskWithTimeEntries;
   redirectUrl?: string;
 };
 
