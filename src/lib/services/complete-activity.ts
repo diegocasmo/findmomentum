@@ -17,6 +17,7 @@ export async function completeActivity({
       // and there is at least one non-deleted completed task
       const activity = await tx.activity.findFirstOrThrow({
         where: {
+          userId,
           id: activityId,
           deletedAt: null,
           completedAt: null,

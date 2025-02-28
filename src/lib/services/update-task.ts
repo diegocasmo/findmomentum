@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { type Task, TeamMembershipRole } from "@prisma/client";
-import { getTaskRemainingTime } from "@/lib/utils/time";
 
 type UpdateTaskParams = {
   userId: string;
@@ -37,24 +36,10 @@ export async function updateTask({
             },
           },
         },
-        include: {
-          timeEntries: true,
-        },
       });
 
-      // Validate durationMs only if the task has time entries
-      if (task.timeEntries.length > 0) {
-        const elapsedTime = task.durationMs - getTaskRemainingTime(task);
-
-        if (durationMs < elapsedTime) {
-          throw new Error(
-            `Duration must be at least ${elapsedTime}ms (the current elapsed time)`
-          );
-        }
-      }
-
       return await tx.task.update({
-        where: { id: taskId },
+        where: { id: task.id },
         data: { name, durationMs },
       });
     });

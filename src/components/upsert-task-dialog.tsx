@@ -32,7 +32,9 @@ export function UpsertTaskDialog({
         <DialogHeader>
           <DialogTitle>{task ? "Update" : "Create New"} Task</DialogTitle>
           <DialogDescription>
-            Add a new task to your activity by filling out the form below.
+            {task
+              ? "Update the task by filling out the form below."
+              : "Create a new task by filling out the form below."}
           </DialogDescription>
         </DialogHeader>
         <UpsertTaskForm

@@ -20,6 +20,7 @@ import { isTaskRunning } from "@/lib/utils/is-task-running";
 import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { formatTimeMMss } from "@/lib/utils/time";
 
 type TaskCardProps = {
   task: TaskWithTimeEntries;
@@ -110,7 +111,10 @@ export function TaskCard({ task }: TaskCardProps) {
                   isCompleted && "line-through text-muted-foreground"
                 )}
               >
-                {task.name}
+                {task.name}&nbsp;
+                {task.completedAt
+                  ? null
+                  : `(${formatTimeMMss(task.durationMs)})`}
               </span>
             </div>
             <div className="flex items-center space-x-2">

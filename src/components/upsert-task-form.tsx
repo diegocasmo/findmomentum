@@ -9,6 +9,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -27,8 +28,8 @@ import { useRouter } from "next/navigation";
 import type { CreateTaskSchema } from "@/app/schemas/create-task-schema";
 import { DurationInput } from "@/components/duration-input";
 import { RootFormError } from "@/components/root-form-error";
-import { updateTaskSchema } from "@/app/schemas/update-task-schema";
-import { getTaskRemainingTime } from "@/lib/utils/time";
+import { getUpdateTaskSchema } from "@/app/schemas/update-task-schema";
+import { formatTimeMMss, getTaskElapsedTime } from "@/lib/utils/time";
 import type { TaskWithTimeEntries } from "@/types";
 
 type FormData = {
@@ -54,15 +55,18 @@ export function UpsertTaskForm({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const elapsedMs = task ? getTaskElapsedTime(task) : 0;
 
   const form = useForm<CreateTaskSchema>({
-    resolver: zodResolver(task ? updateTaskSchema : createTaskSchema),
+    resolver: zodResolver(
+      task ? getUpdateTaskSchema(elapsedMs) : createTaskSchema
+    ),
     defaultValues: {
       ...(task
         ? {
             taskId: task.id,
             name: task.name,
-            durationMs: getTaskRemainingTime(task),
+            durationMs: task.durationMs,
           }
         : {
             activityId,
@@ -75,7 +79,6 @@ export function UpsertTaskForm({
   async function onSubmit(data: FormData) {
     startTransition(async () => {
       try {
-        console.log(data);
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("durationMs", data.durationMs.toString());
@@ -137,23 +140,25 @@ export function UpsertTaskForm({
               </FormItem>
             )}
           />
-          {!task && (
-            <FormField
-              control={form.control}
-              name="durationMs"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative">
-                      <DurationInput {...field} className="text-sm pr-10" />
-                      <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={form.control}
+            name="durationMs"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="relative">
+                    <DurationInput {...field} className="text-sm pr-10" />
+                    <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  </div>
+                </FormControl>
+
+                <FormDescription>
+                  Current elapsed time: {formatTimeMMss(elapsedMs)}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <RootFormError message={form.formState.errors.root?.message} />
           <Button
             type="submit"

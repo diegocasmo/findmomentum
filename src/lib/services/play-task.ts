@@ -20,6 +20,7 @@ export async function playTask({
           completedAt: null,
           deletedAt: null,
           activity: {
+            userId,
             completedAt: null,
             deletedAt: null,
             team: {

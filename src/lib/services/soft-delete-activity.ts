@@ -15,6 +15,7 @@ export async function softDeleteActivity({
     return await prisma.activity.update({
       where: {
         id: activityId,
+        userId,
         deletedAt: null,
         team: {
           teamMemberships: {
