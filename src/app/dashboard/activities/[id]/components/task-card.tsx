@@ -1,10 +1,11 @@
 import {
-  ClockIcon,
+  HourglassIcon,
   CheckCircle,
   PlayIcon,
   PauseIcon,
   Loader2Icon,
   GripVerticalIcon,
+  TimerIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TaskActions } from "@/app/dashboard/activities/[id]/components/task-actions";
@@ -21,6 +22,7 @@ import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { formatTimeMMss } from "@/lib/utils/time";
+import { Badge } from "@/components/ui/badge";
 
 type TaskCardProps = {
   task: TaskWithTimeEntries;
@@ -111,26 +113,30 @@ export function TaskCard({ task }: TaskCardProps) {
                   isCompleted && "line-through text-muted-foreground"
                 )}
               >
-                {task.name}&nbsp;
-                {task.completedAt
-                  ? null
-                  : `(${formatTimeMMss(task.durationMs)})`}
+                {task.name}
               </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div
-                className={cn(
-                  "flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md",
-                  {
-                    "w-[80px]": !isCompleted,
-                  }
-                )}
+
+              <Badge
+                variant="outline"
+                className="flex items-center gap-1 px-2 py-1 font-normal"
+                title="Initial Duration"
               >
-                <ClockIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
-                <span className="text-sm text-secondary-foreground truncate">
-                  <TaskRemainingTime task={task} />
+                <TimerIcon className="w-3.5 h-3.5" />
+                <span className="text-xs whitespace-nowrap">
+                  {formatTimeMMss(task.durationMs)}
                 </span>
-              </div>
+              </Badge>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {isCompleted ? null : (
+                <div className="flex items-center justify-center space-x-1 bg-secondary px-2 py-1 rounded-md w-[80px]">
+                  <HourglassIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
+                  <span className="text-sm text-secondary-foreground truncate">
+                    <TaskRemainingTime task={task} />
+                  </span>
+                </div>
+              )}
               <TaskActions task={task} />
             </div>
           </div>
