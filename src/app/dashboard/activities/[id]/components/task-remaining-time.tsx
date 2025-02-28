@@ -11,11 +11,11 @@ import { getTaskRemainingTime } from "@/lib/utils/time";
 import { sendNotification } from "@/components/notification-manager";
 import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 
-type TaskElapsedTimeProps = {
+type TaskRemainingTimeProps = {
   task: TaskWithTimeEntries;
 };
 
-export function TaskElapsedTime({ task }: TaskElapsedTimeProps) {
+export function TaskRemainingTime({ task }: TaskRemainingTimeProps) {
   const isCompleted = isTaskCompleted(task);
   const [displayTime, setDisplayTime] = useState(
     isCompleted ? task.durationMs : getTaskRemainingTime(task)

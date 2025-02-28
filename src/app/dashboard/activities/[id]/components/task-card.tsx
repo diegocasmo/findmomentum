@@ -9,7 +9,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { TaskActions } from "@/app/dashboard/activities/[id]/components/task-actions";
 import type { TaskWithTimeEntries } from "@/types";
-import { TaskElapsedTime } from "@/app/dashboard/activities/[id]/components/task-elapsed-time";
+import { TaskRemainingTime } from "@/app/dashboard/activities/[id]/components/task-remaining-time";
 import { cn } from "@/lib/utils";
 import { useTransition } from "react";
 import { playTaskAction } from "@/app/actions/play-task-action";
@@ -128,7 +128,7 @@ export function TaskCard({ task }: TaskCardProps) {
               >
                 <ClockIcon className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
                 <span className="text-sm text-secondary-foreground truncate">
-                  <TaskElapsedTime task={task} />
+                  <TaskRemainingTime task={task} />
                 </span>
               </div>
               <TaskActions task={task} />
