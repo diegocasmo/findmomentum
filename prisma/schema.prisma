@@ -66,19 +66,22 @@ enum TeamMembershipRole {
 }
 
 model Activity {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  teamId      String    @map("team_id")
-  userId      String    @map("user_id")
-  completedAt DateTime? @map("completedAt") @db.Timestamptz
-  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+  id               String    @id @default(cuid())
+  name             String
+  description      String?
+  teamId           String    @map("team_id")
+  userId           String    @map("user_id")
+  sourceActivityId String?   @map("source_activity_id")
+  completedAt      DateTime? @map("completedAt") @db.Timestamptz
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
-  team  Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks Task[]
+  team              Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceActivity    Activity?  @relation("ActivityTemplate", fields: [sourceActivityId], references: [id])
+  derivedActivities Activity[] @relation("ActivityTemplate")
+  tasks             Task[]
 
   @@index([userId, deletedAt, completedAt])
   @@index([teamId, deletedAt])
