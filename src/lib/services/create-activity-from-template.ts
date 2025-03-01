@@ -1,7 +1,6 @@
 import type { Activity } from "@prisma/client";
 import { TeamMembershipRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { addMilliseconds } from "date-fns";
 
 type CreateActivityFromTemplateParams = {
   activityId: string;
@@ -44,13 +43,12 @@ export async function createActivityFromTemplate({
             : null,
           teamId: sourceActivity.teamId,
           userId: userId,
+          sourceActivityId: sourceActivity.id,
           tasks: {
-            create: sourceActivity.tasks.map((task, index) => ({
+            create: sourceActivity.tasks.map((task) => ({
               name: task.name,
               position: task.position,
               durationMs: task.durationMs,
-              // Make sure each task has a distinct `createdAt` timestamp
-              createdAt: addMilliseconds(new Date(), index),
             })),
           },
         },
