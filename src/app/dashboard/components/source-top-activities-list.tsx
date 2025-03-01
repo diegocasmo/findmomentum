@@ -1,5 +1,6 @@
-import { ActivityWithTasksAndTimeEntries } from "@/types";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { ActivityCard } from "@/app/dashboard/components/activity-card";
+import { NoTopSourceActivities } from "@/app/dashboard/components/no-top-source-activities";
 
 type SourceTopActivitiesListProps = {
   activities: ActivityWithTasksAndTimeEntries[];
@@ -8,7 +9,7 @@ type SourceTopActivitiesListProps = {
 export function SourceTopActivitiesList({
   activities,
 }: SourceTopActivitiesListProps) {
-  if (activities.length === 0) return null;
+  if (activities.length === 0) return <NoTopSourceActivities />;
 
   return (
     <div className="mb-8">
