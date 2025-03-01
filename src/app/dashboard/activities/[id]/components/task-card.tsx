@@ -129,18 +129,16 @@ export function TaskCard({ task }: TaskCardProps) {
                 </span>
               </Badge>
 
-              {!isCompleted && (
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1 px-2 py-1 font-normal order-2 sm:order-none"
-                  title="Remaining Time"
-                >
-                  <HourglassIcon className="w-3.5 h-3.5" />
-                  <span className="text-xs whitespace-nowrap">
-                    <TaskRemainingTime task={task} />
-                  </span>
-                </Badge>
-              )}
+              <Badge
+                variant="outline"
+                className="flex items-center gap-1 px-2 py-1 font-normal order-2 sm:order-none"
+                title="Remaining Time"
+              >
+                <HourglassIcon className="w-3.5 h-3.5" />
+                <span className="text-xs whitespace-nowrap">
+                  <TaskRemainingTime task={task} />
+                </span>
+              </Badge>
 
               <div className="order-3 sm:order-none ml-auto sm:ml-0">
                 <TaskActions task={task} />
