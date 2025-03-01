@@ -72,7 +72,7 @@ model Activity {
   teamId           String    @map("team_id")
   userId           String    @map("user_id")
   sourceActivityId String?   @map("source_activity_id")
-  completedAt      DateTime? @map("completedAt") @db.Timestamptz
+  completedAt      DateTime? @map("completed_at") @db.Timestamptz
   deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime? @updatedAt @map("updated_at") @db.Timestamptz
