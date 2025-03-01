@@ -4,18 +4,46 @@ import { TeamMembershipRole } from "@prisma/client";
 
 export type GetActivitiesParams = {
   userId: string;
-  completed?: boolean;
+  page?: number;
+  limit?: number;
+};
+
+export type PaginatedActivities = {
+  activities: ActivityWithTasksAndTimeEntries[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
 };
 
 export async function getActivities({
   userId,
-  completed,
-}: GetActivitiesParams): Promise<ActivityWithTasksAndTimeEntries[]> {
+  page = 1,
+  limit = 10,
+}: GetActivitiesParams): Promise<PaginatedActivities> {
+  // Calculate pagination values
+  const skip = (page - 1) * limit;
+
+  // Get total count for pagination
+  const totalCount = await prisma.activity.count({
+    where: {
+      userId,
+      deletedAt: null,
+      team: {
+        teamMemberships: {
+          some: {
+            userId,
+            role: TeamMembershipRole.OWNER,
+          },
+        },
+      },
+    },
+  });
+
+  // Get paginated activities
   const activities = await prisma.activity.findMany({
     where: {
       userId,
       deletedAt: null,
-      completedAt: completed ? { not: null } : null,
       team: {
         teamMemberships: {
           some: {
@@ -52,7 +80,16 @@ export async function getActivities({
         },
       },
     },
+    skip,
+    take: limit,
   });
 
-  return activities;
+  const totalPages = Math.ceil(totalCount / limit);
+
+  return {
+    activities,
+    totalCount,
+    totalPages,
+    currentPage: page,
+  };
 }
