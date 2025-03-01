@@ -1,5 +1,5 @@
 import { ActivityWithTasksAndTimeEntries } from "@/types";
-import { ActivityCard } from "@/components/activity-card";
+import { ActivityCard } from "@/app/dashboard/components/activity-card";
 
 type SourceTopActivitiesListProps = {
   activities: ActivityWithTasksAndTimeEntries[];

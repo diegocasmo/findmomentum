@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getActivities } from "@/lib/services/get-activities";
 import { auth } from "@/lib/auth";
 import { ActivityIcon, Home, FileText } from "lucide-react";
-import { ActivitiesList } from "@/components/activities-list";
+import { ActivitiesList } from "@/app/dashboard/components/activities-list";
 import { DashboardPageSkeleton } from "@/components/dashboard-page-skeleton";
 import { getTopSourceActivities } from "@/lib/services/get-top-source-activities";
 import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";

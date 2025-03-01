@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ActivityIcon, ChevronLeft } from "lucide-react";
-import { ActivityActions } from "@/components/activity-actions";
+import { ActivityActions } from "@/app/dashboard/components/activity-actions";
 import type { Activity } from "@prisma/client";
 
 type ActivityHeaderProps = {

@@ -8,10 +8,11 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
-import { Calendar } from "lucide-react";
-import { ActivityActions } from "./activity-actions";
+import { Calendar, CheckCircle } from "lucide-react";
+import { ActivityActions } from "@/app/dashboard/components/activity-actions";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { formatTimeHHMMss } from "@/lib/utils/time";
 import { isActivityRunning } from "@/lib/utils/is-activity-running";
@@ -47,18 +48,25 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             {activity.description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="pb-4">
-          <div className="flex items-center justify-between text-sm text-muted-foreground mt-2">
-            <span className="flex items-center">
-              <Calendar className="w-3 h-3 mr-1 text-primary" />
-              <span className="first-letter:uppercase">
-                {formatDistanceToNow(activity.createdAt, {
-                  addSuffix: true,
-                })}
-              </span>
+        <CardContent className="pb-2">
+          <div className="flex items-center text-sm text-muted-foreground">
+            <Calendar className="w-3 h-3 mr-1 text-primary" />
+            <span className="first-letter:uppercase">
+              {formatDistanceToNow(activity.createdAt, { addSuffix: true })}
             </span>
           </div>
         </CardContent>
+        <CardFooter className="pt-2 pb-2 bg-muted/50 min-h-[2.5rem] flex items-center">
+          {activity.completedAt && (
+            <div className="flex items-center text-sm text-muted-foreground">
+              <CheckCircle className="w-3 h-3 mr-1 text-primary" />
+              <span className="first-letter:uppercase">
+                Completed&nbsp;
+                {formatDistanceToNow(activity.completedAt, { addSuffix: true })}
+              </span>
+            </div>
+          )}
+        </CardFooter>
       </Card>
     </Link>
   );

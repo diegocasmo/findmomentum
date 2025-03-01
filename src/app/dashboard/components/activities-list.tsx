@@ -1,4 +1,4 @@
-import { ActivityCard } from "@/components/activity-card";
+import { ActivityCard } from "@/app/dashboard/components/activity-card";
 import { NoActivities } from "@/components/no-activities";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
