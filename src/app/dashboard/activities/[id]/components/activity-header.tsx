@@ -1,5 +1,8 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ActivityIcon, ChevronLeft } from "lucide-react";
 import { ActivityActions } from "@/app/dashboard/components/activity-actions";
 import type { Activity } from "@prisma/client";
@@ -9,6 +12,9 @@ type ActivityHeaderProps = {
 };
 
 export function ActivityHeader({ activity }: ActivityHeaderProps) {
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl") || "/dashboard";
+
   return (
     <div className="flex flex-col gap-4 pb-4 sm:pb-0">
       <div className="flex items-center gap-3">
@@ -18,7 +24,7 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
           className="flex-shrink-0 h-9 w-9 sm:h-10 sm:w-10"
           asChild
         >
-          <Link href="/dashboard" aria-label="Back to dashboard">
+          <Link href={returnUrl} aria-label="Back to previous page">
             <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </Link>
         </Button>
@@ -34,7 +40,7 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
           )}
         </div>
         <div className="flex items-center sm:self-center ml-auto sm:ml-0">
-          <ActivityActions activity={activity} redirectUrl="/dashboard" />
+          <ActivityActions activity={activity} redirectUrl={returnUrl} />
         </div>
       </div>
     </div>

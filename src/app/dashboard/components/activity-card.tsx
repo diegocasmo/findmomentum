@@ -16,17 +16,20 @@ import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { formatTimeHHMMss, formatDateAsTimeAgo } from "@/lib/utils/time";
 import { isActivityRunning } from "@/lib/utils/is-activity-running";
 import { useGetActivityRemainingTime } from "@/hooks/use-get-activity-remaining-time";
+import { useReturnUrl } from "@/hooks/use-return-url";
 
 type ActivityCardProps = {
   activity: ActivityWithTasksAndTimeEntries;
 };
 
 export function ActivityCard({ activity }: ActivityCardProps) {
+  const returnUrl = useReturnUrl();
+
   const isRunning = isActivityRunning(activity);
   const remainingTime = useGetActivityRemainingTime({ activity });
 
   return (
-    <Link href={`/dashboard/activities/${activity.id}`} passHref>
+    <Link href={`/dashboard/activities/${activity.id}?returnUrl=${returnUrl}`}>
       <Card
         className={cn(
           "transition-all duration-300 group cursor-pointer overflow-hidden hover:bg-accent/50",
