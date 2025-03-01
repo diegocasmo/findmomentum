@@ -48,10 +48,14 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         </h2>
         <SourceTopActivitiesList activities={topSourceActivities} />
 
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
+        <div className="flex items-center">
           <ActivityIcon className="w-5 h-5 mr-2 text-primary" />
-          Activities
-        </h2>
+          <h2 className="text-xl font-semibold">Activities</h2>
+          <span className="ml-2 text-sm text-muted-foreground">
+            Page {currentPage} of {totalPages}
+          </span>
+        </div>
+
         <ActivitiesList activities={activities} />
         <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
