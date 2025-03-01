@@ -1,4 +1,4 @@
-import { intervalToDuration } from "date-fns";
+import { intervalToDuration, formatDistanceToNow } from "date-fns";
 import type {
   ActivityWithTasksAndTimeEntries,
   TaskWithTimeEntries,
@@ -67,4 +67,8 @@ export function getTaskRemainingTime(task: TaskWithTimeEntries): number {
 
 export function getTaskElapsedTime(task: TaskWithTimeEntries): number {
   return task.durationMs - getTaskRemainingTime(task);
+}
+
+export function formatDateAsTimeAgo(date: Date): string {
+  return formatDistanceToNow(date, { addSuffix: true });
 }

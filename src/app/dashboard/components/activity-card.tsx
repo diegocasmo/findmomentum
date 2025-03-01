@@ -10,11 +10,10 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
 import { Calendar, CheckCircle } from "lucide-react";
 import { ActivityActions } from "@/app/dashboard/components/activity-actions";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
-import { formatTimeHHMMss } from "@/lib/utils/time";
+import { formatTimeHHMMss, formatDateAsTimeAgo } from "@/lib/utils/time";
 import { isActivityRunning } from "@/lib/utils/is-activity-running";
 import { useGetActivityRemainingTime } from "@/hooks/use-get-activity-remaining-time";
 
@@ -52,7 +51,8 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           <div className="flex items-center text-sm text-muted-foreground">
             <Calendar className="w-3 h-3 mr-1 text-primary" />
             <span className="first-letter:uppercase">
-              {formatDistanceToNow(activity.createdAt, { addSuffix: true })}
+              Created&nbsp;
+              {formatDateAsTimeAgo(activity.createdAt)}
             </span>
           </div>
         </CardContent>
@@ -62,7 +62,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
               <CheckCircle className="w-3 h-3 mr-1 text-primary" />
               <span className="first-letter:uppercase">
                 Completed&nbsp;
-                {formatDistanceToNow(activity.completedAt, { addSuffix: true })}
+                {formatDateAsTimeAgo(activity.completedAt)}
               </span>
             </div>
           )}
