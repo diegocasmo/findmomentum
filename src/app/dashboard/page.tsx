@@ -10,7 +10,7 @@ import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-a
 import { Pagination } from "@/app/dashboard/components/pagination";
 
 type DashboardProps = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function Dashboard({ searchParams }: DashboardProps) {
@@ -22,8 +22,8 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
   }
 
   // Parse page from search params
-  const pageParam = searchParams.page;
-  const page = pageParam ? Number.parseInt(pageParam as string, 10) : 1;
+  const params = await searchParams;
+  const page = params.page ? Number.parseInt(params.page as string, 10) : 1;
 
   // Get paginated activities
   const { activities, totalPages, currentPage } = await getActivities({
