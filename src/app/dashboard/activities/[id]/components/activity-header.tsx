@@ -18,13 +18,7 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
           className="flex-shrink-0 h-9 w-9 sm:h-10 sm:w-10"
           asChild
         >
-          <Link
-            href={{
-              pathname: "/dashboard",
-              query: { tab: activity.completedAt ? "completed" : "active" },
-            }}
-            aria-label="Back to dashboard"
-          >
+          <Link href="/dashboard" aria-label="Back to dashboard">
             <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </Link>
         </Button>

@@ -12,7 +12,8 @@ export function NoTopSourceActivities() {
           No activities used as templates yet
         </h3>
         <p className="mb-4 max-w-md text-sm text-muted-foreground">
-          Activities you've most frequently used as templates will appear here
+          Activities you&apos;ve most frequently used as templates will appear
+          here
         </p>
       </CardContent>
     </Card>
