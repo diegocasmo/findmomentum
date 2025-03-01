@@ -44,7 +44,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </CardTitle>
             <ActivityActions activity={activity} />
           </div>
-          <CardDescription className="text-sm text-muted-foreground line-clamp-2 mt-1">
+          <CardDescription className="text-sm text-muted-foreground mt-1 truncate">
             {activity.description}
           </CardDescription>
         </CardHeader>
