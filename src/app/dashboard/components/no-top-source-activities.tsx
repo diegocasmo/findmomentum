@@ -8,9 +8,11 @@ export function NoTopSourceActivities() {
         <div className="mb-4 rounded-full bg-primary/10 p-3">
           <BarChart3 className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="mb-2 text-lg font-medium">No top activities yet</h3>
+        <h3 className="mb-2 text-lg font-medium">
+          No activities used as templates yet
+        </h3>
         <p className="mb-4 max-w-md text-sm text-muted-foreground">
-          Your most frequently used activities will appear as templates
+          Activities you've most frequently used as templates will appear here
         </p>
       </CardContent>
     </Card>

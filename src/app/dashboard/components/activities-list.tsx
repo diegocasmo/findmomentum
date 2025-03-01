@@ -7,9 +7,7 @@ type ActivitiesListProps = {
 };
 
 export function ActivitiesList({ activities }: ActivitiesListProps) {
-  if (activities.length === 0) {
-    return <NoActivities />;
-  }
+  if (activities.length === 0) return <NoActivities />;
 
   return (
     <ul className="space-y-4">
