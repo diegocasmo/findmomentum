@@ -6,6 +6,8 @@ import { ActivityIcon } from "lucide-react";
 import { ActivitiesList } from "@/components/activities-list";
 import { DashboardPageSkeleton } from "@/components/dashboard-page-skeleton";
 import { ActivityTabs } from "@/components/activity-tabs";
+import { getTopSourceActivities } from "@/lib/services/get-top-source-activities";
+import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";
 
 type DashboardProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -24,6 +26,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
   const completed = tab === "completed";
 
   const activities = await getActivities({ userId, completed });
+  const topSourceActivities = await getTopSourceActivities({ userId });
 
   return (
     <Suspense fallback={<DashboardPageSkeleton />}>
@@ -32,6 +35,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
           <ActivityIcon className="w-6 h-6 md:w-8 md:h-8 mr-2 text-primary" />
           Activities
         </h1>
+        <SourceTopActivitiesList activities={topSourceActivities} />
         <ActivityTabs />
         <ActivitiesList activities={activities} />
       </div>
