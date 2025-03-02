@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
@@ -32,30 +32,34 @@ export function DeleteActivityDialog({
   redirectUrl,
   children,
 }: DeleteActivityDialogProps) {
+  const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const handleDelete = async () => {
-    try {
-      const result = await softDeleteActivityAction(activity.id);
-      if (result.success) {
-        toast({
-          title: "Activity deleted",
-          description: `"${activity.name}" has been successfully deleted.`,
-        });
-        if (redirectUrl) {
-          router.push(redirectUrl);
+  const handleDelete = () => {
+    startTransition(async () => {
+      try {
+        const result = await softDeleteActivityAction(activity.id);
+        if (result.success) {
+          toast({
+            title: "Activity deleted",
+            description: `"${activity.name}" has been successfully deleted.`,
+          });
+
+          if (redirectUrl) {
+            router.push(redirectUrl);
+          } else {
+            router.refresh();
+            setIsOpen(false);
+          }
         } else {
-          router.refresh();
-          setIsOpen(false);
+          toast(ERROR_MESSAGE_CONFIG);
         }
-      } else {
+      } catch (error) {
+        console.error("Activity deletion error:", error);
         toast(ERROR_MESSAGE_CONFIG);
       }
-    } catch (error) {
-      console.error("Activity deletion error:", error);
-      toast(ERROR_MESSAGE_CONFIG);
-    }
+    });
   };
 
   return (
@@ -71,7 +75,9 @@ export function DeleteActivityDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>
+            {isPending ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

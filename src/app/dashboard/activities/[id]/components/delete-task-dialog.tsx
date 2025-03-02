@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
@@ -29,31 +29,34 @@ const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
 };
 
 export function DeleteTaskDialog({ task, redirectUrl }: DeleteTaskDialogProps) {
+  const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const handleDelete = async () => {
-    try {
-      const result = await softDeleteTaskAction(task.id);
-      if (result.success) {
-        toast({
-          title: "Task deleted",
-          description: `"${task.name}" has been successfully deleted.`,
-        });
-        if (redirectUrl) {
-          router.push(redirectUrl);
+  const handleDelete = () => {
+    startTransition(async () => {
+      try {
+        const result = await softDeleteTaskAction(task.id);
+        if (result.success) {
+          toast({
+            title: "Task deleted",
+            description: `"${task.name}" has been successfully deleted.`,
+          });
+
+          if (redirectUrl) {
+            router.push(redirectUrl);
+          } else {
+            router.refresh();
+            setIsOpen(false);
+          }
         } else {
-          router.refresh();
+          toast(ERROR_MESSAGE_CONFIG);
         }
-      } else {
+      } catch (error) {
+        console.error("Task deletion error:", error);
         toast(ERROR_MESSAGE_CONFIG);
       }
-    } catch (error) {
-      console.error("Task deletion error:", error);
-      toast(ERROR_MESSAGE_CONFIG);
-    } finally {
-      setIsOpen(false);
-    }
+    });
   };
 
   return (
@@ -78,7 +81,9 @@ export function DeleteTaskDialog({ task, redirectUrl }: DeleteTaskDialogProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>
+            {isPending ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
