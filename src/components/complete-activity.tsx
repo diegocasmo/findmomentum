@@ -9,19 +9,21 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { completeActivityAction } from "@/app/actions/complete-activity-action";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2Icon, CheckIcon } from "lucide-react";
-import type { Activity, Task } from "@prisma/client";
+import { ActivityWithTasksAndTimeEntries } from "@/types";
 
 type CompleteActivityProps = {
-  activity: Activity & { tasks: Task[] };
+  activity: ActivityWithTasksAndTimeEntries;
 };
 
 export function CompleteActivity({ activity }: CompleteActivityProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const allTasksCompleted =
     activity.tasks.length > 0 &&
@@ -41,7 +43,11 @@ export function CompleteActivity({ activity }: CompleteActivityProps) {
             description: `"${activity.name}" has been marked as complete.`,
             variant: "default",
           });
-          router.push(`?celebrate=true`);
+
+          // Push the new URL with all parameters preserved
+          const params = new URLSearchParams(searchParams);
+          params.set("celebrate", "true");
+          router.push(`${pathname}?${params.toString()}`);
         } else {
           toast({
             title: "Failed to complete activity",
