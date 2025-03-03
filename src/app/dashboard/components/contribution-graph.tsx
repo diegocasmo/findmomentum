@@ -78,7 +78,8 @@ export function ContributionGraph({
   contributions,
   timezone = "UTC",
 }: ContributionGraphProps) {
-  const [, setHoveredDate] = useState<string | null>(null);
+  const [hoveredDate, setHoveredDate] = useState<string | null>(null);
+  const [touchedDate, setTouchedDate] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const contributionMap = createContributionMap(contributions);
@@ -94,11 +95,28 @@ export function ContributionGraph({
   // Scroll to show today's date on initial load
   useEffect(() => {
     if (scrollContainerRef.current) {
-      // Scroll to the right end to show today's date
       scrollContainerRef.current.scrollLeft =
         scrollContainerRef.current.scrollWidth;
     }
   }, []);
+
+  // Close tooltip when touching outside
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      if (
+        touchedDate &&
+        e.target instanceof Element && // Change Node to Element
+        !e.target.closest(".contribution-cell")
+      ) {
+        setTouchedDate(null);
+      }
+    };
+
+    document.addEventListener("touchstart", handleTouchStart);
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+    };
+  }, [touchedDate]);
 
   return (
     <div className="space-y-2 w-full">
@@ -141,17 +159,23 @@ export function ContributionGraph({
 
                     return (
                       <TooltipProvider key={dateString}>
-                        <Tooltip>
+                        <Tooltip
+                          open={
+                            hoveredDate === dateString ||
+                            touchedDate === dateString
+                          }
+                        >
                           <TooltipTrigger asChild>
                             <div
-                              className={`h-2 w-2 sm:h-3 sm:w-3 rounded-sm ${getCellColor(
+                              className={`contribution-cell h-2 w-2 sm:h-3 sm:w-3 rounded-sm ${getCellColor(
                                 count,
                                 maxCount
-                              )} cursor-pointer transition-colors`}
+                              )} cursor-pointer transition-colors active:opacity-75`}
                               onPointerEnter={() => setHoveredDate(dateString)}
-                              onTouchStart={() => setHoveredDate(dateString)}
                               onPointerLeave={() => setHoveredDate(null)}
-                              onTouchEnd={() => setHoveredDate(null)}
+                              onTouchStart={() => {
+                                setTouchedDate(dateString);
+                              }}
                             />
                           </TooltipTrigger>
                           <TooltipContent side="top" align="center">
@@ -164,8 +188,11 @@ export function ContributionGraph({
                                 )}
                               </p>
                               <p>
-                                {count} completed{" "}
-                                {count === 1 ? "activity" : "activities"}
+                                {count > 0
+                                  ? `${count} completed ${
+                                      count === 1 ? "activity" : "activities"
+                                    }`
+                                  : `No completed activities`}
                               </p>
                             </div>
                           </TooltipContent>
