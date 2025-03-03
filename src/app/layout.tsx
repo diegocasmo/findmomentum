@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SetTimezoneCookie } from "@/components/set-timezone-cookie";
 import "@/app/globals.css";
 
 const geistSans = localFont({
@@ -38,6 +39,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <SetTimezoneCookie />
           <TooltipProvider>
             <div className="container max-w-7xl mx-auto px-2">{children}</div>
           </TooltipProvider>

@@ -3,6 +3,7 @@ import { TeamMembershipRole } from "@prisma/client";
 import { subYears, eachDayOfInterval } from "date-fns";
 import { formatInTimeZone, toZonedTime, fromZonedTime } from "date-fns-tz";
 import type { ActivityContribution } from "@/types";
+import { isValidTimezone } from "@/lib/utils/timezone";
 
 export type GetActivityContributionsParams = {
   userId: string;
@@ -17,6 +18,11 @@ export async function getActivityContributions({
   endDate = new Date(),
   timezone = "UTC",
 }: GetActivityContributionsParams): Promise<ActivityContribution[]> {
+  if (!isValidTimezone(timezone)) {
+    console.warn(`Invalid timezone detected: ${timezone}. Defaulting to UTC.`);
+    timezone = "UTC";
+  }
+
   // Convert endDate to the user's timezone
   const zonedEndDate = toZonedTime(endDate, timezone);
 
