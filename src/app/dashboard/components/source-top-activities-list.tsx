@@ -1,14 +1,16 @@
-import type { ActivityWithTasksAndTimeEntries } from "@/types";
+import { getTopSourceActivities } from "@/lib/services/get-top-source-activities";
 import { ActivityCard } from "@/app/dashboard/components/activity-card";
 import { NoTopSourceActivities } from "@/app/dashboard/components/no-top-source-activities";
 
 type SourceTopActivitiesListProps = {
-  activities: ActivityWithTasksAndTimeEntries[];
+  userId: string;
 };
 
-export function SourceTopActivitiesList({
-  activities,
+export async function SourceTopActivitiesList({
+  userId,
 }: SourceTopActivitiesListProps) {
+  const activities = await getTopSourceActivities({ userId });
+
   if (activities.length === 0) return <NoTopSourceActivities />;
 
   return (
