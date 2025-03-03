@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   format,
   startOfWeek,
@@ -25,6 +25,7 @@ type ContributionGraphProps = {
 
 export function ContributionGraph({ contributions }: ContributionGraphProps) {
   const [_, setHoveredDate] = useState<string | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Create a map of date to count for easier lookup
   const contributionMap = new Map(
@@ -85,6 +86,15 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
   // Generate month labels
   const monthLabels = eachMonthOfInterval({ start: startDate, end: endDate });
 
+  // Scroll to show today's date on initial load
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      // Scroll to the right end to show today's date
+      scrollContainerRef.current.scrollLeft =
+        scrollContainerRef.current.scrollWidth;
+    }
+  }, []);
+
   return (
     <div className="space-y-2 w-full">
       <div className="flex items-center justify-end mb-2">
@@ -101,10 +111,10 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
         </div>
       </div>
 
-      <div className="overflow-x-auto w-full">
+      <div className="overflow-x-auto w-full" ref={scrollContainerRef}>
         <div className="min-w-[750px]">
           <div className="flex w-full">
-            <div className="mr-2 flex flex-col justify-between text-[10px] sm:text-xs text-muted-foreground">
+            <div className="sticky left-0 z-10 pr-2 flex flex-col justify-between text-[10px] sm:text-xs text-muted-foreground bg-background">
               <span>Mon</span>
               <span>Wed</span>
               <span>Fri</span>
@@ -152,7 +162,7 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
             </div>
           </div>
           <div className="flex w-full text-[10px] sm:text-xs text-muted-foreground mt-1">
-            <div className="mr-2 w-4" />
+            <div className="sticky left-0 z-10 mr-2 w-4 bg-background" />
             <div className="flex w-full">
               {monthLabels.map((date, index) => (
                 <span key={index} className="flex-grow text-center">
