@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import {
-  format,
   startOfWeek,
   addDays,
   subMonths,
@@ -11,6 +10,7 @@ import {
   startOfMonth,
   eachMonthOfInterval,
 } from "date-fns";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import {
   Tooltip,
   TooltipContent,
@@ -21,6 +21,7 @@ import type { ActivityContribution } from "@/types";
 
 type ContributionGraphProps = {
   contributions: ActivityContribution[];
+  timezone?: string;
 };
 
 const createContributionMap = (contributions: ActivityContribution[]) => {
@@ -73,7 +74,10 @@ const getCellColor = (count: number, maxCount: number) => {
   }
 };
 
-export function ContributionGraph({ contributions }: ContributionGraphProps) {
+export function ContributionGraph({
+  contributions,
+  timezone = "UTC",
+}: ContributionGraphProps) {
   const [, setHoveredDate] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -81,9 +85,8 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
   const maxCount = getMaxCount(contributions);
 
   // Calculate the date range for the graph (last 12 months, ending today)
-  const today = new Date();
-  const endDate = today;
-  const startDate = startOfMonth(subMonths(today, 12));
+  const endDate = toZonedTime(new Date(), timezone);
+  const startDate = startOfMonth(subMonths(endDate, 12));
 
   const weeks = generateWeeks(startDate, endDate);
   const monthLabels = eachMonthOfInterval({ start: startDate, end: endDate });
@@ -129,7 +132,11 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
                   className="flex flex-col gap-1 flex-grow items-center"
                 >
                   {days.map((date) => {
-                    const dateString = format(date, "yyyy-MM-dd");
+                    const dateString = formatInTimeZone(
+                      date,
+                      timezone,
+                      "yyyy-MM-dd"
+                    );
                     const count = contributionMap.get(dateString) || 0;
 
                     return (
@@ -148,7 +155,11 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
                           <TooltipContent side="top" align="center">
                             <div className="text-xs">
                               <p className="font-medium">
-                                {format(date, "MMM d, yyyy")}
+                                {formatInTimeZone(
+                                  date,
+                                  timezone,
+                                  "MMM d, yyyy"
+                                )}
                               </p>
                               <p>
                                 {count} completed{" "}
@@ -169,7 +180,7 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
             <div className="flex w-full">
               {monthLabels.map((date, index) => (
                 <span key={index} className="flex-grow text-center">
-                  {format(date, "MMM")}
+                  {formatInTimeZone(date, timezone, "MMM")}
                 </span>
               ))}
             </div>

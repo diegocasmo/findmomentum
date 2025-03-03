@@ -72,7 +72,3 @@ export function getTaskElapsedTime(task: TaskWithTimeEntries): number {
 export function formatDateAsTimeAgo(date: Date): string {
   return formatDistanceToNow(date, { addSuffix: true });
 }
-
-export function formatYearMonthDate(date: Date): string {
-  return format(date, "yyyy-MM-dd");
-}

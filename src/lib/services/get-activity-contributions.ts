@@ -1,27 +1,38 @@
 import { prisma } from "@/lib/prisma";
 import { TeamMembershipRole } from "@prisma/client";
 import { subYears, eachDayOfInterval } from "date-fns";
-import { formatYearMonthDate } from "@/lib/utils/time";
+import { formatInTimeZone, toZonedTime, fromZonedTime } from "date-fns-tz";
 import type { ActivityContribution } from "@/types";
 
 export type GetActivityContributionsParams = {
   userId: string;
   startDate?: Date;
   endDate?: Date;
+  timezone?: string;
 };
 
 export async function getActivityContributions({
   userId,
   startDate,
   endDate = new Date(),
+  timezone = "UTC",
 }: GetActivityContributionsParams): Promise<ActivityContribution[]> {
-  let actualStartDate = startDate || subYears(endDate, 1);
+  // Convert endDate to the user's timezone
+  const zonedEndDate = toZonedTime(endDate, timezone);
+
+  let actualStartDate = startDate
+    ? toZonedTime(startDate, timezone)
+    : subYears(zonedEndDate, 1);
 
   // Ensure the date range is no longer than one year
-  const oneYearBeforeEndDate = subYears(endDate, 1);
+  const oneYearBeforeEndDate = subYears(zonedEndDate, 1);
   if (actualStartDate < oneYearBeforeEndDate) {
     actualStartDate = oneYearBeforeEndDate;
   }
+
+  // Convert dates back to UTC for database query
+  const utcStartDate = fromZonedTime(actualStartDate, timezone);
+  const utcEndDate = fromZonedTime(zonedEndDate, timezone);
 
   const activities = await prisma.activity.findMany({
     where: {
@@ -29,8 +40,8 @@ export async function getActivityContributions({
       deletedAt: null,
       completedAt: {
         not: null,
-        gte: actualStartDate,
-        lte: endDate,
+        gte: utcStartDate,
+        lte: utcEndDate,
       },
       team: {
         teamMemberships: {
@@ -51,17 +62,21 @@ export async function getActivityContributions({
 
   const allDatesInRange = eachDayOfInterval({
     start: actualStartDate,
-    end: endDate,
+    end: zonedEndDate,
   });
 
   const contributionMap = new Map<string, number>();
   allDatesInRange.forEach((date) => {
-    contributionMap.set(formatYearMonthDate(date), 0);
+    // Format date in user's timezone
+    const dateString = formatInTimeZone(date, timezone, "yyyy-MM-dd");
+    contributionMap.set(dateString, 0);
   });
 
   activities.forEach((activity) => {
     if (activity.completedAt) {
-      const dateString = formatYearMonthDate(activity.completedAt);
+      // Convert UTC database date to user's timezone before formatting
+      const zonedDate = toZonedTime(activity.completedAt, timezone);
+      const dateString = formatInTimeZone(zonedDate, timezone, "yyyy-MM-dd");
       const currentCount = contributionMap.get(dateString) || 0;
       contributionMap.set(dateString, currentCount + 1);
     }
