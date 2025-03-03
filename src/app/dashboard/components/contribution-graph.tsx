@@ -148,8 +148,10 @@ export function ContributionGraph({
                                 count,
                                 maxCount
                               )} cursor-pointer transition-colors`}
-                              onMouseEnter={() => setHoveredDate(dateString)}
-                              onMouseLeave={() => setHoveredDate(null)}
+                              onPointerEnter={() => setHoveredDate(dateString)}
+                              onTouchStart={() => setHoveredDate(dateString)}
+                              onPointerLeave={() => setHoveredDate(null)}
+                              onTouchEnd={() => setHoveredDate(null)}
                             />
                           </TooltipTrigger>
                           <TooltipContent side="top" align="center">
