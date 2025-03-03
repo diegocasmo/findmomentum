@@ -10,7 +10,7 @@ type ActivityContributionsProps = {
 export async function ActivityContributions({
   userId,
 }: ActivityContributionsProps) {
-  const timezone = getUserTimezone();
+  const timezone = await getUserTimezone();
   const contributions = await getActivityContributions({
     userId,
     timezone,

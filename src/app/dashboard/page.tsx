@@ -8,6 +8,7 @@ import { DashboardPageSkeleton } from "@/components/dashboard-page-skeleton";
 import { ActivityContributions } from "@/app/dashboard/components/activity-contributions";
 import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";
 import { Pagination } from "@/app/dashboard/components/pagination";
+import { SetTimezoneCookie } from "@/app/dashboard/components/set-timezone-cookie";
 
 type DashboardProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -34,6 +35,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
 
   return (
     <Suspense fallback={<DashboardPageSkeleton />}>
+      <SetTimezoneCookie />
       <div className="space-y-6">
         <h1 className="text-2xl md:text-3xl font-bold flex items-center mb-2 sm:mb-0">
           <Home className="w-6 h-6 md:w-8 md:h-8 mr-2 text-primary" />

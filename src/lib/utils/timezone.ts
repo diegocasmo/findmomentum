@@ -1,12 +1,16 @@
-/**
- * Gets the user's timezone from the browser
- * @returns The user's timezone (e.g., "America/New_York")
- */
-export function getUserTimezone(): string {
+import { cookies } from "next/headers";
+
+export async function getUserTimezone(): Promise<string> {
   if (typeof window === "undefined") {
-    return "UTC"; // Default to UTC on the server
+    // Server-side: Get timezone from cookie
+    const cookieStore = await cookies();
+    const userTimezone = cookieStore.get("user-timezone")?.value;
+
+    // Return the user's timezone from cookie or fallback to UTC
+    return userTimezone || "UTC";
   }
 
+  // Client-side: Get timezone from browser
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   } catch (error) {
