@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { TeamMembershipRole } from "@prisma/client";
+import { subYears, eachDayOfInterval, format } from "date-fns";
 
 export type ActivityContribution = {
   date: string;
@@ -17,11 +18,8 @@ export async function getActivityContributions({
   startDate,
   endDate = new Date(),
 }: GetActivityContributionsParams): Promise<ActivityContribution[]> {
-  // Default to last 365 days if no start date provided
-  const defaultStartDate = new Date();
-  defaultStartDate.setDate(defaultStartDate.getDate() - 365);
-
-  const actualStartDate = startDate || defaultStartDate;
+  // Default to last year if no start date provided, properly accounting for leap years
+  const actualStartDate = startDate || subYears(endDate, 1);
 
   // Get all COMPLETED activities within the date range
   const activities = await prisma.activity.findMany({
@@ -51,21 +49,22 @@ export async function getActivityContributions({
     },
   });
 
-  // Group activities by completion date and count them
-  const contributionMap = new Map<string, number>();
+  // Generate all dates in the range using date-fns
+  const allDatesInRange = eachDayOfInterval({
+    start: actualStartDate,
+    end: endDate,
+  });
 
-  // Initialize all dates in the range with zero counts
-  const currentDate = new Date(actualStartDate);
-  while (currentDate <= endDate) {
-    const dateString = currentDate.toISOString().split("T")[0];
-    contributionMap.set(dateString, 0);
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
+  // Initialize contribution map with all dates set to zero count
+  const contributionMap = new Map<string, number>();
+  allDatesInRange.forEach((date) => {
+    contributionMap.set(format(date, "yyyy-MM-dd"), 0);
+  });
 
   // Count activities for each date based on completion date
   activities.forEach((activity) => {
     if (activity.completedAt) {
-      const dateString = activity.completedAt.toISOString().split("T")[0];
+      const dateString = format(activity.completedAt, "yyyy-MM-dd");
       const currentCount = contributionMap.get(dateString) || 0;
       contributionMap.set(dateString, currentCount + 1);
     }
