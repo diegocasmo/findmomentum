@@ -1,4 +1,4 @@
-import { intervalToDuration, formatDistanceToNow } from "date-fns";
+import { intervalToDuration, formatDistanceToNow, format } from "date-fns";
 import type {
   ActivityWithTasksAndTimeEntries,
   TaskWithTimeEntries,
@@ -71,4 +71,8 @@ export function getTaskElapsedTime(task: TaskWithTimeEntries): number {
 
 export function formatDateAsTimeAgo(date: Date): string {
   return formatDistanceToNow(date, { addSuffix: true });
+}
+
+export function formatYearMonthDate(date: Date): string {
+  return format(date, "yyyy-MM-dd");
 }

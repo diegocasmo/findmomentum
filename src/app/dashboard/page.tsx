@@ -2,10 +2,10 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getActivities } from "@/lib/services/get-activities";
 import { auth } from "@/lib/auth";
-import { ActivityIcon, Home, FileText } from "lucide-react";
+import { ActivityIcon, Home, FileText, CheckSquare } from "lucide-react";
 import { ActivitiesList } from "@/app/dashboard/components/activities-list";
 import { DashboardPageSkeleton } from "@/components/dashboard-page-skeleton";
-import { getTopSourceActivities } from "@/lib/services/get-top-source-activities";
+import { ActivityContributions } from "@/app/dashboard/components/activity-contributions";
 import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";
 import { Pagination } from "@/app/dashboard/components/pagination";
 
@@ -32,8 +32,6 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     limit: 10,
   });
 
-  const topSourceActivities = await getTopSourceActivities({ userId });
-
   return (
     <Suspense fallback={<DashboardPageSkeleton />}>
       <div className="space-y-6">
@@ -43,10 +41,18 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         </h1>
 
         <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <CheckSquare className="w-5 h-5 mr-2 text-primary" />
+          Activity Completion History
+        </h2>
+
+        <ActivityContributions userId={userId} />
+
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
           <FileText className="w-5 h-5 mr-2 text-primary" />
           Top templates
         </h2>
-        <SourceTopActivitiesList activities={topSourceActivities} />
+
+        <SourceTopActivitiesList userId={userId} />
 
         <div className="flex items-center">
           <ActivityIcon className="w-5 h-5 mr-2 text-primary" />

@@ -19,3 +19,8 @@ export type OtpCredentials = {
   email: string;
   otp: string;
 };
+
+export type ActivityContribution = {
+  date: string;
+  count: number;
+};
