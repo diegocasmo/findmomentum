@@ -1,4 +1,4 @@
-import { intervalToDuration, formatDistanceToNow, format } from "date-fns";
+import { intervalToDuration, formatDistanceToNow } from "date-fns";
 import type {
   ActivityWithTasksAndTimeEntries,
   TaskWithTimeEntries,
