@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { ActivityContribution } from "@/lib/services/get-activity-contributions";
+import type { ActivityContribution } from "@/types";
 
 type ContributionGraphProps = {
   contributions: ActivityContribution[];
