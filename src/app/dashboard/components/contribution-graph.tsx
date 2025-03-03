@@ -23,24 +23,15 @@ type ContributionGraphProps = {
   contributions: ActivityContribution[];
 };
 
-export function ContributionGraph({ contributions }: ContributionGraphProps) {
-  const [_, setHoveredDate] = useState<string | null>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+const createContributionMap = (contributions: ActivityContribution[]) => {
+  return new Map(contributions.map(({ date, count }) => [date, count]));
+};
 
-  // Create a map of date to count for easier lookup
-  const contributionMap = new Map(
-    contributions.map(({ date, count }) => [date, count])
-  );
+const getMaxCount = (contributions: ActivityContribution[]) => {
+  return Math.max(...contributions.map((c) => c.count));
+};
 
-  // Get the max count to determine the intensity scale
-  const maxCount = Math.max(...contributions.map((c) => c.count));
-
-  // Calculate the date range for the graph (last 12 months, ending today)
-  const today = new Date();
-  const endDate = today;
-  const startDate = startOfMonth(subMonths(today, 12));
-
-  // Generate weeks (rows) and days (cells) for the graph
+const generateWeeks = (startDate: Date, endDate: Date) => {
   const weeks: Date[][] = [];
   let currentDate = startOfWeek(startDate, { weekStartsOn: 1 }); // Start on Monday
 
@@ -59,31 +50,42 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
     currentDate = addDays(currentDate, 7);
   }
 
-  // Function to determine cell color based on activity count
-  const getCellColor = (count: number) => {
-    if (count === 0) return "bg-gray-100 dark:bg-gray-800";
+  return weeks;
+};
 
-    // Calculate intensity (0-4) based on the count relative to max
-    const intensity = Math.min(
-      4,
-      Math.ceil((count / Math.max(maxCount, 1)) * 4)
-    );
+const getCellColor = (count: number, maxCount: number) => {
+  if (count === 0) return "bg-gray-100 dark:bg-gray-800";
 
-    switch (intensity) {
-      case 1:
-        return "bg-emerald-100 dark:bg-emerald-900";
-      case 2:
-        return "bg-emerald-300 dark:bg-emerald-700";
-      case 3:
-        return "bg-emerald-500 dark:bg-emerald-500";
-      case 4:
-        return "bg-emerald-700 dark:bg-emerald-300";
-      default:
-        return "bg-gray-100 dark:bg-gray-800";
-    }
-  };
+  // Calculate intensity (0-4) based on the count relative to max
+  const intensity = Math.min(4, Math.ceil((count / Math.max(maxCount, 1)) * 4));
 
-  // Generate month labels
+  switch (intensity) {
+    case 1:
+      return "bg-emerald-100 dark:bg-emerald-900";
+    case 2:
+      return "bg-emerald-300 dark:bg-emerald-700";
+    case 3:
+      return "bg-emerald-500 dark:bg-emerald-500";
+    case 4:
+      return "bg-emerald-700 dark:bg-emerald-300";
+    default:
+      return "bg-gray-100 dark:bg-gray-800";
+  }
+};
+
+export function ContributionGraph({ contributions }: ContributionGraphProps) {
+  const [, setHoveredDate] = useState<string | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const contributionMap = createContributionMap(contributions);
+  const maxCount = getMaxCount(contributions);
+
+  // Calculate the date range for the graph (last 12 months, ending today)
+  const today = new Date();
+  const endDate = today;
+  const startDate = startOfMonth(subMonths(today, 12));
+
+  const weeks = generateWeeks(startDate, endDate);
   const monthLabels = eachMonthOfInterval({ start: startDate, end: endDate });
 
   // Scroll to show today's date on initial load
@@ -136,7 +138,8 @@ export function ContributionGraph({ contributions }: ContributionGraphProps) {
                           <TooltipTrigger asChild>
                             <div
                               className={`h-2 w-2 sm:h-3 sm:w-3 rounded-sm ${getCellColor(
-                                count
+                                count,
+                                maxCount
                               )} cursor-pointer transition-colors`}
                               onMouseEnter={() => setHoveredDate(dateString)}
                               onMouseLeave={() => setHoveredDate(null)}

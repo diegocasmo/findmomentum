@@ -2,11 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { TeamMembershipRole } from "@prisma/client";
 import { subYears, eachDayOfInterval } from "date-fns";
 import { formatYearMonthDate } from "@/lib/utils/time";
-
-export type ActivityContribution = {
-  date: string;
-  count: number;
-};
+import type { ActivityContribution } from "@/types";
 
 export type GetActivityContributionsParams = {
   userId: string;
