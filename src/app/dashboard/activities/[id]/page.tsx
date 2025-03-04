@@ -5,7 +5,7 @@ import { getActivity } from "@/lib/services/get-activity";
 import { TasksList } from "@/app/dashboard/activities/[id]/components/tasks-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListTodoIcon, PlusCircleIcon } from "lucide-react";
-import { ActivityTimer } from "@/components/activity-timer";
+import { ActivityTimer } from "@/app/dashboard/activities/[id]/components/activity-timer";
 import { CompleteActivity } from "@/components/complete-activity";
 import { UpsertTaskDialog } from "@/components/upsert-task-dialog";
 import { ActivityCompletedCard } from "@/components/activity-completed-card";
