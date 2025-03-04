@@ -46,7 +46,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </CardTitle>
             <ActivityActions activity={activity} redirectUrl={returnUrl} />
           </div>
-          <CardDescription className="text-sm text-muted-foreground mt-1 truncate">
+          <CardDescription className="text-sm text-muted-foreground mt-1 truncate min-h-[1.5rem]">
             {activity.description}
           </CardDescription>
         </CardHeader>
@@ -60,7 +60,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           </div>
         </CardContent>
         <CardFooter className="pt-2 pb-2 bg-muted/50 min-h-[2.5rem] flex items-center">
-          {activity.completedAt && (
+          {activity.completedAt ? (
             <div className="flex items-center text-sm text-muted-foreground">
               <CheckCircle className="w-3 h-3 mr-1 text-primary" />
               <span className="first-letter:uppercase">
@@ -68,6 +68,8 @@ export function ActivityCard({ activity }: ActivityCardProps) {
                 {formatDateAsTimeAgo(activity.completedAt)}
               </span>
             </div>
+          ) : (
+            <div className="h-4"></div>
           )}
         </CardFooter>
       </Card>
