@@ -15,18 +15,18 @@ import type { Activity } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { createActivityFromTemplateAction } from "@/app/actions/create-activity-from-template-action";
 import { useToast } from "@/hooks/use-toast";
-import { useReturnUrl } from "@/hooks/use-return-url";
 
 type ActivityActionsProps = {
   activity: Activity;
   redirectUrl?: string;
+  returnUrl?: string;
 };
 
 export function ActivityActions({
   activity,
   redirectUrl,
+  returnUrl,
 }: ActivityActionsProps) {
-  const returnUrl = useReturnUrl();
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -40,7 +40,9 @@ export function ActivityActions({
 
         if (result.success) {
           router.push(
-            `/dashboard/activities/${result.data?.id}?returnUrl=${returnUrl}`
+            `/dashboard/activities/${result.data?.id}${
+              returnUrl ? `?returnUrl=${returnUrl}` : ""
+            }`
           );
         } else {
           toast({

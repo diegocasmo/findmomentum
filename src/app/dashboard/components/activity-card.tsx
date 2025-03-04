@@ -44,7 +44,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
               {activity.name}&nbsp;
               {isRunning ? `(${formatTimeHHMMss(remainingTime)})` : null}
             </CardTitle>
-            <ActivityActions activity={activity} />
+            <ActivityActions activity={activity} redirectUrl={returnUrl} />
           </div>
           <CardDescription className="text-sm text-muted-foreground mt-1 truncate">
             {activity.description}
