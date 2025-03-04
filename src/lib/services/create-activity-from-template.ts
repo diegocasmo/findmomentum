@@ -37,9 +37,9 @@ export async function createActivityFromTemplate({
 
       return await tx.activity.create({
         data: {
-          name: `Copy of ${sourceActivity.name}`,
+          name: sourceActivity.name,
           description: sourceActivity.description
-            ? `Copy of ${sourceActivity.description}`
+            ? sourceActivity.description
             : null,
           teamId: sourceActivity.teamId,
           userId: userId,
