@@ -10,7 +10,7 @@ import {
   startOfMonth,
   eachMonthOfInterval,
 } from "date-fns";
-import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { formatInTimeZone, toZonedTime } from "@/lib/utils/time";
 import {
   Tooltip,
   TooltipContent,

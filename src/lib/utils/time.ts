@@ -3,6 +3,15 @@ import type {
   ActivityWithTasksAndTimeEntries,
   TaskWithTimeEntries,
 } from "@/types";
+import {
+  formatInTimeZone as tzFormatInTimeZone,
+  toZonedTime as tzToZonedTime,
+  fromZonedTime as tzFromZonedTime,
+} from "date-fns-tz";
+
+export const formatInTimeZone = tzFormatInTimeZone;
+export const toZonedTime = tzToZonedTime;
+export const fromZonedTime = tzFromZonedTime;
 
 export const MS_PER_SECOND = 1000;
 export const SECONDS_PER_MIN = 60;

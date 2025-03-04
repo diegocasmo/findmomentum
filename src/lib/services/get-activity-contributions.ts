@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { TeamMembershipRole } from "@prisma/client";
 import { subYears, eachDayOfInterval } from "date-fns";
-import { formatInTimeZone, toZonedTime, fromZonedTime } from "date-fns-tz";
 import type { ActivityContribution } from "@/types";
 import { isValidTimezone } from "@/lib/utils/timezone";
+import { formatInTimeZone, toZonedTime, fromZonedTime } from "@/lib/utils/time";
 
 export type GetActivityContributionsParams = {
   userId: string;
