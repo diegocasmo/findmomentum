@@ -33,8 +33,6 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     limit: 10,
   });
 
-  return <PageSkeleton />;
-
   return (
     <Suspense fallback={<PageSkeleton />}>
       <div className="space-y-6">
