@@ -2,12 +2,13 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getActivities } from "@/lib/services/get-activities";
 import { auth } from "@/lib/auth";
-import { ActivityIcon, Home, FileText, CheckSquare } from "lucide-react";
+import { Home } from "lucide-react";
 import { ActivitiesList } from "@/app/dashboard/components/activities-list";
 import { DashboardPageSkeleton } from "@/components/dashboard-page-skeleton";
 import { ActivityContributions } from "@/app/dashboard/components/activity-contributions";
 import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";
 import { Pagination } from "@/app/dashboard/components/pagination";
+import { CollapsibleSection } from "@/components/collapsible-section";
 
 type DashboardProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -40,30 +41,31 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
           Home
         </h1>
 
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <CheckSquare className="w-5 h-5 mr-2 text-primary" />
-          Year-to-date activity completion
-        </h2>
+        <CollapsibleSection
+          id="activity-completion"
+          title="Year-to-date activity completion"
+          iconName="check-square"
+        >
+          <ActivityContributions userId={userId} />
+        </CollapsibleSection>
 
-        <ActivityContributions userId={userId} />
+        <CollapsibleSection
+          id="top-templates"
+          title="Top templates"
+          iconName="file-text"
+        >
+          <SourceTopActivitiesList userId={userId} />
+        </CollapsibleSection>
 
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <FileText className="w-5 h-5 mr-2 text-primary" />
-          Top templates
-        </h2>
-
-        <SourceTopActivitiesList userId={userId} />
-
-        <div className="flex items-center">
-          <ActivityIcon className="w-5 h-5 mr-2 text-primary" />
-          <h2 className="text-xl font-semibold">Activities</h2>
-          <span className="ml-2 text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
-          </span>
-        </div>
-
-        <ActivitiesList activities={activities} />
-        <Pagination totalPages={totalPages} currentPage={currentPage} />
+        <CollapsibleSection
+          id="activities"
+          title="Activities"
+          description={`Page ${currentPage} of ${totalPages}`}
+          iconName="activity"
+        >
+          <ActivitiesList activities={activities} />
+          <Pagination totalPages={totalPages} currentPage={currentPage} />
+        </CollapsibleSection>
       </div>
     </Suspense>
   );
