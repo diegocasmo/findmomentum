@@ -46,7 +46,7 @@ export function ActivityFilters() {
         }
       });
       // Only reset page to 1 if search or status changes
-      if (newParams.search !== undefined || newParams.status !== undefined) {
+      if (Boolean(newParams.search) || newParams.status !== undefined) {
         params.set("page", "1");
       }
       router.push(`?${params.toString()}`, { scroll: false });
