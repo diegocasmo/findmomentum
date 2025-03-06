@@ -46,22 +46,12 @@ function getActivityDescription({
   totalCount,
   currentPage,
   totalPages,
-  searchParams,
 }: {
   totalCount: number;
   currentPage: number;
   totalPages: number;
-  searchParams: SearchParams;
 }) {
-  const isFiltering =
-    searchParams.search ||
-    (searchParams.status && searchParams.status !== "all");
-
   let description = `(${totalCount})`;
-
-  if (isFiltering) {
-    description += " found";
-  }
 
   if (totalPages > 1) {
     description += ` • Page ${currentPage} of ${totalPages}`;
@@ -70,7 +60,7 @@ function getActivityDescription({
   return description;
 }
 
-export default async function Dashboard({ searchParams }: DashboardProps) {
+export default async function DashboardPage({ searchParams }: DashboardProps) {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -87,7 +77,6 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     totalCount,
     currentPage,
     totalPages,
-    searchParams: params,
   });
 
   return (
