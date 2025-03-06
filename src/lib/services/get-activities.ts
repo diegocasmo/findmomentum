@@ -1,15 +1,27 @@
 import { prisma } from "@/lib/prisma";
-import type { ActivityWithTasksAndTimeEntries } from "@/types";
-import { TeamMembershipRole } from "@prisma/client";
+import type { CompletionStatus } from "@/types";
+import { type Prisma, TeamMembershipRole } from "@prisma/client";
 
 export type GetActivitiesParams = {
   userId: string;
   page?: number;
   limit?: number;
+  searchQuery?: string;
+  completionStatus?: CompletionStatus;
 };
 
+type ActivityWithTasks = Prisma.ActivityGetPayload<{
+  include: {
+    tasks: {
+      include: {
+        timeEntries: true;
+      };
+    };
+  };
+}>;
+
 export type PaginatedActivities = {
-  activities: ActivityWithTasksAndTimeEntries[];
+  activities: ActivityWithTasks[];
   totalCount: number;
   totalPages: number;
   currentPage: number;
@@ -19,70 +31,59 @@ export async function getActivities({
   userId,
   page = 1,
   limit = 10,
+  searchQuery = "",
+  completionStatus = "all",
 }: GetActivitiesParams): Promise<PaginatedActivities> {
-  // Calculate pagination values
   const skip = (page - 1) * limit;
 
-  // Get total count for pagination
-  const totalCount = await prisma.activity.count({
-    where: {
-      userId,
-      deletedAt: null,
-      team: {
-        teamMemberships: {
-          some: {
-            userId,
-            role: TeamMembershipRole.OWNER,
-          },
-        },
-      },
-    },
-  });
+  console.log(`completionStatus: ${completionStatus}`);
 
-  // Get paginated activities
-  const activities = await prisma.activity.findMany({
-    where: {
-      userId,
-      deletedAt: null,
-      team: {
-        teamMemberships: {
-          some: {
-            userId,
-            role: TeamMembershipRole.OWNER,
-          },
+  const whereClause: Prisma.ActivityWhereInput = {
+    userId,
+    deletedAt: null,
+    team: {
+      teamMemberships: {
+        some: {
+          userId,
+          role: TeamMembershipRole.OWNER,
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      tasks: {
-        where: {
-          deletedAt: null,
-          activity: {
-            tasks: {
-              some: {
-                timeEntries: {
-                  some: {
-                    stoppedAt: null,
-                  },
-                },
-              },
+    ...(searchQuery
+      ? {
+          name: {
+            contains: searchQuery,
+            mode: "insensitive",
+          },
+        }
+      : {}),
+    ...(completionStatus === "completed"
+      ? { completedAt: { not: null } }
+      : completionStatus === "incomplete"
+      ? { completedAt: null }
+      : {}),
+  };
+
+  const [totalCount, activities] = await Promise.all([
+    prisma.activity.count({ where: whereClause }),
+    prisma.activity.findMany({
+      where: whereClause,
+      orderBy: { createdAt: "desc" },
+      include: {
+        tasks: {
+          where: { deletedAt: null },
+          orderBy: { position: "asc" },
+          include: {
+            timeEntries: {
+              where: { stoppedAt: null },
             },
           },
         },
-        include: {
-          timeEntries: true,
-        },
-        orderBy: {
-          position: "asc",
-        },
       },
-    },
-    skip,
-    take: limit,
-  });
+      skip,
+      take: limit,
+    }),
+  ]);
 
   const totalPages = Math.ceil(totalCount / limit);
 

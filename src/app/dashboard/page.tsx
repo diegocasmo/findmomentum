@@ -4,15 +4,37 @@ import { getActivities } from "@/lib/services/get-activities";
 import { auth } from "@/lib/auth";
 import { Home } from "lucide-react";
 import { ActivitiesList } from "@/app/dashboard/components/activities-list";
+import { ActivityFilters } from "@/app/dashboard/components/activity-filters";
 import { PageSkeleton } from "@/app/dashboard/components/page-skeleton";
 import { ActivityContributions } from "@/app/dashboard/components/activity-contributions";
 import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";
 import { Pagination } from "@/app/dashboard/components/pagination";
 import { CollapsibleSection } from "@/components/collapsible-section";
+import type { CompletionStatus } from "@/types";
+
+type SearchParams = {
+  page?: string;
+  search?: string;
+  status?: string;
+};
 
 type DashboardProps = {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<SearchParams>;
 };
+
+async function getActivitiesData(userId: string, searchParams: SearchParams) {
+  const page = searchParams.page ? Number.parseInt(searchParams.page, 10) : 1;
+  const searchQuery = searchParams.search;
+  const completionStatus = searchParams.status as CompletionStatus | undefined;
+
+  return getActivities({
+    userId,
+    page,
+    limit: 10,
+    searchQuery,
+    completionStatus,
+  });
+}
 
 export default async function Dashboard({ searchParams }: DashboardProps) {
   const session = await auth();
@@ -22,16 +44,13 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     redirect("/auth/sign-in");
   }
 
-  // Parse page from search params
-  const params = await searchParams;
-  const page = params.page ? Number.parseInt(params.page as string, 10) : 1;
+  // Await and parse search params
+  const resolvedSearchParams = await searchParams;
+  console.log(resolvedSearchParams);
 
-  // Get paginated activities
-  const { activities, totalPages, currentPage } = await getActivities({
-    userId,
-    page,
-    limit: 10,
-  });
+  // Get paginated activities with filters
+  const { activities, totalPages, currentPage, totalCount } =
+    await getActivitiesData(userId, resolvedSearchParams);
 
   return (
     <Suspense fallback={<PageSkeleton />}>
@@ -60,9 +79,12 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         <CollapsibleSection
           id="activities"
           title="Activities"
-          description={`Page ${currentPage} of ${totalPages}`}
+          description={`${totalCount} ${
+            totalCount === 1 ? "activity" : "activities"
+          } found • Page ${currentPage} of ${totalPages}`}
           iconName="activity"
         >
+          <ActivityFilters />
           <ActivitiesList activities={activities} />
           <Pagination totalPages={totalPages} currentPage={currentPage} />
         </CollapsibleSection>

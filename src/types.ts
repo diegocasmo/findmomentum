@@ -24,3 +24,5 @@ export type ActivityContribution = {
   date: string;
   count: number;
 };
+
+export type CompletionStatus = "all" | "completed" | "incomplete";
