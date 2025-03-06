@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Filter } from "lucide-react";
@@ -68,29 +67,35 @@ export function ActivityFilters() {
   }, [searchParams]);
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 mb-4">
-      <div className="relative flex-1">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="text"
-          placeholder="Search activities..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="pl-9"
-        />
+    <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
+      <div className="relative flex-1 w-full">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none">
+          <Search className="h-full w-full" />
+        </div>
+        <div className="w-full p-[3px]">
+          <Input
+            type="text"
+            placeholder="Search activities..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="pl-10 w-full"
+          />
+        </div>
       </div>
-      <div className="flex items-center gap-2">
-        <Filter className="h-4 w-4 text-muted-foreground" />
-        <Select value={completionStatus} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All activities</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="incomplete">Incomplete</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex items-center gap-2 w-full sm:w-auto">
+        <Filter className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+        <div className="w-full sm:w-[180px] p-[3px]">
+          <Select value={completionStatus} onValueChange={handleStatusChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All activities</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="incomplete">Incomplete</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
