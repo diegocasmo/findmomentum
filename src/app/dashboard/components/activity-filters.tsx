@@ -38,7 +38,6 @@ export function ActivityFilters() {
   const updateFilters = useCallback(
     (newParams: Record<string, string>) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set("page", "1");
       Object.entries(newParams).forEach(([key, value]) => {
         if (value) {
           params.set(key, value);
@@ -46,14 +45,20 @@ export function ActivityFilters() {
           params.delete(key);
         }
       });
+      // Only reset page to 1 if search or status changes
+      if (newParams.search !== undefined || newParams.status !== undefined) {
+        params.set("page", "1");
+      }
       router.push(`?${params.toString()}`);
     },
     [router, searchParams]
   );
 
   useEffect(() => {
-    updateFilters({ search: debouncedSearchQuery });
-  }, [debouncedSearchQuery, updateFilters]);
+    if (debouncedSearchQuery !== searchParams.get("search")) {
+      updateFilters({ search: debouncedSearchQuery });
+    }
+  }, [debouncedSearchQuery, updateFilters, searchParams]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
