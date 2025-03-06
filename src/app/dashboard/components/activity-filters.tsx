@@ -15,6 +15,8 @@ import {
 import { useDebounce } from "@/hooks/use-debounce";
 import type { CompletionStatus } from "@/types";
 
+const SEARCH_DEBOUNCE_DELAY_MS = 300;
+
 export function ActivityFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,7 +30,10 @@ export function ActivityFilters() {
     initialCompletionStatus
   );
 
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const debouncedSearchQuery = useDebounce(
+    searchQuery,
+    SEARCH_DEBOUNCE_DELAY_MS
+  );
 
   const updateFilters = useCallback(
     (newParams: Record<string, string>) => {
