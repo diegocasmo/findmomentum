@@ -56,9 +56,8 @@ function getActivityDescription({
   const isFiltering =
     searchParams.search ||
     (searchParams.status && searchParams.status !== "all");
-  const activityText = totalCount === 1 ? "activity" : "activities";
 
-  let description = `${totalCount} ${activityText}`;
+  let description = `(${totalCount})`;
 
   if (isFiltering) {
     description += " found";
