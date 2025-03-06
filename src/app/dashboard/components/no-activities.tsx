@@ -8,9 +8,10 @@ export function NoActivities() {
         <div className="mb-4 rounded-full bg-primary/10 p-3">
           <ActivityIcon className="h-6 w-6 text-primary" />
         </div>
-        <h3 className="mb-2 text-lg font-medium">No activities yet</h3>
+        <h3 className="mb-2 text-lg font-medium">No activities found</h3>
         <p className="mb-4 max-w-md text-sm text-muted-foreground">
-          When you create activities, they&apos;ll appear here.
+          No activities to display. Create a new activity or try different
+          search terms.
         </p>
       </CardContent>
     </Card>

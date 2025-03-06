@@ -1,5 +1,5 @@
 import { ActivityCard } from "@/app/dashboard/components/activity-card";
-import { NoActivities } from "@/components/no-activities";
+import { NoActivities } from "@/app/dashboard/components/no-activities";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
 type ActivitiesListProps = {
