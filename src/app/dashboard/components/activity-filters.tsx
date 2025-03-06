@@ -49,7 +49,7 @@ export function ActivityFilters() {
       if (newParams.search !== undefined || newParams.status !== undefined) {
         params.set("page", "1");
       }
-      router.push(`?${params.toString()}`);
+      router.push(`?${params.toString()}`, { scroll: false });
     },
     [router, searchParams]
   );
