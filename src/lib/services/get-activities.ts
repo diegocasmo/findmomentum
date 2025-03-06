@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import type { CompletionStatus } from "@/types";
+import type {
+  ActivityWithTasksAndTimeEntries,
+  CompletionStatus,
+} from "@/types";
 import { type Prisma, TeamMembershipRole } from "@prisma/client";
 
 export type GetActivitiesParams = {
@@ -10,18 +13,8 @@ export type GetActivitiesParams = {
   completionStatus?: CompletionStatus;
 };
 
-type ActivityWithTasks = Prisma.ActivityGetPayload<{
-  include: {
-    tasks: {
-      include: {
-        timeEntries: true;
-      };
-    };
-  };
-}>;
-
 export type PaginatedActivities = {
-  activities: ActivityWithTasks[];
+  activities: ActivityWithTasksAndTimeEntries[];
   totalCount: number;
   totalPages: number;
   currentPage: number;
@@ -36,9 +29,7 @@ export async function getActivities({
 }: GetActivitiesParams): Promise<PaginatedActivities> {
   const skip = (page - 1) * limit;
 
-  console.log(`completionStatus: ${completionStatus}`);
-
-  const whereClause: Prisma.ActivityWhereInput = {
+  const where: Prisma.ActivityWhereInput = {
     userId,
     deletedAt: null,
     team: {
@@ -65,18 +56,31 @@ export async function getActivities({
   };
 
   const [totalCount, activities] = await Promise.all([
-    prisma.activity.count({ where: whereClause }),
+    prisma.activity.count({ where }),
     prisma.activity.findMany({
-      where: whereClause,
+      where,
       orderBy: { createdAt: "desc" },
       include: {
         tasks: {
-          where: { deletedAt: null },
-          orderBy: { position: "asc" },
-          include: {
-            timeEntries: {
-              where: { stoppedAt: null },
+          where: {
+            deletedAt: null,
+            activity: {
+              tasks: {
+                some: {
+                  timeEntries: {
+                    some: {
+                      stoppedAt: null,
+                    },
+                  },
+                },
+              },
             },
+          },
+          include: {
+            timeEntries: true,
+          },
+          orderBy: {
+            position: "asc",
           },
         },
       },

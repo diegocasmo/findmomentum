@@ -1,15 +1,21 @@
-import type { Activity, Task, TimeEntry } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import type { FieldErrors } from "react-hook-form";
 
-export type ActivityWithTasksAndTimeEntries = Activity & {
-  tasks: (Task & {
-    timeEntries: TimeEntry[];
-  })[];
-};
+export type ActivityWithTasksAndTimeEntries = Prisma.ActivityGetPayload<{
+  include: {
+    tasks: {
+      include: {
+        timeEntries: true;
+      };
+    };
+  };
+}>;
 
-export type TaskWithTimeEntries = Task & {
-  timeEntries: TimeEntry[];
-};
+export type TaskWithTimeEntries = Prisma.TaskGetPayload<{
+  include: {
+    timeEntries: true;
+  };
+}>;
 
 export type ActionResult<T = void> =
   | { success: true; data: T }
