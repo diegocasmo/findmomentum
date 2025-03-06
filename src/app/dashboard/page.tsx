@@ -22,7 +22,13 @@ type DashboardProps = {
   searchParams: Promise<SearchParams>;
 };
 
-async function getActivitiesData(userId: string, searchParams: SearchParams) {
+async function getActivitiesData({
+  userId,
+  searchParams,
+}: {
+  userId: string;
+  searchParams: SearchParams;
+}) {
   const page = searchParams.page ? Number.parseInt(searchParams.page, 10) : 1;
   const searchQuery = searchParams.search;
   const completionStatus = searchParams.status as CompletionStatus | undefined;
@@ -36,12 +42,17 @@ async function getActivitiesData(userId: string, searchParams: SearchParams) {
   });
 }
 
-function getActivityDescription(
-  totalCount: number,
-  currentPage: number,
-  totalPages: number,
-  searchParams: SearchParams
-) {
+function getActivityDescription({
+  totalCount,
+  currentPage,
+  totalPages,
+  searchParams,
+}: {
+  totalCount: number;
+  currentPage: number;
+  totalPages: number;
+  searchParams: SearchParams;
+}) {
   const isFiltering =
     searchParams.search ||
     (searchParams.status && searchParams.status !== "all");
@@ -71,14 +82,14 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
   // Get paginated activities with filters
   const params = await searchParams;
   const { activities, totalPages, currentPage, totalCount } =
-    await getActivitiesData(userId, params);
+    await getActivitiesData({ userId, searchParams: params });
 
-  const activityDescription = getActivityDescription(
+  const activityDescription = getActivityDescription({
     totalCount,
     currentPage,
     totalPages,
-    params
-  );
+    searchParams: params,
+  });
 
   return (
     <Suspense fallback={<PageSkeleton />}>
