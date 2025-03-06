@@ -36,6 +36,30 @@ async function getActivitiesData(userId: string, searchParams: SearchParams) {
   });
 }
 
+function getActivityDescription(
+  totalCount: number,
+  currentPage: number,
+  totalPages: number,
+  searchParams: SearchParams
+) {
+  const isFiltering =
+    searchParams.search ||
+    (searchParams.status && searchParams.status !== "all");
+  const activityText = totalCount === 1 ? "activity" : "activities";
+
+  let description = `${totalCount} ${activityText}`;
+
+  if (isFiltering) {
+    description += " found";
+  }
+
+  if (totalPages > 1) {
+    description += ` • Page ${currentPage} of ${totalPages}`;
+  }
+
+  return description;
+}
+
 export default async function Dashboard({ searchParams }: DashboardProps) {
   const session = await auth();
   const userId = session?.user?.id;
@@ -44,13 +68,17 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
     redirect("/auth/sign-in");
   }
 
-  // Await and parse search params
-  const resolvedSearchParams = await searchParams;
-  console.log(resolvedSearchParams);
-
   // Get paginated activities with filters
+  const params = await searchParams;
   const { activities, totalPages, currentPage, totalCount } =
-    await getActivitiesData(userId, resolvedSearchParams);
+    await getActivitiesData(userId, params);
+
+  const activityDescription = getActivityDescription(
+    totalCount,
+    currentPage,
+    totalPages,
+    params
+  );
 
   return (
     <Suspense fallback={<PageSkeleton />}>
@@ -79,9 +107,7 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
         <CollapsibleSection
           id="activities"
           title="Activities"
-          description={`${totalCount} ${
-            totalCount === 1 ? "activity" : "activities"
-          } found • Page ${currentPage} of ${totalPages}`}
+          description={activityDescription}
           iconName="activity"
         >
           <ActivityFilters />
