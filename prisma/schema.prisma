@@ -16,6 +16,7 @@ model User {
 
   teamMemberships TeamMembership[]
   activities      Activity[]
+  categories      Category[]
 
   @@map("users")
 }
@@ -41,6 +42,7 @@ model Team {
 
   teamMemberships TeamMembership[]
   activities      Activity[]
+  categories      Category[]
 
   @@map("teams")
 }
@@ -77,15 +79,49 @@ model Activity {
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
-  team              Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sourceActivity    Activity?  @relation("ActivityTemplate", fields: [sourceActivityId], references: [id])
-  derivedActivities Activity[] @relation("ActivityTemplate")
+  team              Team               @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceActivity    Activity?          @relation("ActivityTemplate", fields: [sourceActivityId], references: [id])
+  derivedActivities Activity[]         @relation("ActivityTemplate")
   tasks             Task[]
+  categories        ActivityCategory[]
 
   @@index([userId, deletedAt, completedAt])
   @@index([teamId, deletedAt])
   @@map("activities")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  teamId    String    @map("team_id")
+  userId    String    @map("user_id")
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+
+  team       Team               @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities ActivityCategory[]
+
+  @@unique([teamId, name, deletedAt])
+  @@index([userId, teamId, deletedAt])
+  @@map("categories")
+}
+
+model ActivityCategory {
+  id         String    @id @default(cuid())
+  activityId String    @map("activity_id")
+  categoryId String    @map("category_id")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, categoryId])
+  @@index([activityId, categoryId])
+  @@map("activity_categories")
 }
 
 model Task {
