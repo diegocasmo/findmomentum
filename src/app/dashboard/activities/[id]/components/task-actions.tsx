@@ -11,11 +11,10 @@ import {
 import { DeleteTaskDialog } from "@/app/dashboard/activities/[id]/components/delete-task-dialog";
 import { UpsertTaskDialog } from "@/components/upsert-task-dialog";
 import type { TaskWithTimeEntries } from "@/types";
-import { useTransition, useEffect, useRef } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { duplicateTaskAction } from "@/app/actions/duplicate-task-action";
-import { scrollToBottom } from "@/lib/utils/scroll";
 
 type TaskActionsProps = {
   task: TaskWithTimeEntries;
@@ -26,16 +25,6 @@ export function TaskActions({ task }: TaskActionsProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
-  const shouldScrollRef = useRef(false);
-
-  // Effect to handle scrolling after router refresh
-  useEffect(() => {
-    if (shouldScrollRef.current) {
-      shouldScrollRef.current = false;
-
-      scrollToBottom();
-    }
-  });
 
   const handleDuplicate = () => {
     startTransition(async () => {
@@ -45,8 +34,6 @@ export function TaskActions({ task }: TaskActionsProps) {
         const result = await duplicateTaskAction(formData);
 
         if (result.success) {
-          // Set flag to scroll after refresh
-          shouldScrollRef.current = true;
           router.refresh();
 
           toast({
