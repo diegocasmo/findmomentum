@@ -22,6 +22,7 @@ export async function duplicateTask({
           activity: {
             userId,
             deletedAt: null,
+            completedAt: null,
             team: {
               teamMemberships: {
                 some: {
