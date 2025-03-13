@@ -1,7 +1,6 @@
 import type { Task } from "@prisma/client";
 import { TeamMembershipRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { w } from "node_modules/@faker-js/faker/dist/airline-BcEu2nRk";
 
 type DuplicateTaskParams = {
   taskId: string;
