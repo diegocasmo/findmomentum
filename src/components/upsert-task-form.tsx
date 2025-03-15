@@ -1,5 +1,3 @@
-"use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTaskSchema } from "@/app/schemas/create-task-schema";
@@ -151,7 +149,7 @@ export function UpsertTaskForm({
                     <ClockIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   </div>
                 </FormControl>
-                {task ? (
+                {task && elapsedMs > 0 ? (
                   <FormDescription>
                     Current elapsed time {formatTimeMMss(elapsedMs)}
                   </FormDescription>
