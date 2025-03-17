@@ -20,9 +20,15 @@ import { useReturnUrl } from "@/hooks/use-return-url";
 
 type ActivityCardProps = {
   activity: ActivityWithTasksAndTimeEntries;
+  showCompletedAt?: boolean;
+  showDescription?: boolean;
 };
 
-export function ActivityCard({ activity }: ActivityCardProps) {
+export function ActivityCard({
+  activity,
+  showCompletedAt = true,
+  showDescription = true,
+}: ActivityCardProps) {
   const returnUrl = useReturnUrl();
 
   const isRunning = isActivityRunning(activity);
@@ -46,9 +52,11 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </CardTitle>
             <ActivityActions activity={activity} returnUrl={returnUrl} />
           </div>
-          <CardDescription className="text-sm text-muted-foreground mt-1 truncate min-h-[1.5rem]">
-            {activity.description}
-          </CardDescription>
+          {showDescription && (
+            <CardDescription className="text-sm text-muted-foreground mt-1 truncate min-h-[1.5rem]">
+              {activity.description}
+            </CardDescription>
+          )}
         </CardHeader>
         <CardContent className="pb-2">
           <div className="flex items-center text-sm text-muted-foreground">
@@ -59,19 +67,21 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </span>
           </div>
         </CardContent>
-        <CardFooter className="pt-2 pb-2 bg-muted/50 min-h-[2.5rem] flex items-center">
-          {activity.completedAt ? (
-            <div className="flex items-center text-sm text-muted-foreground">
-              <CheckCircle className="w-3 h-3 mr-1 text-primary" />
-              <span className="first-letter:uppercase">
-                Completed&nbsp;
-                {formatDateAsTimeAgo(activity.completedAt)}
-              </span>
-            </div>
-          ) : (
-            <div className="h-4"></div>
-          )}
-        </CardFooter>
+        {showCompletedAt && (
+          <CardFooter className="pt-2 pb-2 bg-muted/50 min-h-[2.5rem] flex items-center">
+            {activity.completedAt ? (
+              <div className="flex items-center text-sm text-muted-foreground">
+                <CheckCircle className="w-3 h-3 mr-1 text-primary" />
+                <span className="first-letter:uppercase">
+                  Completed&nbsp;
+                  {formatDateAsTimeAgo(activity.completedAt)}
+                </span>
+              </div>
+            ) : (
+              <div className="h-4"></div>
+            )}
+          </CardFooter>
+        )}
       </Card>
     </Link>
   );
