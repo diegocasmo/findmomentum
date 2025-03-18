@@ -96,7 +96,6 @@ model Category {
   name      String
   teamId    String    @map("team_id")
   userId    String    @map("user_id")
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -104,8 +103,8 @@ model Category {
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   activities ActivityCategory[]
 
-  @@unique([teamId, name, deletedAt])
-  @@index([userId, teamId, deletedAt])
+  @@unique([teamId, name])
+  @@index([userId, teamId])
   @@map("categories")
 }
 
