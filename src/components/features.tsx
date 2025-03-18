@@ -1,22 +1,29 @@
-import type React from "react";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { CheckCircle, Clock, BarChart } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  BarChart,
+  History,
+  Search,
+  Copy,
+} from "lucide-react";
 
 const features = [
   {
     title: "Activity Creation",
-    description: "Design custom activities composed of multiple timed tasks.",
+    description:
+      "Design custom activities composed of multiple timed tasks that can be updated, duplicated, or deleted.",
     icon: CheckCircle,
   },
   {
     title: "Flexible Task Management",
     description:
-      "Organize and complete tasks within your activities in any order.",
+      "Organize and complete time-bound tasks within your activities in any order. Easily drag and drop tasks to rearrange their order.",
     icon: Clock,
   },
   {
@@ -24,6 +31,24 @@ const features = [
     description:
       "Monitor your progress across tasks and activities at your own pace.",
     icon: BarChart,
+  },
+  {
+    title: "Activity History",
+    description:
+      "View your complete activity history with a visual timeline grouped by day to track your progress over time.",
+    icon: History,
+  },
+  {
+    title: "Use Activities as Templates",
+    description:
+      "Quickly recreate previous activities by using them as templates, maintaining the same structure without starting from scratch.",
+    icon: Copy,
+  },
+  {
+    title: "Advanced Search",
+    description:
+      "Easily find activities by name or completion status to stay organized.",
+    icon: Search,
   },
 ];
 

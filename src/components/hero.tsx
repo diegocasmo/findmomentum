@@ -8,7 +8,8 @@ export const Hero = () => {
         Small wins. Big progress.
       </h1>
       <p className="text-xl sm:text-2xl mb-10 text-muted-foreground max-w-3xl mx-auto">
-        Track your daily activities and build momentum towards your goals.
+        Track your daily activities, reuse existing activities as templates, and
+        build momentum with a complete history of your accomplishments.
       </p>
       <Button asChild size="lg" className="text-lg px-8 py-6">
         <Link href="/auth/sign-in">Get Started</Link>

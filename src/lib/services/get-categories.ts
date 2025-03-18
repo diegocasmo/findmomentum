@@ -13,7 +13,6 @@ export async function getCategories({
     return prisma.category.findMany({
       where: {
         userId,
-        deletedAt: null,
         team: {
           teamMemberships: {
             some: {
