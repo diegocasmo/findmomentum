@@ -1,9 +1,6 @@
-# Momentum
-
-
 [https://www.findmomentum.xyz](https://www.findmomentum.xyz)
 
-Small wins. Big progress.
+A productivity app that helps track and celebrate daily progress through small wins.
 
 ## Installation
 
