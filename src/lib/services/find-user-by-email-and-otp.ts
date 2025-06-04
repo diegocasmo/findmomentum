@@ -7,7 +7,7 @@ export async function findUserByEmailAndOtp(
 ): Promise<User | null> {
   try {
     return prisma.$transaction(async (tx) => {
-      await prisma.verificationToken.delete({
+      await tx.verificationToken.delete({
         where: {
           identifier: email,
           token: otp,
