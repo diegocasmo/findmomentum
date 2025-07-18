@@ -77,6 +77,7 @@ export function UpsertActivityForm({
           } else {
             router.push(`/dashboard/activities/${result.data.id}`);
           }
+
           onSuccess();
         } else {
           setFormErrors(form.setError, result.errors);
@@ -173,8 +174,8 @@ export function UpsertActivityForm({
                   ? "Updating..."
                   : "Update"
                 : isPending
-                ? "Creating..."
-                : "Create"}
+                  ? "Creating..."
+                  : "Create"}
             </Button>
           </div>
         </form>

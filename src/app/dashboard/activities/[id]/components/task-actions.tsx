@@ -59,7 +59,21 @@ export function TaskActions({ task }: TaskActionsProps) {
   };
 
   return (
-    <div onClick={(e) => e.preventDefault()}>
+    <div
+      onClick={(e) => {
+        // Prevent click event from bubbling up and causing a side-effects
+        // like toggling a task being started/paused
+        e.stopPropagation();
+
+        const isFormSubmit =
+          (e.target as HTMLElement)?.getAttribute?.("type") === "submit";
+
+        // Make sure form submission is not prevented
+        if (!isFormSubmit) {
+          e.preventDefault();
+        }
+      }}
+    >
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm">

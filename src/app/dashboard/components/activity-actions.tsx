@@ -64,7 +64,21 @@ export function ActivityActions({
   };
 
   return (
-    <div onClick={(e) => e.preventDefault()}>
+    <div
+      onClick={(e) => {
+        // Prevent click event from bubbling and causing a side-effects like
+        // opening an activity details page
+        e.stopPropagation();
+
+        const isFormSubmit =
+          (e.target as HTMLElement)?.getAttribute?.("type") === "submit";
+
+        // Make sure form submission is not prevented
+        if (!isFormSubmit) {
+          e.preventDefault();
+        }
+      }}
+    >
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
