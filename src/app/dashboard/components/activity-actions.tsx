@@ -64,8 +64,8 @@ export function ActivityActions({
   };
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu>
+    <div onClick={(e) => e.preventDefault()}>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
             <Settings className="h-4 w-4" />

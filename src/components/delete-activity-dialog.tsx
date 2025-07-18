@@ -49,8 +49,8 @@ export function DeleteActivityDialog({
           if (redirectUrl) {
             router.push(redirectUrl);
           } else {
-            router.refresh();
             setIsOpen(false);
+            router.refresh();
           }
         } else {
           toast(ERROR_MESSAGE_CONFIG);

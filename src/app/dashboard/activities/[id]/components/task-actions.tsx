@@ -59,8 +59,8 @@ export function TaskActions({ task }: TaskActionsProps) {
   };
 
   return (
-    <div onClick={(e) => e.stopPropagation()}>
-      <DropdownMenu>
+    <div onClick={(e) => e.preventDefault()}>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm">
             <Ellipsis className="h-4 w-4" />
