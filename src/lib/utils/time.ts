@@ -78,17 +78,17 @@ export function getTaskElapsedTime(task: TaskWithTimeEntries): number {
   return task.durationMs - getTaskRemainingTime(task);
 }
 
-export interface FormatDateOptions {
+type FormatDateOptions = {
   /** How many days back to show “x ago” instead of an absolute date */
   recencyThresholdDays?: number;
   /** date-fns format string for absolute dates (see https://date-fns.org/v2.30.0/docs/format) */
   absoluteDateFormat?: string;
-}
+};
 
 /**
  * Returns a human-readable timestamp:
- *  - “5 minutes ago” if within recencyThresholdDays
- *  - otherwise a formatted date like “Jan 5, 2022”
+ *  - "5 minutes ago" if within recencyThresholdDays
+ *  - otherwise a formatted date like "Jan 5, 2022"
  */
 export function formatDateAsTimeAgo(
   date: Date,
