@@ -94,7 +94,7 @@ export function formatDateAsTimeAgo(
   date: Date,
   options: FormatDateOptions = {}
 ): string {
-  const { recencyThresholdDays = 7, absoluteDateFormat = "PP" } = options;
+  const { recencyThresholdDays = 10, absoluteDateFormat = "PP" } = options;
 
   const now = Date.now();
   const elapsedMs = now - date.getTime();
