@@ -1,4 +1,4 @@
-import { intervalToDuration, formatDistanceToNow } from "date-fns";
+import { intervalToDuration, formatDistanceToNow, format } from "date-fns";
 import type {
   ActivityWithTasksAndTimeEntries,
   TaskWithTimeEntries,
@@ -78,6 +78,31 @@ export function getTaskElapsedTime(task: TaskWithTimeEntries): number {
   return task.durationMs - getTaskRemainingTime(task);
 }
 
-export function formatDateAsTimeAgo(date: Date): string {
-  return formatDistanceToNow(date, { addSuffix: true });
+export interface FormatDateOptions {
+  /** How many days back to show “x ago” instead of an absolute date */
+  recencyThresholdDays?: number;
+  /** date-fns format string for absolute dates (see https://date-fns.org/v2.30.0/docs/format) */
+  absoluteDateFormat?: string;
+}
+
+/**
+ * Returns a human-readable timestamp:
+ *  - “5 minutes ago” if within recencyThresholdDays
+ *  - otherwise a formatted date like “Jan 5, 2022”
+ */
+export function formatDateAsTimeAgo(
+  date: Date,
+  options: FormatDateOptions = {}
+): string {
+  const { recencyThresholdDays = 7, absoluteDateFormat = "PP" } = options;
+
+  const now = Date.now();
+  const elapsedMs = now - date.getTime();
+  const elapsedDays = elapsedMs / (1000 * 60 * 60 * 24);
+
+  if (elapsedDays < recencyThresholdDays) {
+    return formatDistanceToNow(date, { addSuffix: true });
+  }
+
+  return format(date, absoluteDateFormat);
 }
