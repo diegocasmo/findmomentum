@@ -3786,10 +3786,10 @@ regexp.prototype.flags@^1.5.3:
     gopd "^1.2.0"
     set-function-name "^2.0.2"
 
-resend@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/resend/-/resend-4.7.0.tgz#0668038ce9ffcfa496175ea8c782727d879ffe73"
-  integrity sha512-30IbXGBUbmDweQH2IlO53XOXX7ndjYV9xFZ8IEBiWqefqQ/qmTsgrX0Ab6MUnmobJXbpdReVv+iXGRQPubQL5Q==
+resend@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/resend/-/resend-4.8.0.tgz#8d5e33c5030155c23f96a66010714afb84c546ca"
+  integrity sha512-R8eBOFQDO6dzRTDmaMEdpqrkmgSjPpVXt4nGfWsZdYOet0kqra0xgbvTES6HmCriZEXbmGk3e0DiGIaLFTFSHA==
   dependencies:
     "@react-email/render" "1.1.2"
 
