@@ -4044,10 +4044,10 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==
 
-resend@^6.2.2:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/resend/-/resend-6.2.2.tgz#8046791412e0472662f74dc331a09057a64dd363"
-  integrity sha512-EF/wUj0y/CHBDqLV9iKrNHxGV/wdJfzfEzhPbd3tXD4wtMssabgVwys7N3dv+s1EsqnXjC0uN6ylpfvWTzF4Aw==
+resend@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/resend/-/resend-6.3.0.tgz#a3d48514a0cab6a67b0bfb784bfea1a26c7b8d9a"
+  integrity sha512-Nmg5cFojC2E07gQ/RnlcroXpclFnlr05yQP2QNbbAhfX1Q4LBqiSd6/0t/fq95MvcuP8EDbb+Eyw1NG2P0OWgw==
   dependencies:
     svix "1.76.1"
 
