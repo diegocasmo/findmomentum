@@ -13,8 +13,11 @@ export async function requestOtp(email: string) {
     throw new Error("EMAIL_FROM is not set in the environment variables");
   }
 
-  const otp = Buffer.from(crypto.getRandomValues(new Uint8Array(8)))
-    .toString("hex")
+  // Generate random bytes and convert to hex string (Edge runtime compatible)
+  const randomBytes = crypto.getRandomValues(new Uint8Array(8));
+  const otp = Array.from(randomBytes)
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("")
     .slice(0, 6);
   const expires = new Date(Date.now() + 10 * MS_PER_MIN); // 10 minutes from now
   const { host } = new URL(nextAuthUrl);
