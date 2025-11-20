@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClientKnownRequestError } from "@prisma/client-runtime-utils";
 import { z } from "zod";
 import { createZodError } from "@/lib/utils/form";
 
