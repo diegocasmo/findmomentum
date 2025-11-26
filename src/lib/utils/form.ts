@@ -19,7 +19,7 @@ export function setFormErrors<T extends FieldValues>(
   });
 }
 
-export function parseZodErrors<T extends z.ZodType>(
+export function parseZodErrors<T extends z.ZodType<FieldValues>>(
   result: z.ZodSafeParseError<z.infer<T>> | z.ZodError
 ): FieldErrors<z.infer<T>> {
   const zodError = result instanceof z.ZodError ? result : result.error;
