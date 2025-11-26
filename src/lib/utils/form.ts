@@ -20,7 +20,7 @@ export function setFormErrors<T extends FieldValues>(
 }
 
 export function parseZodErrors<T extends z.ZodType>(
-  result: z.SafeParseError<z.infer<T>> | z.ZodError
+  result: z.ZodSafeParseError<z.infer<T>> | z.ZodError
 ): FieldErrors<z.infer<T>> {
   const zodError = result instanceof z.ZodError ? result : result.error;
   return zodError.issues.reduce((acc, issue) => {
