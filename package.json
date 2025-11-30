@@ -2,6 +2,9 @@
   "name": "momentum",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.13.1"
+  },
   "scripts": {
     "dev": "prisma generate && prisma migrate deploy && next dev --turbopack",
     "build": "prisma generate && prisma migrate deploy && next build",
