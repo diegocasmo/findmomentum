@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UpsertActivityDialog } from "@/components/upsert-activity-dialog";
 import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
-import type { Activity } from "@prisma/client";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { useRouter } from "next/navigation";
 import { createActivityFromTemplateAction } from "@/app/actions/create-activity-from-template-action";
 import { useToast } from "@/hooks/use-toast";
 
 type ActivityActionsProps = {
-  activity: Activity;
+  activity: ActivityWithTasksAndTimeEntries;
   redirectUrl?: string;
   returnUrl?: string;
 };

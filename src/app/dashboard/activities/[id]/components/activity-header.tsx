@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ActivityIcon, ChevronLeft } from "lucide-react";
 import { ActivityActions } from "@/app/dashboard/components/activity-actions";
-import type { Activity } from "@prisma/client";
+import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
 type ActivityHeaderProps = {
-  activity: Activity;
+  activity: ActivityWithTasksAndTimeEntries;
 };
 
 export function ActivityHeader({ activity }: ActivityHeaderProps) {
