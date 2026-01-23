@@ -25,7 +25,9 @@ export function BookmarkButton({
   const [optimisticBookmarked, setOptimisticBookmarked] =
     useOptimistic(isBookmarked);
 
-  const handleToggleBookmark = () => {
+  const handleToggleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     startTransition(async () => {
       setOptimisticBookmarked(!optimisticBookmarked);
 
