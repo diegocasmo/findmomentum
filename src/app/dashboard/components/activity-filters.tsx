@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -35,9 +35,16 @@ export function ActivityFilters() {
     SEARCH_DEBOUNCE_DELAY_MS
   );
 
+  // Use a ref to access searchParams without it being a dependency
+  // This breaks the circular dependency that causes infinite loops
+  const searchParamsRef = useRef(searchParams);
+  useEffect(() => {
+    searchParamsRef.current = searchParams;
+  }, [searchParams]);
+
   const updateFilters = useCallback(
     (newParams: Record<string, string>) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParamsRef.current.toString());
       Object.entries(newParams).forEach(([key, value]) => {
         if (value) {
           params.set(key, value);
@@ -51,14 +58,21 @@ export function ActivityFilters() {
       }
       router.push(`?${params.toString()}`, { scroll: false });
     },
-    [router, searchParams]
+    [router]
   );
 
+  // Track previous debounced value to avoid unnecessary updates
+  const prevDebouncedSearchRef = useRef(debouncedSearchQuery);
   useEffect(() => {
-    if (debouncedSearchQuery !== searchParams.get("search")) {
-      updateFilters({ search: debouncedSearchQuery });
+    // Only update if the debounced value actually changed
+    if (prevDebouncedSearchRef.current !== debouncedSearchQuery) {
+      prevDebouncedSearchRef.current = debouncedSearchQuery;
+      const currentSearch = searchParamsRef.current.get("search") ?? "";
+      if (debouncedSearchQuery !== currentSearch) {
+        updateFilters({ search: debouncedSearchQuery });
+      }
     }
-  }, [debouncedSearchQuery, updateFilters, searchParams]);
+  }, [debouncedSearchQuery, updateFilters]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
