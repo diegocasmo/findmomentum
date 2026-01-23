@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UpsertActivityDialog } from "@/components/upsert-activity-dialog";
 import { DeleteActivityDialog } from "@/components/delete-activity-dialog";
+import { BookmarkButton } from "@/components/bookmark-button";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { useRouter } from "next/navigation";
 import { createActivityFromTemplateAction } from "@/app/actions/create-activity-from-template-action";
@@ -117,6 +118,17 @@ export function ActivityActions({
               )}
               {isPending ? "Using as template..." : "Use as template"}
             </Button>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            asChild
+            className="p-0"
+          >
+            <BookmarkButton
+              activityId={activity.id}
+              isBookmarked={!!activity.bookmarkedAt}
+              variant="menu"
+            />
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <DeleteActivityDialog activity={activity} redirectUrl={redirectUrl}>

@@ -7,6 +7,7 @@ import {
   CheckSquare,
   FileText,
   ActivityIcon,
+  Star,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ const ICONS: Record<string, LucideIcon> = {
   "check-square": CheckSquare,
   "file-text": FileText,
   activity: ActivityIcon,
+  star: Star,
 };
 
 interface CollapsibleSectionProps {

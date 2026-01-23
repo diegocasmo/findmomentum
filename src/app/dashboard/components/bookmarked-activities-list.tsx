@@ -1,17 +1,17 @@
-import { getTopSourceActivities } from "@/lib/services/get-top-source-activities";
+import { getBookmarkedActivities } from "@/lib/services/get-bookmarked-activities";
 import { ActivityCard } from "@/app/dashboard/components/activity-card";
-import { NoTopSourceActivities } from "@/app/dashboard/components/no-top-source-activities";
+import { NoBookmarkedActivities } from "@/app/dashboard/components/no-bookmarked-activities";
 
-type SourceTopActivitiesListProps = {
+type BookmarkedActivitiesListProps = {
   userId: string;
 };
 
-export async function SourceTopActivitiesList({
+export async function BookmarkedActivitiesList({
   userId,
-}: SourceTopActivitiesListProps) {
-  const activities = await getTopSourceActivities({ userId });
+}: BookmarkedActivitiesListProps) {
+  const activities = await getBookmarkedActivities({ userId });
 
-  if (activities.length === 0) return <NoTopSourceActivities />;
+  if (activities.length === 0) return <NoBookmarkedActivities />;
 
   return (
     <div className="mb-8">

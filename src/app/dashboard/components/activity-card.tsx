@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Calendar, CheckCircle } from "lucide-react";
 import { ActivityActions } from "@/app/dashboard/components/activity-actions";
+import { BookmarkButton } from "@/components/bookmark-button";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 import { formatTimeHHMMss, formatDateAsTimeAgo } from "@/lib/utils/time";
 import { isActivityRunning } from "@/lib/utils/is-activity-running";
@@ -46,10 +47,16 @@ export function ActivityCard({
       >
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
-            <CardTitle className="text-lg font-medium text-foreground">
-              {activity.name}&nbsp;
-              {isRunning ? `(${formatTimeHHMMss(remainingTime)})` : null}
-            </CardTitle>
+            <div className="flex items-center gap-1">
+              <BookmarkButton
+                activityId={activity.id}
+                isBookmarked={!!activity.bookmarkedAt}
+              />
+              <CardTitle className="text-lg font-medium text-foreground">
+                {activity.name}&nbsp;
+                {isRunning ? `(${formatTimeHHMMss(remainingTime)})` : null}
+              </CardTitle>
+            </div>
             <ActivityActions activity={activity} returnUrl={returnUrl} />
           </div>
           {showDescription && (

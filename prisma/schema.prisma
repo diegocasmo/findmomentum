@@ -73,6 +73,7 @@ model Activity {
   teamId           String    @map("team_id")
   userId           String    @map("user_id")
   sourceActivityId String?   @map("source_activity_id")
+  bookmarkedAt     DateTime? @map("bookmarked_at") @db.Timestamptz
   completedAt      DateTime? @map("completed_at") @db.Timestamptz
   deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
@@ -86,6 +87,7 @@ model Activity {
   categories        ActivityCategory[]
 
   @@index([userId, deletedAt, completedAt])
+  @@index([userId, deletedAt, bookmarkedAt])
   @@index([teamId, deletedAt])
   @@map("activities")
 }
