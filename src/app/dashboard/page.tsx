@@ -7,7 +7,7 @@ import { ActivitiesList } from "@/app/dashboard/components/activities-list";
 import { ActivityFilters } from "@/app/dashboard/components/activity-filters";
 import { PageSkeleton } from "@/app/dashboard/components/page-skeleton";
 import { ActivityContributions } from "@/app/dashboard/components/activity-contributions";
-import { SourceTopActivitiesList } from "@/app/dashboard/components/source-top-activities-list";
+import { BookmarkedActivitiesList } from "@/app/dashboard/components/bookmarked-activities-list";
 import { Pagination } from "@/app/dashboard/components/pagination";
 import { CollapsibleSection } from "@/components/collapsible-section";
 import type { CompletionStatus } from "@/types";
@@ -96,11 +96,11 @@ export default async function DashboardPage({ searchParams }: DashboardProps) {
         </CollapsibleSection>
 
         <CollapsibleSection
-          id="top-templates"
-          title="Top templates"
-          iconName="file-text"
+          id="bookmarked-activities"
+          title="Bookmarked activities"
+          iconName="star"
         >
-          <SourceTopActivitiesList userId={userId} />
+          <BookmarkedActivitiesList userId={userId} />
         </CollapsibleSection>
 
         <CollapsibleSection

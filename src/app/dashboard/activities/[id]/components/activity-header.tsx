@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ActivityIcon, ChevronLeft } from "lucide-react";
 import { ActivityActions } from "@/app/dashboard/components/activity-actions";
+import { BookmarkButton } from "@/components/bookmark-button";
 import type { ActivityWithTasksAndTimeEntries } from "@/types";
 
 type ActivityHeaderProps = {
@@ -32,6 +33,10 @@ export function ActivityHeader({ activity }: ActivityHeaderProps) {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-2 sm:gap-3">
             <ActivityIcon className="w-6 h-6 sm:w-8 sm:h-8 text-primary flex-shrink-0" />
             <span className="truncate">{activity.name}</span>
+            <BookmarkButton
+              activityId={activity.id}
+              isBookmarked={!!activity.bookmarkedAt}
+            />
           </h1>
           {activity.description && (
             <p className="mt-1 text-sm sm:text-base md:text-lg text-muted-foreground line-clamp-2">
