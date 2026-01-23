@@ -43,7 +43,6 @@ export async function createActivityFromTemplate({
             : null,
           teamId: sourceActivity.teamId,
           userId: userId,
-          sourceActivityId: sourceActivity.id,
           tasks: {
             create: sourceActivity.tasks.map((task) => ({
               name: task.name,
