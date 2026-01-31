@@ -19,6 +19,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { useTransition, useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { createTaskAction } from "@/app/actions/create-task-action";
 import { updateTaskAction } from "@/app/actions/update-task-action";
 import { setFormErrors } from "@/lib/utils/form";
@@ -52,6 +53,7 @@ export function UpsertTaskForm({
 }: UpsertTaskFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
   const nameInputRef = useRef<HTMLInputElement>(null);
   const elapsedMs = task ? getTaskElapsedTime(task) : 0;
 
@@ -76,6 +78,11 @@ export function UpsertTaskForm({
 
   async function onSubmit(data: FormData) {
     startTransition(async () => {
+      // For CREATE: close dialog immediately for better responsiveness
+      if (!task) {
+        onSuccess();
+      }
+
       try {
         const formData = new FormData();
         formData.append("name", data.name);
@@ -95,16 +102,38 @@ export function UpsertTaskForm({
 
         if (result.success) {
           router.refresh();
-          onSuccess();
+          if (task) {
+            onSuccess();
+          }
         } else {
-          setFormErrors(form.setError, result.errors);
+          // For creates, show toast (dialog closed)
+          // For updates, show form errors (dialog open)
+          if (!task) {
+            toast({
+              title: "Error",
+              description: "Failed to create task. Please try again.",
+              variant: "destructive",
+            });
+            router.refresh();
+          } else {
+            setFormErrors(form.setError, result.errors);
+          }
         }
       } catch (error) {
         console.error(`Task ${task ? "update" : "create"} error:`, error);
-        form.setError("root", {
-          type: "manual",
-          message: "An unexpected error occurred. Please try again.",
-        });
+        if (!task) {
+          toast({
+            title: "Error",
+            description: "An unexpected error occurred. Please try again.",
+            variant: "destructive",
+          });
+          router.refresh();
+        } else {
+          form.setError("root", {
+            type: "manual",
+            message: "An unexpected error occurred. Please try again.",
+          });
+        }
       }
     });
   }

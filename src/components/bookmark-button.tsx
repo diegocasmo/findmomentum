@@ -1,11 +1,9 @@
 "use client";
 
 import { Star, Loader2 } from "lucide-react";
-import { useTransition, useOptimistic } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { toggleBookmarkActivityAction } from "@/app/actions/toggle-bookmark-activity-action";
-import { useToast } from "@/hooks/use-toast";
+import { useOptimisticAction } from "@/hooks/use-optimistic-action";
 import { cn } from "@/lib/utils";
 
 type BookmarkButtonProps = {
@@ -19,40 +17,21 @@ export function BookmarkButton({
   isBookmarked,
   variant = "icon",
 }: BookmarkButtonProps) {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
-  const [optimisticBookmarked, setOptimisticBookmarked] =
-    useOptimistic(isBookmarked);
+  const {
+    value: optimisticBookmarked,
+    isPending,
+    execute,
+  } = useOptimisticAction(isBookmarked);
 
   const handleToggleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    startTransition(async () => {
-      setOptimisticBookmarked(!optimisticBookmarked);
 
-      try {
-        const formData = new FormData();
-        formData.append("activityId", activityId);
-        const result = await toggleBookmarkActivityAction(formData);
+    const formData = new FormData();
+    formData.append("activityId", activityId);
 
-        if (result.success) {
-          router.refresh();
-        } else {
-          toast({
-            title: "Error",
-            description: "Failed to update bookmark. Please try again.",
-            variant: "destructive",
-          });
-        }
-      } catch (error) {
-        console.error("Toggle bookmark error:", error);
-        toast({
-          title: "Error",
-          description: "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        });
-      }
+    execute(!optimisticBookmarked, () => toggleBookmarkActivityAction(formData), {
+      errorMessage: "Failed to update bookmark. Please try again.",
     });
   };
 
