@@ -81,6 +81,42 @@ This document provides AI agents (like Claude Code) with comprehensive context a
 3. **Suspense boundaries** for progressive loading (dashboard, activity pages)
 4. **Type safety** throughout with TypeScript + Zod + Prisma
 
+### Directory Structure
+
+```
+src/
+├── app/                      # Next.js App Router pages
+│   ├── actions/              # Server Actions (18 files)
+│   ├── api/auth/             # NextAuth API handler
+│   ├── schemas/              # Zod validation schemas (15+ files)
+│   ├── dashboard/            # Main authenticated application
+│   │   ├── activities/       # Activity detail pages
+│   │   │   └── [id]/         # Dynamic route for activity details
+│   │   └── components/       # Dashboard-specific components
+│   ├── auth/                 # Authentication pages
+│   │   └── sign-in/          # OTP sign-in flow
+│   ├── fonts/                # Custom font files
+│   ├── globals.css           # Global Tailwind + CSS variables
+│   ├── layout.tsx            # Root layout with providers
+│   └── page.tsx              # Landing page
+├── components/               # Shared UI components
+│   ├── ui/                   # shadcn/ui base components (20+ files)
+│   └── [feature].tsx         # Feature-specific components
+├── lib/                      # Business logic & utilities
+│   ├── auth/                 # NextAuth configuration + Resend
+│   ├── prisma/               # Database client singleton
+│   ├── services/             # Data access layer (25+ functions)
+│   ├── utils/                # Utility functions
+│   │   ├── cn.ts             # Class name merger
+│   │   └── time.ts           # Time formatting utilities
+│   └── rate-limiter/         # Request rate limiting
+├── hooks/                    # Custom React hooks
+│   ├── use-toast.ts          # Toast notification system
+│   ├── use-debounce.ts       # Input debouncing
+│   └── use-window-size.ts    # Responsive behavior
+└── types.ts                  # Global TypeScript types
+```
+
 ---
 
 ## Code Organization
@@ -1259,44 +1295,35 @@ export function useToast() {
 
 ### Optimistic Updates
 
-**Pattern**: Use the `useOptimisticAction` hook for optimistic UI updates
+**Pattern**: Update UI immediately, revert on failure
 
 ```typescript
-// hooks/use-optimistic-action.ts
-import { useOptimisticAction } from "@/hooks/use-optimistic-action";
-
-// Usage example
-function BookmarkButton({ activity }: { activity: Activity }) {
-  const { value, isPending, execute } = useOptimisticAction(activity.completedAt);
-
-  const handleToggle = () => {
-    const newValue = value ? null : new Date();
-    execute(newValue, () => toggleBookmarkAction(activity.id), {
-      errorMessage: "Failed to update bookmark",
-    });
-  };
-
-  return (
-    <Button onClick={handleToggle} disabled={isPending}>
-      {value ? "Bookmarked" : "Bookmark"}
-    </Button>
+async function handleCompleteTask(taskId: string) {
+  // Optimistic update
+  setTasks((prev) =>
+    prev.map((task) =>
+      task.id === taskId ? { ...task, completedAt: new Date() } : task
+    )
   );
+
+  // Server action
+  const result = await completeTaskAction(taskId);
+
+  if (result.error) {
+    // Revert on failure
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === taskId ? { ...task, completedAt: null } : task
+      )
+    );
+
+    toast({
+      title: "Error",
+      description: result.error.message,
+      variant: "destructive"
+    });
+  }
 }
-```
-
-**Key features**:
-- Encapsulates `useTransition` and `useOptimistic` from React
-- Automatic `router.refresh()` on success (unless `skipRefresh: true`)
-- Toast notifications on error
-- Returns `{ value, isPending, execute }`
-
-**Options**:
-```typescript
-type Options = {
-  onSuccess?: () => void;    // Callback after successful action
-  errorMessage?: string;     // Custom error message for toast
-  skipRefresh?: boolean;     // Skip router.refresh() on success
-};
 ```
 
 ---

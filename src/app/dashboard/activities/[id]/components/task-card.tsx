@@ -12,26 +12,27 @@ import { TaskActions } from "@/app/dashboard/activities/[id]/components/task-act
 import type { TaskWithTimeEntries } from "@/types";
 import { TaskRemainingTime } from "@/app/dashboard/activities/[id]/components/task-remaining-time";
 import { cn } from "@/lib/utils";
+import { useTransition } from "react";
 import { playTaskAction } from "@/app/actions/play-task-action";
 import { pauseTaskAction } from "@/app/actions/pause-task-action";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 import { isTaskRunning } from "@/lib/utils/is-task-running";
 import { isTaskCompleted } from "@/lib/utils/is-task-completed";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { formatTimeMMss } from "@/lib/utils/time";
 import { Badge } from "@/components/ui/badge";
-import { useOptimisticAction } from "@/hooks/use-optimistic-action";
 
 type TaskCardProps = {
   task: TaskWithTimeEntries;
 };
 
 export function TaskCard({ task }: TaskCardProps) {
-  const {
-    value: isRunning,
-    isPending,
-    execute,
-  } = useOptimisticAction(isTaskRunning(task));
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const isRunning = isTaskRunning(task);
   const isCompleted = isTaskCompleted(task);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -45,15 +46,34 @@ export function TaskCard({ task }: TaskCardProps) {
   const handleToggleTask = () => {
     if (isCompleted) return;
 
-    const newState = !isRunning;
-    const formData = new FormData();
-    formData.append("taskId", task.id);
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("taskId", task.id);
 
-    execute(
-      newState,
-      () => (newState ? playTaskAction(formData) : pauseTaskAction(formData)),
-      { errorMessage: `Failed to ${isRunning ? "pause" : "start"} the task.` }
-    );
+        const action = isRunning ? pauseTaskAction : playTaskAction;
+        const result = await action(formData);
+
+        if (result.success) {
+          router.refresh();
+        } else {
+          toast({
+            title: "Error",
+            description: `Failed to ${
+              isRunning ? "pause" : "start"
+            } the task. Please try again.`,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Task toggle error:", error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   return (

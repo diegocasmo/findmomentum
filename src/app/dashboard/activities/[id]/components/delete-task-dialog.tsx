@@ -29,13 +29,11 @@ const ERROR_MESSAGE_CONFIG: Parameters<typeof toast>[0] = {
 };
 
 export function DeleteTaskDialog({ task, redirectUrl }: DeleteTaskDialogProps) {
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const handleDelete = () => {
-    setIsOpen(false);
-
     startTransition(async () => {
       try {
         const result = await softDeleteTaskAction(task.id);
@@ -49,15 +47,14 @@ export function DeleteTaskDialog({ task, redirectUrl }: DeleteTaskDialogProps) {
             router.push(redirectUrl);
           } else {
             router.refresh();
+            setIsOpen(false);
           }
         } else {
           toast(ERROR_MESSAGE_CONFIG);
-          router.refresh();
         }
       } catch (error) {
         console.error("Task deletion error:", error);
         toast(ERROR_MESSAGE_CONFIG);
-        router.refresh();
       }
     });
   };
@@ -84,7 +81,9 @@ export function DeleteTaskDialog({ task, redirectUrl }: DeleteTaskDialogProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>
+            {isPending ? "Deleting..." : "Delete"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
