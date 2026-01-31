@@ -32,11 +32,13 @@ export function DeleteActivityDialog({
   redirectUrl,
   children,
 }: DeleteActivityDialogProps) {
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const handleDelete = () => {
+    setIsOpen(false);
+
     startTransition(async () => {
       try {
         const result = await softDeleteActivityAction(activity.id);
@@ -49,15 +51,16 @@ export function DeleteActivityDialog({
           if (redirectUrl) {
             router.push(redirectUrl);
           } else {
-            setIsOpen(false);
             router.refresh();
           }
         } else {
           toast(ERROR_MESSAGE_CONFIG);
+          router.refresh();
         }
       } catch (error) {
         console.error("Activity deletion error:", error);
         toast(ERROR_MESSAGE_CONFIG);
+        router.refresh();
       }
     });
   };
@@ -75,9 +78,7 @@ export function DeleteActivityDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>
-            {isPending ? "Deleting..." : "Delete"}
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

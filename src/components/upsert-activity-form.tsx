@@ -22,6 +22,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { useTransition } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { createActivityAction } from "@/app/actions/create-activity-action";
 import { updateActivityAction } from "@/app/actions/update-activity-action";
 import { setFormErrors } from "@/lib/utils/form";
@@ -45,6 +46,7 @@ export function UpsertActivityForm({
 }: UpsertActivityFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<FormData>({
     resolver: zodResolver(
@@ -59,6 +61,11 @@ export function UpsertActivityForm({
 
   const onSubmit = (data: FormData) => {
     startTransition(async () => {
+      // For CREATE: close dialog immediately for better responsiveness
+      if (!activity) {
+        onSuccess();
+      }
+
       try {
         const formData = new FormData();
         formData.append("name", data.name);
@@ -74,23 +81,42 @@ export function UpsertActivityForm({
         if (result.success) {
           if (activity) {
             router.refresh();
+            onSuccess();
           } else {
             router.push(`/dashboard/activities/${result.data.id}`);
           }
-
-          onSuccess();
         } else {
-          setFormErrors(form.setError, result.errors);
+          // For creates, show toast (dialog closed)
+          // For updates, show form errors (dialog open)
+          if (!activity) {
+            toast({
+              title: "Error",
+              description: "Failed to create activity. Please try again.",
+              variant: "destructive",
+            });
+            router.refresh();
+          } else {
+            setFormErrors(form.setError, result.errors);
+          }
         }
       } catch (error) {
         console.error(
           `Activity ${activity ? "update" : "create"} error:`,
           error
         );
-        form.setError("root", {
-          type: "manual",
-          message: "An unexpected error occurred. Please try again.",
-        });
+        if (!activity) {
+          toast({
+            title: "Error",
+            description: "An unexpected error occurred. Please try again.",
+            variant: "destructive",
+          });
+          router.refresh();
+        } else {
+          form.setError("root", {
+            type: "manual",
+            message: "An unexpected error occurred. Please try again.",
+          });
+        }
       }
     });
   };
